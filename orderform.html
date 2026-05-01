@@ -134,6 +134,12 @@
         }
         .float-anim { animation: float 3s ease-in-out infinite; }
 
+        @keyframes checkDraw {
+            0% { stroke-dashoffset: 24; }
+            100% { stroke-dashoffset: 0; }
+        }
+        .check-draw { stroke-dasharray: 24; stroke-dashoffset: 24; animation: checkDraw 0.5s ease 0.3s forwards; }
+
         .sticky-submit {
             backdrop-filter: blur(24px);
             background: rgba(10, 11, 14, 0.92);
@@ -150,8 +156,8 @@
         .msg-box::-webkit-scrollbar-thumb { background: #25262c; border-radius: 2px; }
 
         .overlay-bg {
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.80);
+            backdrop-filter: blur(12px);
         }
     </style>
 </head>
@@ -178,19 +184,17 @@
 
     <main class="max-w-2xl mx-auto px-6 pt-10">
 
-        <!-- HEADER -->
         <div class="anim-in text-center mb-10">
             <div class="w-16 h-16 rounded-2xl bg-tg/10 border border-tg/20 flex items-center justify-center mx-auto mb-5 float-anim">
                 <iconify-icon icon="mdi:web" class="text-tg text-3xl"></iconify-icon>
             </div>
             <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">Tempah Laman Web Landing Page</h1>
-            <p class="text-sm text-slate-400 max-w-md mx-auto">Isi borang di bawah. Ringkasan akan dihantar terus ke Telegram kami untuk diproses.</p>
+            <p class="text-sm text-slate-400 max-w-md mx-auto">Isi borang di bawah. Klik hantar — borang terus masuk ke Telegram kami.</p>
         </div>
 
-        <!-- FORM -->
         <form id="orderForm" class="space-y-6" onsubmit="return false;">
 
-            <!-- ===== SECTION 1 ===== -->
+            <!-- SECTION 1 -->
             <div class="section-card rounded-2xl p-6 sm:p-8 anim-in anim-d1">
                 <div class="flex items-center gap-2.5 mb-6">
                     <div class="w-8 h-8 rounded-lg bg-tg/10 flex items-center justify-center">
@@ -228,7 +232,7 @@
                 </div>
             </div>
 
-            <!-- ===== SECTION 2 ===== -->
+            <!-- SECTION 2 -->
             <div class="section-card rounded-2xl p-6 sm:p-8 anim-in anim-d2">
                 <div class="flex items-center gap-2.5 mb-6">
                     <div class="w-8 h-8 rounded-lg bg-tg/10 flex items-center justify-center">
@@ -283,7 +287,7 @@
                 </div>
             </div>
 
-            <!-- ===== SECTION 3: FEATURE ===== -->
+            <!-- SECTION 3 -->
             <div class="section-card rounded-2xl p-6 sm:p-8 anim-in anim-d3">
                 <div class="flex items-center gap-2.5 mb-2">
                     <div class="w-8 h-8 rounded-lg bg-tg/10 flex items-center justify-center">
@@ -416,7 +420,7 @@
                 </div>
             </div>
 
-            <!-- ===== SECTION 4 ===== -->
+            <!-- SECTION 4 -->
             <div class="section-card rounded-2xl p-6 sm:p-8 anim-in anim-d4">
                 <div class="flex items-center gap-2.5 mb-6">
                     <div class="w-8 h-8 rounded-lg bg-tg/10 flex items-center justify-center">
@@ -491,7 +495,7 @@
                 </div>
             </div>
 
-            <!-- ===== SECTION 5 ===== -->
+            <!-- SECTION 5 -->
             <div class="section-card rounded-2xl p-6 sm:p-8 anim-in anim-d5">
                 <div class="flex items-center gap-2.5 mb-6">
                     <div class="w-8 h-8 rounded-lg bg-tg/10 flex items-center justify-center">
@@ -510,14 +514,27 @@
 
     <!-- STICKY SUBMIT BAR -->
     <div class="sticky-submit fixed bottom-0 left-0 right-0 z-50 py-4 px-6">
-        <div class="max-w-2xl mx-auto flex items-center gap-3">
-            <button onclick="copySummary()" class="flex-shrink-0 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium text-sm px-4 py-3.5 rounded-full transition-all flex items-center gap-2">
-                <iconify-icon icon="mdi:content-copy" class="text-base"></iconify-icon>
-                <span class="hidden sm:inline">Salin</span>
+        <div class="max-w-2xl mx-auto">
+            <button onclick="submitForm()" id="submitBtn" class="w-full flex items-center justify-center gap-2.5 bg-[#0088cc] hover:bg-[#006699] text-white font-bold text-sm px-6 py-4 rounded-full transition-all hover:scale-[1.01] pulse-tg shadow-lg shadow-[#0088cc]/20">
+                <iconify-icon icon="mdi:send" class="text-xl"></iconify-icon>
+                Hantar Borang
             </button>
-            <button onclick="submitForm()" id="submitBtn" class="flex-1 flex items-center justify-center gap-2 bg-[#0088cc] hover:bg-[#006699] text-white font-bold text-sm px-6 py-3.5 rounded-full transition-all hover:scale-[1.02] pulse-tg shadow-lg shadow-[#0088cc]/20">
-                <iconify-icon icon="mdi:telegram" class="text-xl"></iconify-icon>
-                Hantar Borang via Telegram
+        </div>
+    </div>
+
+    <!-- ========== SUCCESS OVERLAY ========== -->
+    <div id="successOverlay" class="fixed inset-0 z-[200] overlay-bg flex items-center justify-center p-6 hidden">
+        <div class="pop-in bg-surface-300 border border-white/10 rounded-2xl p-8 sm:p-10 text-center max-w-sm w-full">
+            <div class="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-5">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="#10b981" stroke-width="1.5" opacity="0.3"/>
+                    <path class="check-draw" d="M8 12.5L11 15.5L16.5 9.5" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Borang Berjaya Dihantar!</h3>
+            <p class="text-sm text-slate-400 mb-6 leading-relaxed">Borang anda telah diterima. Kami akan hubungi anda melalui Telegram dalam tempoh 24 jam.</p>
+            <button onclick="document.getElementById('successOverlay').classList.add('hidden')" class="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium text-sm px-6 py-3 rounded-xl transition-all w-full">
+                Tutup
             </button>
         </div>
     </div>
@@ -530,31 +547,19 @@
                     <iconify-icon icon="mdi:alert-circle" class="text-red-400 text-2xl"></iconify-icon>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold">Telegram Tidak Dapat Dibuka</h3>
-                    <p class="text-xs text-slate-400">Pautan Telegram tidak berfungsi. Sila salin mesej di bawah dan hantar manual.</p>
+                    <h3 class="text-lg font-bold">Gagal Menghantar</h3>
+                    <p class="text-xs text-slate-400">Sila salin mesej di bawah dan hantar manual ke @AranisEcom</p>
                 </div>
             </div>
-
-            <div class="bg-red-500/5 border border-red-500/10 rounded-xl p-4 mb-4">
-                <p class="text-xs font-semibold text-red-400 mb-2">Sebab yang mungkin:</p>
-                <ul class="text-xs text-slate-400 space-y-1.5">
-                    <li class="flex items-start gap-2"><iconify-icon icon="mdi:close-circle" class="text-red-400/60 mt-0.5 flex-shrink-0 text-sm"></iconify-icon>Telegram tidak dipasang di peranti ini</li>
-                    <li class="flex items-start gap-2"><iconify-icon icon="mdi:close-circle" class="text-red-400/60 mt-0.5 flex-shrink-0 text-sm"></iconify-icon>Popup blocker menyekat pautan daripada terbuka</li>
-                    <li class="flex items-start gap-2"><iconify-icon icon="mdi:close-circle" class="text-red-400/60 mt-0.5 flex-shrink-0 text-sm"></iconify-icon>Membuka melalui Instagram / app lain yang menyekat pautan luaran</li>
-                </ul>
-            </div>
-
             <div class="mb-4">
                 <div class="flex items-center justify-between mb-2">
                     <p class="text-xs font-semibold text-slate-400">Mesej untuk dihantar:</p>
                     <button onclick="copyFailMsg()" id="failCopyBtn" class="flex items-center gap-1 text-xs text-tg hover:text-white transition-colors font-medium">
-                        <iconify-icon icon="mdi:content-copy" class="text-sm"></iconify-icon>
-                        Salin Mesej
+                        <iconify-icon icon="mdi:content-copy" class="text-sm"></iconify-icon> Salin Mesej
                     </button>
                 </div>
                 <div id="failMsgBox" class="msg-box rounded-xl p-4 text-xs text-slate-300 leading-relaxed whitespace-pre-line font-mono"></div>
             </div>
-
             <div class="bg-tg/5 border border-tg/10 rounded-xl p-4 mb-5">
                 <p class="text-xs font-semibold text-tg mb-2">Cara hantar manual:</p>
                 <ol class="text-xs text-slate-400 space-y-1.5 list-decimal list-inside">
@@ -564,23 +569,10 @@
                     <li><strong class="text-white">Tampal (paste)</strong> mesej dan hantar</li>
                 </ol>
             </div>
-
-            <div class="flex gap-3">
-                <button onclick="tryAgain()" class="flex-1 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium text-sm px-4 py-3 rounded-xl transition-all">
-                    <iconify-icon icon="mdi:refresh" class="text-base"></iconify-icon>
-                    Cuba Lagi
-                </button>
-                <button onclick="closeFail()" class="flex-1 flex items-center justify-center gap-2 bg-[#0088cc] hover:bg-[#006699] text-white font-bold text-sm px-4 py-3 rounded-xl transition-all">
-                    <iconify-icon icon="mdi:telegram" class="text-base"></iconify-icon>
-                    Buka Telegram
-                </button>
-            </div>
+            <button onclick="document.getElementById('failOverlay').classList.add('hidden')" class="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium text-sm px-4 py-3 rounded-xl transition-all">
+                Tutup
+            </button>
         </div>
-    </div>
-
-    <!-- COPY TOAST -->
-    <div id="copyToast" class="fixed top-20 left-1/2 -translate-x-1/2 z-[300] bg-tg text-white text-sm font-medium px-5 py-2.5 rounded-full shadow-lg transition-all duration-300 opacity-0 -translate-y-4 pointer-events-none">
-        <iconify-icon icon="mdi:check" class="mr-1"></iconify-icon> Disalin!
     </div>
 
 
@@ -589,38 +581,33 @@
         let selectedStyle = 'gelap';
         let selectedCount = '3';
         let lastBuiltMsg = '';
-        let openedWindow = null;
+
+        const BOT_TOKEN = '8704581615:AAHRvV428Y_0TSeXe3078rB5iUaNJZRXf4Q';
+        const CHAT_ID = '7143688285';
 
         function toggleCustom() {
             document.getElementById('jenisLain').classList.toggle('hidden', document.getElementById('jenisProduk').value !== 'Lain-lain');
         }
-
         function toggleCheck(el) {
             el.classList.toggle('selected');
             el.querySelector('.choice-check-box iconify-icon').classList.toggle('hidden');
         }
-
         function selectStyle(el) {
             el.parentElement.querySelectorAll('.choice-card').forEach(c => c.classList.remove('selected'));
             el.classList.add('selected');
             selectedStyle = el.dataset.style;
         }
-
         function pickColor(btn) {
             document.querySelectorAll('.color-btn').forEach(b => { b.classList.remove('active-color'); b.style.borderColor = 'transparent'; });
             btn.classList.add('active-color');
             btn.style.borderColor = 'rgba(255,255,255,0.5)';
             selectedColor = btn.dataset.color;
-            document.getElementById('warnaTema').value = selectedColor;
         }
-
         function selectCount(el) {
             el.parentElement.querySelectorAll('.choice-card').forEach(c => c.classList.remove('selected'));
             el.classList.add('selected');
             selectedCount = el.dataset.count;
-            document.getElementById('bilPakej').value = selectedCount;
         }
-
         function getFeatures() {
             return [...document.querySelectorAll('.choice-card.selected[data-feature]')].map(el => el.dataset.feature);
         }
@@ -642,6 +629,12 @@
             'floating-tg':    '🟢 Floating Telegram Button (Desktop)'
         };
 
+        // Escape HTML to prevent breaking Telegram HTML parse_mode
+        function esc(text) {
+            if (!text) return '';
+            return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
         function buildMessage() {
             const g = id => document.getElementById(id).value.trim();
             const jenis = g('jenisProduk');
@@ -650,40 +643,42 @@
             const styleMap = { gelap: 'Gelap (Premium)', cerah: 'Cerah (Clean)', campuran: 'Campuran (Modern)' };
             const features = getFeatures();
 
-            let msg = `🚀 *TEMPAHAN LANDING PAGE — Pixelcraft Aranis*
+            // HTML format for Telegram parse_mode=HTML
+            let msg = `🚀 <b>TEMPAHAN LANDING PAGE — Pixelcraft Aranis</b>
 ━━━━━━━━━━━━━━━━━━━━
 
-👤 *MAKLUMAT*
-Nama: ${g('nama')}
-Bisnes: ${g('bisnes') || '-'}
-Telegram: +60${g('telegram')}
-Emel: ${g('emel') || '-'}
+👤 <b>MAKLUMAT</b>
+Nama: ${esc(g('nama'))}
+Bisnes: ${esc(g('bisnes')) || '-'}
+Telegram: +60${esc(g('telegram'))}
+Emel: ${esc(g('emel')) || '-'}
 
-📦 *PRODUK / PERKHIDMATAN*
-Jenis: ${jenisDisplay}
-Sasaran: ${g('sasaran') || '-'}
-Web sedia ada: ${g('webLama') || '-'}
+📦 <b>PRODUK / PERKHIDMATAN</b>
+Jenis: ${esc(jenisDisplay)}
+Sasaran: ${esc(g('sasaran')) || '-'}
+Web sedia ada: ${esc(g('webLama')) || '-'}
 
 Deskripsi:
- ${g('deskripsi')}
+ ${esc(g('deskripsi'))}
 
 Harga / Pakej:
- ${g('harga')}
+ ${esc(g('harga'))}
 
-🎨 *REKA BENTUK*
+🎨 <b>REKA BENTUK</b>
 Gaya: ${styleMap[selectedStyle] || selectedStyle}
 Warna: ${selectedColor}
 Bil. pakej harga: ${selectedCount}
 
-✅ *FEATURE (${features.length})*
+✅ <b>FEATURE (${features.length})</b>
  ${features.map(f => featureLabels[f] || f).join('\n')}
 
- ${g('nota') ? `📝 *NOTA:* ${g('nota')}` : ''}
+ ${g('nota') ? `📝 <b>NOTA:</b> ${esc(g('nota'))}` : ''}
 
 ━━━━━━━━━━━━━━━━━━━━
-_Dihantar melalui borang Pixelcraft Aranis_`;
+<i>Dihantar melalui borang Pixelcraft Aranis</i>`;
 
-            lastBuiltMsg = msg;
+            // Plain text version for clipboard fallback
+            lastBuiltMsg = msg.replace(/<b>/g, '').replace(/<\/b>/g, '').replace(/<i>/g, '').replace(/<\/i>/g, '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
             return msg;
         }
 
@@ -701,64 +696,49 @@ _Dihantar melalui borang Pixelcraft Aranis_`;
             return ok;
         }
 
-        function submitForm() {
+        async function submitForm() {
             if (!validate()) return;
 
             const msg = buildMessage();
-            const encoded = encodeURIComponent(msg);
-            const url = `https://t.me/share/url?url=&text=${encoded}`;
-
             const btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<iconify-icon icon="mdi:loading" class="text-xl animate-spin"></iconify-icon> Membuka Telegram...';
 
-            let didOpen = false;
+            // Loading state
+            btn.disabled = true;
+            btn.innerHTML = '<iconify-icon icon="mdi:loading" class="text-xl animate-spin"></iconify-icon> Menghantar...';
 
             try {
-                openedWindow = window.open(url, '_blank');
+                const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: msg,
+                        parse_mode: 'HTML',
+                        disable_web_page_preview: true
+                    })
+                });
 
-                if (!openedWindow || openedWindow.closed || typeof openedWindow.closed === 'undefined') {
-                    didOpen = false;
+                const data = await res.json();
+
+                if (data.ok) {
+                    // SUCCESS
+                    document.getElementById('successOverlay').classList.remove('hidden');
                 } else {
-                    setTimeout(() => {
-                        try {
-                            if (openedWindow && !openedWindow.closed && openedWindow.location.href === 'about:blank') {
-                                openedWindow.close();
-                                showFailOverlay();
-                            }
-                        } catch (e) {
-                            // Cross-origin = navigated to Telegram successfully
-                        }
-                    }, 1500);
-                    didOpen = true;
+                    // API returned error
+                    console.error('TG API Error:', data);
+                    document.getElementById('failMsgBox').textContent = lastBuiltMsg;
+                    document.getElementById('failOverlay').classList.remove('hidden');
                 }
-            } catch (e) {
-                didOpen = false;
+            } catch (err) {
+                // Network error
+                console.error('Network Error:', err);
+                document.getElementById('failMsgBox').textContent = lastBuiltMsg;
+                document.getElementById('failOverlay').classList.remove('hidden');
             }
 
-            if (!didOpen) {
-                setTimeout(() => showFailOverlay(), 300);
-            }
-
-            setTimeout(() => {
-                btn.disabled = false;
-                btn.innerHTML = '<iconify-icon icon="mdi:telegram" class="text-xl"></iconify-icon> Hantar Borang via Telegram';
-            }, 3000);
-        }
-
-        function showFailOverlay() {
-            document.getElementById('failMsgBox').textContent = lastBuiltMsg;
-            document.getElementById('failOverlay').classList.remove('hidden');
-        }
-
-        function closeFail() {
-            document.getElementById('failOverlay').classList.add('hidden');
-            window.open('https://t.me/AranisEcom', '_blank');
-        }
-
-        function tryAgain() {
-            document.getElementById('failOverlay').classList.add('hidden');
-            submitForm();
+            // Reset button
+            btn.disabled = false;
+            btn.innerHTML = '<iconify-icon icon="mdi:send" class="text-xl"></iconify-icon> Hantar Borang';
         }
 
         function copyFailMsg() {
@@ -767,19 +747,6 @@ _Dihantar melalui borang Pixelcraft Aranis_`;
                 btn.innerHTML = '<iconify-icon icon="mdi:check" class="text-sm text-green-400"></iconify-icon> <span class="text-green-400">Disalin!</span>';
                 setTimeout(() => {
                     btn.innerHTML = '<iconify-icon icon="mdi:content-copy" class="text-sm"></iconify-icon> Salin Mesej';
-                }, 2000);
-            });
-        }
-
-        function copySummary() {
-            buildMessage();
-            navigator.clipboard.writeText(lastBuiltMsg).then(() => {
-                const toast = document.getElementById('copyToast');
-                toast.classList.remove('opacity-0', '-translate-y-4');
-                toast.classList.add('opacity-100', 'translate-y-0');
-                setTimeout(() => {
-                    toast.classList.add('opacity-0', '-translate-y-4');
-                    toast.classList.remove('opacity-100', 'translate-y-0');
                 }, 2000);
             });
         }
