@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimKad Pro — Kad SIM Data Tanpa Had | Penghantaran Pantas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 'inter': ['Inter', 'sans-serif'] },
+                    colors: {
+                        wa: '#25D366',
+                        waDark: '#128C7E',
+                        surface: { 50: '#0A0B0E', 100: '#0c0d10', 200: '#121317', 300: '#1a1b20', 400: '#25262c' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; }
+        body { background: #0A0B0E; color: #fff; }
+
+        @keyframes animationIn {
+            0% { opacity: 0; transform: translateY(30px); filter: blur(8px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0px); }
+        }
+        .anim-in { animation: animationIn 0.8s ease-out both; }
+        .anim-d1 { animation-delay: 0.1s; }
+        .anim-d2 { animation-delay: 0.2s; }
+        .anim-d3 { animation-delay: 0.3s; }
+        .anim-d4 { animation-delay: 0.4s; }
+        .anim-d5 { animation-delay: 0.5s; }
+        .anim-d6 { animation-delay: 0.6s; }
+        .anim-d7 { animation-delay: 0.7s; }
+
+        @keyframes slideInRight {
+            0% { opacity: 0; transform: translateX(100%); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideOutRight {
+            0% { opacity: 1; transform: translateX(0); }
+            100% { opacity: 0; transform: translateX(100%); }
+        }
+        .notif-in { animation: slideInRight 0.5s ease-out both; }
+        .notif-out { animation: slideOutRight 0.4s ease-in both; }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(37, 211, 102, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(37, 211, 102, 0.6); }
+        }
+        .pulse-wa { animation: pulse-glow 2s ease-in-out infinite; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .float-anim { animation: float 3s ease-in-out infinite; }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .marquee-track { animation: marquee 30s linear infinite; }
+
+        .gradient-border {
+            background: linear-gradient(135deg, rgba(37,211,102,0.2), rgba(37,211,102,0.05));
+            border: 1px solid rgba(37,211,102,0.15);
+        }
+        .popular-border {
+            background: linear-gradient(135deg, rgba(37,211,102,0.15), rgba(16,185,129,0.05));
+            border: 2px solid rgba(37,211,102,0.4);
+        }
+
+        .sticky-bar {
+            backdrop-filter: blur(24px);
+            background: rgba(10, 11, 14, 0.9);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0A0B0E; }
+        ::-webkit-scrollbar-thumb { background: #25262c; border-radius: 3px; }
+
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.4s ease; }
+        .faq-answer.open { max-height: 300px; }
+
+        .toast-container { pointer-events: none; }
+        .toast-container > * { pointer-events: auto; }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .shimmer-badge {
+            background: linear-gradient(90deg, #25D366 25%, #4ade80 50%, #25D366 75%);
+            background-size: 200% 100%;
+            animation: shimmer 2s linear infinite;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- BAR KESEGERAN ATAS -->
+    <div class="bg-wa text-black text-center text-xs sm:text-sm font-semibold py-2.5 px-4 relative overflow-hidden">
+        <div class="marquee-track inline-flex gap-16 whitespace-nowrap">
+            <span>🔥 JUALAN PANAS — Penghantaran PERCUMA untuk 50 Pesanan Pertama Hari Ini!</span>
+            <span>⚡ Stok Terhad — Hanya Tinggal 23 Kad SIM</span>
+            <span>🎁 Bonus 10GB Data Tambahan — Hari Ini Sahaja</span>
+            <span>🔥 JUALAN PANAS — Penghantaran PERCUMA untuk 50 Pesanan Pertama Hari Ini!</span>
+            <span>⚡ Stok Terhad — Hanya Tinggal 23 Kad SIM</span>
+            <span>🎁 Bonus 10GB Data Tambahan — Hari Ini Sahaja</span>
+        </div>
+    </div>
+
+    <!-- BEKAS NOTIFIKASI PALSU -->
+    <div id="notifContainer" class="toast-container fixed top-20 right-4 z-[100] flex flex-col gap-3 max-w-sm w-full pr-4"></div>
+
+    <!-- NAVIGASI -->
+    <nav class="sticky top-0 z-50 border-b border-white/5" style="backdrop-filter: blur(24px); background: rgba(10,11,14,0.8);">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-wa flex items-center justify-center">
+                    <iconify-icon icon="mdi:sim" class="text-black text-lg"></iconify-icon>
+                </div>
+                <span class="font-bold text-lg tracking-tight">SimKad<span class="text-wa">Pro</span></span>
+            </div>
+            <div class="hidden md:flex items-center gap-8 text-sm text-slate-400">
+                <a href="#plans" class="hover:text-white transition-colors">Pakej</a>
+                <a href="#benefits" class="hover:text-white transition-colors">Kenapa Kami</a>
+                <a href="#reviews" class="hover:text-white transition-colors">Ulasan</a>
+                <a href="#faq" class="hover:text-white transition-colors">Soalan Lazim</a>
+            </div>
+            <a href="https://wa.me/60123456789?text=Hi%2C%20saya%20nak%20order%20SimKad!" target="_blank"
+               class="bg-wa hover:bg-waDark text-black font-semibold text-sm px-5 py-2.5 rounded-full transition-all hover:scale-105 flex items-center gap-2">
+                <iconify-icon icon="mdi:whatsapp" class="text-lg"></iconify-icon>
+                Tempah Sekarang
+            </a>
+        </div>
+    </nav>
+
+    <!-- BAHAGIAN HERO -->
+    <section class="relative pt-16 pb-20 lg:pt-24 lg:pb-32 overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] rounded-full" style="background: radial-gradient(circle, rgba(37,211,102,0.08) 0%, transparent 70%);"></div>
+
+        <div class="max-w-6xl mx-auto px-6 text-center relative z-10">
+            <!-- Penonton secara langsung -->
+            <div class="anim-in anim-d1 inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 mb-8">
+                <span class="relative flex h-2.5 w-2.5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                </span>
+                <span class="text-sm text-slate-300"><span id="liveCount" class="font-semibold text-white">47</span> orang sedang lihat halaman ini</span>
+            </div>
+
+            <h1 class="anim-in anim-d2 text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight leading-[1.05] mb-6">
+                Kad SIM Data<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-wa to-emerald-300">Tanpa Had</span><br>
+                Dari <span class="text-wa">RM29</span>/bulan
+            </h1>
+
+            <p class="anim-in anim-d3 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-8 leading-relaxed">
+                Tiada kontrak. Tiada yuran pendaftaran. Aktifkan serta-merta.<br class="hidden sm:block">
+                Terima kad SIM anda dalam tempoh 24 jam.
+            </p>
+
+            <!-- Butang CTA -->
+            <div class="anim-in anim-d4 flex flex-col sm:flex-row gap-4 justify-center mb-10">
+                <a href="https://wa.me/60123456789?text=Hi%2C%20saya%20nak%20order%20SimKad!" target="_blank"
+                   class="pulse-wa bg-wa hover:bg-waDark text-black font-bold text-base px-8 py-4 rounded-full transition-all hover:scale-105 flex items-center justify-center gap-3 shadow-lg shadow-wa/20">
+                    <iconify-icon icon="mdi:whatsapp" class="text-2xl"></iconify-icon>
+                    Tempah Melalui WhatsApp
+                </a>
+                <a href="#plans"
+                   class="bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white font-semibold text-base px-8 py-4 rounded-full transition-all flex items-center justify-center gap-2">
+                    Lihat Pakej
+                    <iconify-icon icon="mdi:chevron-down" class="text-lg"></iconify-icon>
+                </a>
+            </div>
+
+            <!-- Bar kepercayaan -->
+            <div class="anim-in anim-d5 flex flex-wrap justify-center gap-6 sm:gap-10 text-sm text-slate-500">
+                <div class="flex items-center gap-2">
+                    <iconify-icon icon="mdi:shield-check" class="text-wa text-lg"></iconify-icon>
+                    <span>Didaftar MCMC</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <iconify-icon icon="mdi:truck-fast" class="text-wa text-lg"></iconify-icon>
+                    <span>Penghantaran 24jam</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <iconify-icon icon="mdi:account-group" class="text-wa text-lg"></iconify-icon>
+                    <span>12,400+ Pengguna</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <iconify-icon icon="mdi:star" class="text-yellow-400 text-lg"></iconify-icon>
+                    <span>Penilaian 4.9/5</span>
+                </div>
+            </div>
+
+            <!-- Imej hero -->
+            <div class="anim-in anim-d6 mt-14 relative max-w-lg mx-auto float-anim">
+                <div class="absolute -inset-4 bg-gradient-to-r from-wa/20 via-emerald-500/10 to-wa/20 rounded-3xl blur-xl"></div>
+                <img src="https://picsum.photos/seed/simcard-hero-my/600/400.jpg" alt="Kad SIM" class="relative rounded-2xl border border-white/10 shadow-2xl w-full">
+                <div class="absolute -top-3 -right-3 shimmer-badge text-black text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
+                    LAKU TERKINI
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BAR BUKTI SOSIAL -->
+    <section class="border-y border-white/5 bg-surface-200 py-8 overflow-hidden">
+        <div class="max-w-6xl mx-auto px-6">
+            <p class="text-center text-xs text-slate-600 uppercase tracking-widest mb-6">Dipercayai oleh ribuan rakyat Malaysia</p>
+            <div class="flex flex-wrap justify-center items-center gap-8 sm:gap-14 opacity-40">
+                <span class="text-xl font-bold tracking-tight">Celcom</span>
+                <span class="text-xl font-bold tracking-tight">Maxis</span>
+                <span class="text-xl font-bold tracking-tight">Digi</span>
+                <span class="text-xl font-bold tracking-tight">U Mobile</span>
+                <span class="text-xl font-bold tracking-tight">Unifi</span>
+                <span class="text-xl font-bold tracking-tight">Yes</span>
+                <span class="text-xl font-bold tracking-tight">Yoodo</span>
+            </div>
+        </div>
+    </section>
+
+        <!-- UNDUR MASA KESEGERAAN -->
+    <section class="py-10">
+        <div class="max-w-2xl mx-auto px-6">
+            <div class="gradient-border rounded-2xl p-6 sm:p-8 text-center">
+                <p class="text-sm text-wa font-semibold uppercase tracking-wider mb-2 flex items-center justify-center gap-2">
+                    <iconify-icon icon="mdi:fire" class="text-lg"></iconify-icon>
+                    Jualan Panas Tamat Dalam
+                </p>
+                <div id="countdown" class="flex justify-center gap-3 sm:gap-5 mb-4">
+                    <div class="bg-black/40 rounded-xl px-4 py-3 min-w-[70px]">
+                        <div id="cdHours" class="text-3xl sm:text-4xl font-extrabold text-white">02</div>
+                        <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Jam</div>
+                    </div>
+                    <div class="text-3xl sm:text-4xl font-bold text-slate-600 self-start pt-3">:</div>
+                    <div class="bg-black/40 rounded-xl px-4 py-3 min-w-[70px]">
+                        <div id="cdMinutes" class="text-3xl sm:text-4xl font-extrabold text-white">47</div>
+                        <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Minit</div>
+                    </div>
+                    <div class="text-3xl sm:text-4xl font-bold text-slate-600 self-start pt-3">:</div>
+                    <div class="bg-black/40 rounded-xl px-4 py-3 min-w-[70px]">
+                        <div id="cdSeconds" class="text-3xl sm:text-4xl font-extrabold text-wa">33</div>
+                        <div class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Saat</div>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-400">🔥 Hanya tinggal <span id="stockCount" class="text-white font-semibold">23</span> kad SIM pada harga ini</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAKEJ / HARGA -->
+    <section id="plans" class="py-20">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="inline-block text-xs font-semibold text-wa uppercase tracking-widest bg-wa/10 px-4 py-1.5 rounded-full mb-4">Pakej Harga</span>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-4">Pilih Pakej Anda</h2>
+                <p class="text-slate-400 text-lg max-w-xl mx-auto">Tiada yuran tersembunyi. Tiada kontrak. Batal bila-bila masa.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
+                <!-- Pakej 1 -->
+                <div class="gradient-border rounded-2xl p-8 flex flex-col hover:border-white/20 transition-all duration-300 group">
+                    <div class="mb-6">
+                        <span class="text-sm font-medium text-slate-400">Asas</span>
+                        <div class="flex items-end gap-1 mt-2">
+                            <span class="text-4xl font-extrabold">RM29</span>
+                            <span class="text-slate-500 text-sm mb-1">/bulan</span>
+                        </div>
+                        <p class="text-sm text-slate-500 line-through mt-1">RM45/bulan</p>
+                    </div>
+                    <ul class="space-y-3 mb-8 flex-1">
+                        <li class="flex items-center gap-3 text-sm text-slate-300"><iconify-icon icon="mdi:check-circle" class="text-wa text-lg flex-shrink-0"></iconify-icon> 30GB Data Kelajuan Tinggi</li>
+                        <li class="flex items-center gap-3 text-sm text-slate-300"><iconify-icon icon="mdi:check-circle" class="text-wa text-lg flex-shrink-0"></iconify-icon> Panggilan Tanpa Had</li>
+                        <li class="flex items-center gap-3 text-sm text-slate-300"><iconify-icon icon="mdi:check-circle" class="text-wa text-lg flex-shrink-0"></iconify-icon> SMS Tanpa Had</li>
+                        <li class="flex items-center gap-3 text-sm text-slate-500"><iconify-icon icon="mdi:close-circle" class="text-slate-600 text-lg flex-shrink-0"></iconify-icon> Akses 5G</li>
+                        <li class="flex items-center gap-3 text-sm text-slate-500"><iconify-icon icon="mdi:close-circle" class="text-slate-600 text-lg flex-shrink-0"></iconify-icon> Perkongsian Hotspot</li>
+                    </ul>
+                    <a href="https://wa.me/60123456789?text=Hi%2C%20saya%20nak%20Pakej%20Asas%20(RM29)" target="_blank"
+                       class="w-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white font-semibold py-3.5 rounded-full transition-all text-center block">
+                        Pilih Asas
+                    </a>
+                </div>
+
+                <!-- Pakej 2 - Popular -->
+                <div class="popular-border rounded-2xl p-8 flex flex-col relative hover:border-wa/60 transition-all duration-300 group shadow-lg shadow-wa/5">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 shimmer-badge text-black text-xs font-bold px-5 py-1.5 rounded-full shadow-lg">
+                        PALING POPULAR 🔥
+                    </div>
+                    <div class="mb-6">
+                        <span class="text-sm font-medium text-wa">Premium</span>
+                        <div class="flex items-end gap-1 mt-2">
+                            <span class="text-4xl font-extrabold">RM49</span>
+                            <span class="text-slate-500 text-sm mb-1">/bulan</span>
+                        </div>
+                        <p class="text-sm text-slate-500 line-through mt-1">RM79/bulan</p>
+                    </div>
+                    <ul class="space-y-3 mb-8 flex-1">
+                        <li class="flex items-center gap-3 text-sm text-slate-300"><iconify-icon icon="mdi:check-circle" class="text-wa text-lg flex-shrink-0"></iconify-icon> Data Kelajuan Tinggi <strong class="text-white">Tanpa Had</strong></li>
+                        <li class="flex items-center gap-3 text-sm text-slate-300"><iconify-icon icon="mdi:check-circle" class="text-wa text-lg flex-shrink-0"></iconify-icon> Panggilan Tanpa Had</li>
+                        <li class="flex items-center gap-3 text-sm text-slate-300"><iconify-icon icon="mdi:check-circle" class="text-wa text-lg flex-shrink-0"></iconify-icon> SMS Tanpa Had</li>
+                        <li class="flex items-center gap-3 text-sm text-slate-300"><iconify-icon icon="mdi:check-circle" class="text-wa text-lg flex-shrink-0"></iconify-icon> <span class="text-wa font-medium">Akses 5G</span></li>
+                        <li class="flex items-center gap-3 text-sm text-slate-300"><iconify-icon icon="mdi:check-circle" class="text-wa text-lg flex-shrink-0"></iconify-icon> Perkongsian Hotspot</li>
+                    </ul>
+                    <a href="https://wa.me/60123456789?text=Hi%2C%20saya%20nak%20Pakej%20Premium%20(RM49)" target="_blank"
+                       class="pulse-wa w-full bg-wa hover:bg-waDark text-black font-bold py-3.5 rounded-full transition-all text-center block shadow-lg shadow-wa/20">
+                        Pilih Premium
+                    </a>
+                    <p class="text-center text-xs text-slate-500 mt-3">⚡ 156 orang pilih pakej ini hari ini</p>
+                </div>
+
+                <!-- Pakej 3 -->
+                <div class="gradient-border rounded-2xl p-8 flex flex-col hover:border-white/20 transition-all duration-300 group">
+                    <div class="mb-6">
+                        <span class="text-sm font-medium text-slate-400">Keluarga</span>
+                        <div class="flex items-end gap-1 mt-2">
+                            <span class="text-4xl font-extrabold">RM89</span>
+                            <span class="text-slate-500 text-sm mb-1">/bulan</span>
+                        </div>
+                        <p class="text-sm text-slate-500 line-through mt-1">RM139/bulan</p>
+                    </div>
+                    <ul class="space-y-3 mb-8 flex-1">
+                        <li class="flex items-center gap-3 text-sm text-slate-300"><iconify-icon icon="mdi:check-circle" class="text-wa text-lg flex-shrink-0"></iconify-icon> <strong class="text-white">3 Kad SIM</strong></li>
+                        <li class="flex items-center gap-3 text-sm text-slate-300"><iconify-icon icon="mdi:check-circle" class="text-wa text-lg flex-shrink-0"></iconify-icon> Data Tanpa Had (Semua)</li>
+                        <li class="flex items-center gap-3 text-sm text-slate-300"><iconify-icon icon="mdi:check-circle" class="text-wa text-lg flex-shrink-0"></iconify-icon> Panggilan Tanpa Had</li>
+                        <li class="flex items-center gap-3 text-sm text-slate-300"><iconify-icon icon="mdi:check-circle" class="text-wa text-lg flex-shrink-0"></iconify-icon> Akses 5G</li>
+                        <li class="flex items-center gap-3 text-sm text-slate-300"><iconify-icon icon="mdi:check-circle" class="text-wa text-lg flex-shrink-0"></iconify-icon> Perkongsian Keluarga</li>
+                    </ul>
+                    <a href="https://wa.me/60123456789?text=Hi%2C%20saya%20nak%20Pakej%20Keluarga%20(RM89)" target="_blank"
+                       class="w-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white font-semibold py-3.5 rounded-full transition-all text-center block">
+                        Pilih Keluarga
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KELEBIHAN -->
+    <section id="benefits" class="py-20 border-t border-white/5">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="inline-block text-xs font-semibold text-wa uppercase tracking-widest bg-wa/10 px-4 py-1.5 rounded-full mb-4">Kenapa SimKadPro</span>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-4">Cara Lebih Pintar<br class="hidden sm:block"> untuk Kekal Berhubung</h2>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-surface-200 border border-white/5 rounded-2xl p-7 hover:border-wa/20 transition-all group">
+                    <div class="w-12 h-12 rounded-xl bg-wa/10 flex items-center justify-center mb-5 group-hover:bg-wa/20 transition-colors">
+                        <iconify-icon icon="mdi:rocket-launch" class="text-wa text-2xl"></iconify-icon>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Aktifkan Serta-merta</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Masuk dan guna terus. Tiada menunggu, tiada proses rumit.</p>
+                </div>
+                <div class="bg-surface-200 border border-white/5 rounded-2xl p-7 hover:border-wa/20 transition-all group">
+                    <div class="w-12 h-12 rounded-xl bg-wa/10 flex items-center justify-center mb-5 group-hover:bg-wa/20 transition-colors">
+                        <iconify-icon icon="mdi:truck-delivery" class="text-wa text-2xl"></iconify-icon>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Penghantaran Percuma 24jam</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Order hari ini, terima esok. Percuma ke seluruh Semenanjung Malaysia.</p>
+                </div>
+                <div class="bg-surface-200 border border-white/5 rounded-2xl p-7 hover:border-wa/20 transition-all group">
+                    <div class="w-12 h-12 rounded-xl bg-wa/10 flex items-center justify-center mb-5 group-hover:bg-wa/20 transition-colors">
+                        <iconify-icon icon="mdi:cancel" class="text-wa text-2xl"></iconify-icon>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Tiada Kontrak</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Bulan ke bulan. Batal bila-bila masa tanpa denda atau caj tersembunyi.</p>
+                </div>
+                <div class="bg-surface-200 border border-white/5 rounded-2xl p-7 hover:border-wa/20 transition-all group">
+                    <div class="w-12 h-12 rounded-xl bg-wa/10 flex items-center justify-center mb-5 group-hover:bg-wa/20 transition-colors">
+                        <iconify-icon icon="mdi:signal-5g" class="text-wa text-2xl"></iconify-icon>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Sedia 5G</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Akses rangkaian 5G terpantas Malaysia pada peranti dan pakej yang disokong.</p>
+                </div>
+                <div class="bg-surface-200 border border-white/5 rounded-2xl p-7 hover:border-wa/20 transition-all group">
+                    <div class="w-12 h-12 rounded-xl bg-wa/10 flex items-center justify-center mb-5 group-hover:bg-wa/20 transition-colors">
+                        <iconify-icon icon="mdi:headset" class="text-wa text-2xl"></iconify-icon>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Sokongan 24/7</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Hubungi kami bila-bila masa melalui WhatsApp. Masa respons purata bawah 2 minit.</p>
+                </div>
+                <div class="bg-surface-200 border border-white/5 rounded-2xl p-7 hover:border-wa/20 transition-all group">
+                    <div class="w-12 h-12 rounded-xl bg-wa/10 flex items-center justify-center mb-5 group-hover:bg-wa/20 transition-colors">
+                        <iconify-icon icon="mdi:shield-lock" class="text-wa text-2xl"></iconify-icon>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">100% Sah</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Dealer berdaftar MCMC. Semua kad SIM adalah tulen dan telah didaftarkan.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- JADUAL PERBANDINGAN -->
+    <section class="py-20 border-t border-white/5">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="inline-block text-xs font-semibold text-wa uppercase tracking-widest bg-wa/10 px-4 py-1.5 rounded-full mb-4">Perbandingan</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">SimKadPro vs Lain-lain</h2>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-white/10">
+                            <th class="text-left py-4 px-4 text-slate-500 font-medium">Ciri</th>
+                            <th class="py-4 px-4 text-wa font-bold text-center">SimKadPro</th>
+                            <th class="py-4 px-4 text-slate-500 font-medium text-center">Kedai Telco</th>
+                            <th class="py-4 px-4 text-slate-500 font-medium text-center">Lain-lain</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-white/5">
+                            <td class="py-4 px-4 text-slate-300">Yuran Pendaftaran</td>
+                            <td class="py-4 px-4 text-center text-wa font-semibold">PERCUMA</td>
+                            <td class="py-4 px-4 text-center text-red-400">RM10-30</td>
+                            <td class="py-4 px-4 text-center text-red-400">RM5-20</td>
+                        </tr>
+                        <tr class="border-b border-white/5">
+                            <td class="py-4 px-4 text-slate-300">Penghantaran</td>
+                            <td class="py-4 px-4 text-center text-wa font-semibold">PERCUMA 24jam</td>
+                            <td class="py-4 px-4 text-center text-slate-500">Ambil Sendiri</td>
+                            <td class="py-4 px-4 text-center text-slate-500">RM5-10</td>
+                        </tr>
+                        <tr class="border-b border-white/5">
+                            <td class="py-4 px-4 text-slate-300">Kontrak</td>
+                            <td class="py-4 px-4 text-center text-wa font-semibold">Tiada</td>
+                            <td class="py-4 px-4 text-center text-red-400">12-24 bulan</td>
+                            <td class="py-4 px-4 text-center text-slate-500">Berbeza</td>
+                        </tr>
+                        <tr class="border-b border-white/5">
+                            <td class="py-4 px-4 text-slate-300">Pengaktifan</td>
+                            <td class="py-4 px-4 text-center text-wa font-semibold">Serta-merta</td>
+                            <td class="py-4 px-4 text-center text-slate-500">1-24 jam</td>
+                            <td class="py-4 px-4 text-center text-slate-500">1-48 jam</td>
+                        </tr>
+                        <tr>
+                            <td class="py-4 px-4 text-slate-300">Sokongan</td>
+                            <td class="py-4 px-4 text-center text-wa font-semibold">WhatsApp 24/7</td>
+                            <td class="py-4 px-4 text-center text-slate-500">Waktu pejabat</td>
+                            <td class="py-4 px-4 text-center text-red-400">Perlahan</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ULASAN -->
+    <section id="reviews" class="py-20 border-t border-white/5">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="inline-block text-xs font-semibold text-wa uppercase tracking-widest bg-wa/10 px-4 py-1.5 rounded-full mb-4">Testimoni</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">Digemari oleh <span class="text-wa">12,400+</span> Pengguna</h2>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-surface-200 border border-white/5 rounded-2xl p-6">
+                    <div class="flex gap-1 mb-4">
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                    </div>
+                    <p class="text-sm text-slate-300 leading-relaxed mb-5">"Order pukul 2 ptg, esok pg 10 dah sampai. Speed gila! Data pun smooth, tak ada throttling. Keputusan terbaik."</p>
+                    <div class="flex items-center gap-3">
+                        <img src="https://picsum.photos/seed/user-amin/80/80.jpg" class="w-10 h-10 rounded-full object-cover" alt="">
+                        <div>
+                            <p class="text-sm font-semibold">Amin Shah</p>
+                            <p class="text-xs text-slate-500">Kuala Lumpur • Pakej Premium</p>
+                        </div>
+                        <span class="ml-auto"><iconify-icon icon="mdi:check-decagram" class="text-blue-400 text-lg"></iconify-icon></span>
+                    </div>
+                </div>
+
+                <div class="bg-surface-200 border border-white/5 rounded-2xl p-6">
+                    <div class="flex gap-1 mb-4">
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                    </div>
+                    <p class="text-sm text-slate-300 leading-relaxed mb-5">"Seluruh keluarga tukar ke Pakej Keluarga. Jimat RM200+ sebulan berbanding pakej lama. Support jawab dalam 1 minit!"</p>
+                    <div class="flex items-center gap-3">
+                        <img src="https://picsum.photos/seed/user-siti/80/80.jpg" class="w-10 h-10 rounded-full object-cover" alt="">
+                        <div>
+                            <p class="text-sm font-semibold">Siti Nurhaliza</p>
+                            <p class="text-xs text-slate-500">Johor Bahru • Pakej Keluarga</p>
+                        </div>
+                        <span class="ml-auto"><iconify-icon icon="mdi:check-decagram" class="text-blue-400 text-lg"></iconify-icon></span>
+                    </div>
+                </div>
+
+                <div class="bg-surface-200 border border-white/5 rounded-2xl p-6">
+                    <div class="flex gap-1 mb-4">
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star-half-full" class="text-yellow-400"></iconify-icon>
+                    </div>
+                    <p class="text-sm text-slate-300 leading-relaxed mb-5">"Guna untuk bisnes online. Speed 5G memang gila. Upload gambar produk dalam sekelip mata. Tak payah pegi kedai telco queue!"</p>
+                    <div class="flex items-center gap-3">
+                        <img src="https://picsum.photos/seed/user-raj/80/80.jpg" class="w-10 h-10 rounded-full object-cover" alt="">
+                        <div>
+                            <p class="text-sm font-semibold">Raj Kumar</p>
+                            <p class="text-xs text-slate-500">Pulau Pinang • Pakej Premium</p>
+                        </div>
+                        <span class="ml-auto"><iconify-icon icon="mdi:check-decagram" class="text-blue-400 text-lg"></iconify-icon></span>
+                    </div>
+                </div>
+
+                <div class="bg-surface-200 border border-white/5 rounded-2xl p-6">
+                    <div class="flex gap-1 mb-4">
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                    </div>
+                    <p class="text-sm text-slate-300 leading-relaxed mb-5">"Student ni, Pakej Asas dah lebih cukup. Zoom lectures tak ada masalah langsung. Sangat berbaloi untuk RM29 je."</p>
+                    <div class="flex items-center gap-3">
+                        <img src="https://picsum.photos/seed/user-haq/80/80.jpg" class="w-10 h-10 rounded-full object-cover" alt="">
+                        <div>
+                            <p class="text-sm font-semibold">Haqimi</p>
+                            <p class="text-xs text-slate-500">Shah Alam • Pakej Asas</p>
+                        </div>
+                        <span class="ml-auto"><iconify-icon icon="mdi:check-decagram" class="text-blue-400 text-lg"></iconify-icon></span>
+                    </div>
+                </div>
+
+                <div class="bg-surface-200 border border-white/5 rounded-2xl p-6">
+                    <div class="flex gap-1 mb-4">
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                    </div>
+                    <p class="text-sm text-slate-300 leading-relaxed mb-5">"Saya driver Grab. Perlukan data yang stabil 24/7. SimKadPro tak pernah mengecewakan. Dah recommend kepada 10+ driver."</p>
+                    <div class="flex items-center gap-3">
+                        <img src="https://picsum.photos/seed/user-ahmad/80/80.jpg" class="w-10 h-10 rounded-full object-cover" alt="">
+                        <div>
+                            <p class="text-sm font-semibold">Ahmad Faizal</p>
+                            <p class="text-xs text-slate-500">Kuantan • Pakej Premium</p>
+                        </div>
+                        <span class="ml-auto"><iconify-icon icon="mdi:check-decagram" class="text-blue-400 text-lg"></iconify-icon></span>
+                    </div>
+                </div>
+
+                <div class="bg-surface-200 border border-white/5 rounded-2xl p-6">
+                    <div class="flex gap-1 mb-4">
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                        <iconify-icon icon="mdi:star" class="text-yellow-400"></iconify-icon>
+                    </div>
+                    <p class="text-sm text-slate-300 leading-relaxed mb-5">"Beli 5 kad SIM untuk staff. Semua berfungsi dengan sempurna. Sokongan WhatsApp memang game changer — cepat dan membantu!"</p>
+                    <div class="flex items-center gap-3">
+                        <img src="https://picsum.photos/seed/user-lim/80/80.jpg" class="w-10 h-10 rounded-full object-cover" alt="">
+                        <div>
+                            <p class="text-sm font-semibold">Lim Wei Chong</p>
+                            <p class="text-xs text-slate-500">Subang Jaya • Perniagaan</p>
+                        </div>
+                        <span class="ml-auto"><iconify-icon icon="mdi:check-decagram" class="text-blue-400 text-lg"></iconify-icon></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CARA PENGGUNAAN -->
+    <section class="py-20 border-t border-white/5">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="inline-block text-xs font-semibold text-wa uppercase tracking-widest bg-wa/10 px-4 py-1.5 rounded-full mb-4">Cara Penggunaan</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">Hanya 3 Langkah Mudah</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="w-16 h-16 rounded-2xl bg-wa/10 border border-wa/20 flex items-center justify-center mx-auto mb-5 text-2xl font-extrabold text-wa">1</div>
+                    <h3 class="font-bold text-lg mb-2">Hantar Mesej</h3>
+                    <p class="text-sm text-slate-400">Klik "Tempah Melalui WhatsApp" dan beritahu kami pakej yang anda inginkan.</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 rounded-2xl bg-wa/10 border border-wa/20 flex items-center justify-center mx-auto mb-5 text-2xl font-extrabold text-wa">2</div>
+                    <h3 class="font-bold text-lg mb-2">Buat Pembayaran</h3>
+                    <p class="text-sm text-slate-400">Bayar melalui transfer bank, DuitNow, atau FPX. Kami akan sahkan serta-merta.</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 rounded-2xl bg-wa/10 border border-wa/20 flex items-center justify-center mx-auto mb-5 text-2xl font-extrabold text-wa">3</div>
+                    <h3 class="font-bold text-lg mb-2">Terima & Guna</h3>
+                    <p class="text-sm text-slate-400">Kad SIM dihantar dalam 24 jam. Masuk, aktifkan, siap!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOALAN LAZIM -->
+    <section id="faq" class="py-20 border-t border-white/5">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="text-center mb-14">
+                <span class="inline-block text-xs font-semibold text-wa uppercase tracking-widest bg-wa/10 px-4 py-1.5 rounded-full mb-4">Soalan Lazim</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">Soalan Biasa</h2>
+            </div>
+
+            <div class="space-y-3" id="faqList">
+                <div class="faq-item bg-surface-200 border border-white/5 rounded-xl overflow-hidden">
+                    <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between px-6 py-5 text-left">
+                        <span class="font-semibold text-sm pr-4">Adakah kad SIM ini sah dan berdaftar?</span>
+                        <iconify-icon icon="mdi:chevron-down" class="text-xl text-slate-500 transition-transform duration-300 flex-shrink-0 faq-icon"></iconify-icon>
+                    </button>
+                    <div class="faq-answer px-6">
+                        <p class="text-sm text-slate-400 leading-relaxed pb-5">Ya, 100%. Kami adalah dealer berdaftar MCMC. Semua kad SIM telah didaftarkan mengikut peraturan Malaysia. Anda akan menerima kad SIM yang sah dengan dokumentasi yang lengkap.</p>
+                    </div>
+                </div>
+                <div class="faq-item bg-surface-200 border border-white/5 rounded-xl overflow-hidden">
+                    <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between px-6 py-5 text-left">
+                        <span class="font-semibold text-sm pr-4">Berapa cepat penghantaran?</span>
+                        <iconify-icon icon="mdi:chevron-down" class="text-xl text-slate-500 transition-transform duration-300 flex-shrink-0 faq-icon"></iconify-icon>
+                    </button>
+                    <div class="faq-answer px-6">
+                        <p class="text-sm text-slate-400 leading-relaxed pb-5">Semenanjung Malaysia: Penghantaran esok hari (dalam 24 jam). Sabah & Sarawak: 2-3 hari bekerja. Semua melalui kurier dengan pengesanan SMS.</p>
+                    </div>
+                </div>
+                <div class="faq-item bg-surface-200 border border-white/5 rounded-xl overflow-hidden">
+                    <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between px-6 py-5 text-left">
+                        <span class="font-semibold text-sm pr-4">Boleh kekal nombor lama saya?</span>
+                        <iconify-icon icon="mdi:chevron-down" class="text-xl text-slate-500 transition-transform duration-300 flex-shrink-0 faq-icon"></iconify-icon>
+                    </button>
+                    <div class="faq-answer px-6">
+                        <p class="text-sm text-slate-400 leading-relaxed pb-5">Boleh! Kami tawarkan perpindahan nombor mudah alih (MNP). Cuma berikan butiran nombor semasa anda dan kami akan uruskan. Perpindahan mengambil masa 1-3 hari bekerja.</p>
+                    </div>
+                </div>
+                <div class="faq-item bg-surface-200 border border-white/5 rounded-xl overflow-hidden">
+                    <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between px-6 py-5 text-left">
+                        <span class="font-semibold text-sm pr-4">Kaedah pembayaran yang diterima?</span>
+                        <iconify-icon icon="mdi:chevron-down" class="text-xl text-slate-500 transition-transform duration-300 flex-shrink-0 faq-icon"></iconify-icon>
+                    </button>
+                    <div class="faq-answer px-6">
+                        <p class="text-sm text-slate-400 leading-relaxed pb-5">Kami terima transfer bank online (semua bank utama), DuitNow QR, FPX, dan Touch 'n Go eWallet. Butiran pembayaran akan dihantar melalui WhatsApp.</p>
+                    </div>
+                </div>
+                <div class="faq-item bg-surface-200 border border-white/5 rounded-xl overflow-hidden">
+                    <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between px-6 py-5 text-left">
+                        <span class="font-semibold text-sm pr-4">Bagaimana jika kad SIM tak berfungsi?</span>
+                        <iconify-icon icon="mdi:chevron-down" class="text-xl text-slate-500 transition-transform duration-300 flex-shrink-0 faq-icon"></iconify-icon>
+                    </button>
+                    <div class="faq-answer px-6">
+                        <p class="text-sm text-slate-400 leading-relaxed pb-5">Kami tawarkan jaminan wang dikembalikan 7 hari. Jika kad SIM rosak, kami akan hantar pengganti serta-merta atau pulangkan wang anda — tanpa soal.</p>
+                    </div>
+                </div>
+                <div class="faq-item bg-surface-200 border border-white/5 rounded-xl overflow-hidden">
+                    <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between px-6 py-5 text-left">
+                        <span class="font-semibold text-sm pr-4">Boleh batal pakej bila-bila masa?</span>
+                        <iconify-icon icon="mdi:chevron-down" class="text-xl text-slate-500 transition-transform duration-300 flex-shrink-0 faq-icon"></iconify-icon>
+                    </button>
+                    <div class="faq-answer px-6">
+                        <p class="text-sm text-slate-400 leading-relaxed pb-5">Sudah tentu. Tiada kontrak atau komitmen. Hanya berhenti bayar dan pakej akan tamat pada akhir kitaran bil. Tiada yuran pembatalan.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA AKHIR -->
+    <section class="py-20 border-t border-white/5 relative overflow-hidden">
+        <div class="absolute inset-0" style="background: radial-gradient(ellipse at center, rgba(37,211,102,0.08) 0%, transparent 70%);"></div>
+        <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
+            <iconify-icon icon="mdi:whatsapp" class="text-6xl text-wa mb-6"></iconify-icon>
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-4">Sedia untuk Bertukar?</h2>
+            <p class="text-lg text-slate-400 mb-8 max-w-xl mx-auto">Sertai 12,400+ rakyat Malaysia yang gembira sudah bertukar ke SimKadPro. Tempah sekarang dan kekal berhubung esok.</p>
+
+            <a href="https://wa.me/60123456789?text=Hi%2C%20saya%20nak%20order%20SimKad!" target="_blank"
+               class="pulse-wa inline-flex items-center gap-3 bg-wa hover:bg-waDark text-black font-bold text-lg px-10 py-5 rounded-full transition-all hover:scale-105 shadow-xl shadow-wa/20">
+                <iconify-icon icon="mdi:whatsapp" class="text-2xl"></iconify-icon>
+                Tempah Melalui WhatsApp Sekarang
+            </a>
+
+            <div class="mt-8 flex flex-wrap justify-center gap-6 text-sm text-slate-500">
+                <span class="flex items-center gap-1.5"><iconify-icon icon="mdi:check" class="text-wa"></iconify-icon> Tiada komitmen</span>
+                <span class="flex items-center gap-1.5"><iconify-icon icon="mdi:check" class="text-wa"></iconify-icon> Penghantaran percuma</span>
+                <span class="flex items-center gap-1.5"><iconify-icon icon="mdi:check" class="text-wa"></iconify-icon> Jaminan 7 hari</span>
+                <span class="flex items-center gap-1.5"><iconify-icon icon="mdi:check" class="text-wa"></iconify-icon> Jawapan serta-merta</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/5 py-10">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-lg bg-wa flex items-center justify-center">
+                        <iconify-icon icon="mdi:sim" class="text-black text-sm"></iconify-icon>
+                    </div>
+                    <span class="font-bold text-sm">SimKad<span class="text-wa">Pro</span></span>
+                </div>
+                <p class="text-xs text-slate-600">© 2025 SimKadPro. Dealer Berdaftar MCMC. Hak cipta terpelihara.</p>
+                <div class="flex gap-4 text-slate-500">
+                    <a href="#" class="hover:text-wa transition-colors"><iconify-icon icon="mdi:instagram" class="text-xl"></iconify-icon></a>
+                    <a href="#" class="hover:text-wa transition-colors"><iconify-icon icon="mdi:facebook" class="text-xl"></iconify-icon></a>
+                    <a href="#" class="hover:text-wa transition-colors"><iconify-icon icon="mdi:tiktok" class="text-xl"></iconify-icon></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- BAR BAWAH MELEKIT (telefon) -->
+    <div class="sticky-bar fixed bottom-0 left-0 right-0 z-50 py-3 px-4 sm:hidden">
+        <a href="https://wa.me/60123456789?text=Hi%2C%20saya%20nak%20order%20SimKad!" target="_blank"
+           class="flex items-center justify-center gap-2 bg-wa hover:bg-waDark text-black font-bold py-3.5 rounded-full transition-all w-full shadow-lg shadow-wa/30">
+            <iconify-icon icon="mdi:whatsapp" class="text-xl"></iconify-icon>
+            Tempah Sekarang — Dari RM29/bulan
+        </a>
+    </div>
+
+    <!-- WHATSAPP TERAPUNG (desktop) -->
+    <a href="https://wa.me/60123456789?text=Hi%2C%20saya%20nak%20order%20SimKad!" target="_blank"
+       class="hidden sm:flex fixed bottom-6 right-6 z-50 w-16 h-16 bg-wa hover:bg-waDark rounded-full items-center justify-center shadow-2xl shadow-wa/30 transition-all hover:scale-110 pulse-wa">
+        <iconify-icon icon="mdi:whatsapp" class="text-white text-3xl"></iconify-icon>
+    </a>
+
+
+    <script>
+        // ===== SISTEM NOTIFIKASI PALSU =====
+        const notifData = [
+            { name: "Amin", loc: "Kuala Lumpur", action: "tempah Pakej Premium", time: "2 minit lalu", avatar: "amin" },
+            { name: "Siti", loc: "Johor Bahru", action: "tempah Pakej Keluarga", time: "5 minit lalu", avatar: "siti" },
+            { name: "Raj", loc: "Pulau Pinang", action: "sedang lihat Pakej Premium", time: "baru sahaja", avatar: "raj" },
+            { name: "Nurul", loc: "Shah Alam", action: "tempah Pakej Asas", time: "8 minit lalu", avatar: "nurul" },
+            { name: "Ahmad", loc: "Kuantan", action: "tempah Pakej Premium", time: "12 minit lalu", avatar: "ahmad" },
+            { name: "Lim", loc: "Subang Jaya", action: "tempah 5x Pakej Premium", time: "15 minit lalu", avatar: "lim" },
+            { name: "Farah", loc: "Melaka", action: "sedang lihat Pakej Keluarga", time: "baru sahaja", avatar: "farah" },
+            { name: "Kumar", loc: "Ipoh", action: "tempah Pakej Premium", time: "20 minit lalu", avatar: "kumar" },
+            { name: "Hana", loc: "Cyberjaya", action: "tempah Pakej Asas", time: "3 minit lalu", avatar: "hana" },
+            { name: "Syafiq", loc: "Cheras", action: "tempah Pakej Keluarga", time: "7 minit lalu", avatar: "syafiq" },
+            { name: "Devi", loc: "Petaling Jaya", action: "tempah Pakej Premium", time: "10 minit lalu", avatar: "devi" },
+            { name: "Zul", loc: "Bangi", action: "sedang lihat halaman ini", time: "baru sahaja", avatar: "zul" },
+        ];
+
+        let notifIndex = 0;
+        const container = document.getElementById('notifContainer');
+
+        function showNotification() {
+            const data = notifData[notifIndex % notifData.length];
+            notifIndex++;
+
+            const isOrder = data.action.includes("tempah");
+
+            const el = document.createElement('div');
+            el.className = 'notif-in bg-surface-300/95 border border-white/10 rounded-xl p-4 flex items-start gap-3 shadow-2xl';
+            el.style.backdropFilter = 'blur(20px)';
+            el.innerHTML = `
+                <img src="https://picsum.photos/seed/notif-${data.avatar}/80/80.jpg" class="w-10 h-10 rounded-full object-cover flex-shrink-0" alt="">
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm text-white font-medium truncate">${data.name} <span class="text-slate-500 font-normal">dari ${data.loc}</span></p>
+                    <p class="text-xs ${isOrder ? 'text-wa' : 'text-slate-400'} mt-0.5">${isOrder ? '✅' : '👁️'} ${data.action}</p>
+                    <p class="text-[10px] text-slate-600 mt-1">${data.time}</p>
+                </div>
+            `;
+
+            container.appendChild(el);
+
+            setTimeout(() => {
+                el.classList.remove('notif-in');
+                el.classList.add('notif-out');
+                setTimeout(() => el.remove(), 400);
+            }, 4000);
+        }
+
+        // Notifikasi pertama selepas 5 saat, kemudian setiap 8-15 saat
+        setTimeout(() => {
+            showNotification();
+            setInterval(() => {
+                showNotification();
+            }, 8000 + Math.random() * 7000);
+        }, 5000);
+
+
+        // ===== KIRAAN PENONTON LANGSUNG =====
+        function updateLiveCount() {
+            const el = document.getElementById('liveCount');
+            let count = parseInt(el.textContent);
+            const change = Math.random() > 0.5 ? 1 : -1;
+            count = Math.max(31, Math.min(67, count + change));
+            el.textContent = count;
+        }
+        setInterval(updateLiveCount, 3000 + Math.random() * 4000);
+
+
+        // ===== UNDUR MASA =====
+        const endTime = new Date().getTime() + (3 * 60 * 60 * 1000) + (47 * 60 * 1000) + (33 * 1000);
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            let diff = endTime - now;
+            if (diff <= 0) diff = 0;
+
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('cdHours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('cdMinutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('cdSeconds').textContent = String(seconds).padStart(2, '0');
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+
+        // ===== KIRAAN STOK BERKURANG =====
+        let stockCount = 23;
+        function updateStock() {
+            if (stockCount > 5) {
+                stockCount -= 1;
+                document.getElementById('stockCount').textContent = stockCount;
+            }
+        }
+        setInterval(updateStock, 25000 + Math.random() * 20000);
+
+
+        // ===== TUKAR FAQ =====
+        function toggleFaq(btn) {
+            const item = btn.closest('.faq-item');
+            const answer = item.querySelector('.faq-answer');
+            const icon = item.querySelector('.faq-icon');
+            const isOpen = answer.classList.contains('open');
+
+            document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+            document.querySelectorAll('.faq-icon').forEach(i => i.style.transform = 'rotate(0deg)');
+
+            if (!isOpen) {
+                answer.classList.add('open');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+
+        // ===== ANIMASI TATAL =====
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'animationIn 0.8s ease-out both';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('#plans .grid > div, #benefits .grid > div, #reviews .grid > div').forEach((el, i) => {
+            el.style.opacity = '0';
+            el.style.animationDelay = `${i * 0.1}s`;
+            observer.observe(el);
+        });
+
+
+        // ===== Popup trending (selepas 15 saat) =====
+        setTimeout(() => {
+            const popup = document.createElement('div');
+            popup.className = 'notif-in fixed bottom-24 sm:bottom-8 left-4 sm:left-8 z-50 bg-surface-300/95 border border-white/10 rounded-xl p-4 shadow-2xl max-w-xs';
+            popup.style.backdropFilter = 'blur(20px)';
+            popup.innerHTML = `
+                <button onclick="this.parentElement.remove()" class="absolute top-2 right-3 text-slate-500 hover:text-white text-lg">&times;</button>
+                <div class="flex items-center gap-2 mb-2">
+                    <iconify-icon icon="mdi:eye" class="text-wa text-lg"></iconify-icon>
+                    <span class="text-xs text-wa font-semibold">TRENDING SEKARANG</span>
+                </div>
+                <p class="text-sm text-white font-medium"><span class="text-wa">247 orang</span> telah tempah Pakej Premium dalam 24 jam terakhir</p>
+                <a href="https://wa.me/60123456789?text=Hi%2C%20saya%20nak%20Pakej%20Premium%20(RM49)" target="_blank"
+                   class="mt-3 block text-center bg-wa hover:bg-waDark text-black font-semibold text-xs py-2 rounded-full transition-colors">
+                    Dapatkan Anda Sekarang →
+                </a>
+            `;
+            document.body.appendChild(popup);
+
+            setTimeout(() => {
+                if (popup.parentElement) {
+                    popup.classList.remove('notif-in');
+                    popup.classList.add('notif-out');
+                    setTimeout(() => popup.remove(), 400);
+                }
+            }, 12000);
+        }, 15000);
+    </script>
+</body>
+</html>
