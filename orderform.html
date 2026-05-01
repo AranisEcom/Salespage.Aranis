@@ -121,12 +121,12 @@
         }
         .shake { animation: shake 0.4s ease; }
 
-        @keyframes successPop {
-            0% { transform: scale(0.8); opacity: 0; }
-            50% { transform: scale(1.05); }
+        @keyframes popIn {
+            0% { transform: scale(0.85); opacity: 0; }
+            50% { transform: scale(1.03); }
             100% { transform: scale(1); opacity: 1; }
         }
-        .success-pop { animation: successPop 0.5s ease-out both; }
+        .pop-in { animation: popIn 0.4s ease-out both; }
 
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
@@ -138,6 +138,20 @@
             backdrop-filter: blur(24px);
             background: rgba(10, 11, 14, 0.92);
             border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .msg-box {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            max-height: 260px;
+            overflow-y: auto;
+        }
+        .msg-box::-webkit-scrollbar { width: 4px; }
+        .msg-box::-webkit-scrollbar-thumb { background: #25262c; border-radius: 2px; }
+
+        .overlay-bg {
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(10px);
         }
     </style>
 </head>
@@ -176,7 +190,7 @@
         <!-- FORM -->
         <form id="orderForm" class="space-y-6" onsubmit="return false;">
 
-            <!-- ===== SECTION 1: MAKLUMAT ANDA ===== -->
+            <!-- ===== SECTION 1 ===== -->
             <div class="section-card rounded-2xl p-6 sm:p-8 anim-in anim-d1">
                 <div class="flex items-center gap-2.5 mb-6">
                     <div class="w-8 h-8 rounded-lg bg-tg/10 flex items-center justify-center">
@@ -187,7 +201,6 @@
                         <p class="text-[11px] text-slate-500">Untuk kami hubungi anda</p>
                     </div>
                 </div>
-
                 <div class="space-y-4">
                     <div class="grid sm:grid-cols-2 gap-4">
                         <div>
@@ -199,7 +212,6 @@
                             <input id="bisnes" type="text" class="form-input w-full rounded-xl px-4 py-3 text-sm" placeholder="e.g. Kedai Digital Ahmad">
                         </div>
                     </div>
-
                     <div class="grid sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-medium text-slate-400 mb-1.5">Nombor Telegram <span class="text-red-400">*</span></label>
@@ -216,7 +228,7 @@
                 </div>
             </div>
 
-            <!-- ===== SECTION 2: PRODUK ===== -->
+            <!-- ===== SECTION 2 ===== -->
             <div class="section-card rounded-2xl p-6 sm:p-8 anim-in anim-d2">
                 <div class="flex items-center gap-2.5 mb-6">
                     <div class="w-8 h-8 rounded-lg bg-tg/10 flex items-center justify-center">
@@ -227,7 +239,6 @@
                         <p class="text-[11px] text-slate-500">Lebih detail, lebih tepat hasilnya</p>
                     </div>
                 </div>
-
                 <div class="space-y-4">
                     <div>
                         <label class="block text-xs font-medium text-slate-400 mb-1.5">Jenis Produk / Perkhidmatan <span class="text-red-400">*</span></label>
@@ -244,18 +255,15 @@
                         </select>
                         <input id="jenisLain" type="text" class="form-input w-full rounded-xl px-4 py-3 text-sm mt-3 hidden" placeholder="Nyatakan jenis produk anda...">
                     </div>
-
                     <div>
                         <label class="block text-xs font-medium text-slate-400 mb-1.5">Terangkan produk anda <span class="text-red-400">*</span></label>
                         <textarea id="deskripsi" class="form-input w-full rounded-xl px-4 py-3 text-sm" rows="3" placeholder="Contoh: Kami jual kad SIM data tanpa had. Penghantaran 24 jam ke seluruh Malaysia. Harga mula RM29/bulan." required></textarea>
                         <p class="text-[10px] text-slate-600 mt-1">Apa yang anda jual? Apa masalah yang diselesaikan? Apa yang istimewa?</p>
                     </div>
-
                     <div>
                         <label class="block text-xs font-medium text-slate-400 mb-1.5">Harga / Pakej yang ditawarkan <span class="text-red-400">*</span></label>
                         <textarea id="harga" class="form-input w-full rounded-xl px-4 py-3 text-sm" rows="2" placeholder="Contoh:&#10;Pakej Asas: RM29/bulan — 30GB data&#10;Pakej Premium: RM49/bulan — Data tanpa had" required></textarea>
                     </div>
-
                     <div>
                         <label class="block text-xs font-medium text-slate-400 mb-1.5">Sasaran pelanggan utama</label>
                         <select id="sasaran" class="form-input form-select w-full rounded-xl px-4 py-3 text-sm">
@@ -268,7 +276,6 @@
                             <option value="Belia" class="bg-surface-200">Belia / Remaja</option>
                         </select>
                     </div>
-
                     <div>
                         <label class="block text-xs font-medium text-slate-400 mb-1.5">Laman web sedia ada (jika ada)</label>
                         <input id="webLama" type="url" class="form-input w-full rounded-xl px-4 py-3 text-sm" placeholder="https://... (kosongkan jika tiada)">
@@ -287,10 +294,7 @@
                         <p class="text-[11px] text-slate-500">Tandakan yang anda mahu</p>
                     </div>
                 </div>
-
                 <div class="space-y-5 mt-6">
-
-                    <!-- High-convert features -->
                     <div>
                         <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-3">High-Convert Features</p>
                         <div class="space-y-2.5">
@@ -341,8 +345,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Page sections -->
                     <div>
                         <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-3">Page Sections</p>
                         <div class="space-y-2.5">
@@ -385,8 +387,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Extras -->
                     <div>
                         <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-3">Extras</p>
                         <div class="space-y-2.5">
@@ -416,7 +416,7 @@
                 </div>
             </div>
 
-            <!-- ===== SECTION 4: REKA BENTUK ===== -->
+            <!-- ===== SECTION 4 ===== -->
             <div class="section-card rounded-2xl p-6 sm:p-8 anim-in anim-d4">
                 <div class="flex items-center gap-2.5 mb-6">
                     <div class="w-8 h-8 rounded-lg bg-tg/10 flex items-center justify-center">
@@ -427,7 +427,6 @@
                         <p class="text-[11px] text-slate-500">Pilih rupa laman web anda</p>
                     </div>
                 </div>
-
                 <div class="space-y-5">
                     <div>
                         <label class="block text-xs font-medium text-slate-400 mb-3">Gaya Reka Bentuk</label>
@@ -452,7 +451,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div>
                         <label class="block text-xs font-medium text-slate-400 mb-3">Warna Tema Utama</label>
                         <div class="grid grid-cols-5 sm:grid-cols-8 gap-2.5">
@@ -467,7 +465,6 @@
                         </div>
                         <input type="hidden" id="warnaTema" value="#0088cc">
                     </div>
-
                     <div>
                         <label class="block text-xs font-medium text-slate-400 mb-3">Bilangan Pakej / Kad Harga</label>
                         <div class="grid grid-cols-4 gap-2.5">
@@ -494,7 +491,7 @@
                 </div>
             </div>
 
-            <!-- ===== SECTION 5: NOTA TAMBAHAN ===== -->
+            <!-- ===== SECTION 5 ===== -->
             <div class="section-card rounded-2xl p-6 sm:p-8 anim-in anim-d5">
                 <div class="flex items-center gap-2.5 mb-6">
                     <div class="w-8 h-8 rounded-lg bg-tg/10 flex items-center justify-center">
@@ -505,7 +502,6 @@
                         <p class="text-[11px] text-slate-500">Apa-apa permintaan khas (optional)</p>
                     </div>
                 </div>
-
                 <textarea id="nota" class="form-input w-full rounded-xl px-4 py-3 text-sm" rows="3" placeholder="Contoh: Nak tambah bahagian video, integrasi Instagram, animasi khas, rujukan laman web yang anda suka..."></textarea>
             </div>
 
@@ -515,31 +511,75 @@
     <!-- STICKY SUBMIT BAR -->
     <div class="sticky-submit fixed bottom-0 left-0 right-0 z-50 py-4 px-6">
         <div class="max-w-2xl mx-auto flex items-center gap-3">
-            <button onclick="copySummary()" class="flex-shrink-0 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium text-sm px-4 py-3.5 rounded-full transition-all flex items-center gap-2" id="copyBtn">
+            <button onclick="copySummary()" class="flex-shrink-0 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium text-sm px-4 py-3.5 rounded-full transition-all flex items-center gap-2">
                 <iconify-icon icon="mdi:content-copy" class="text-base"></iconify-icon>
                 <span class="hidden sm:inline">Salin</span>
             </button>
-            <button onclick="submitForm()" class="flex-1 flex items-center justify-center gap-2 bg-[#0088cc] hover:bg-[#006699] text-white font-bold text-sm px-6 py-3.5 rounded-full transition-all hover:scale-[1.02] pulse-tg shadow-lg shadow-[#0088cc]/20">
+            <button onclick="submitForm()" id="submitBtn" class="flex-1 flex items-center justify-center gap-2 bg-[#0088cc] hover:bg-[#006699] text-white font-bold text-sm px-6 py-3.5 rounded-full transition-all hover:scale-[1.02] pulse-tg shadow-lg shadow-[#0088cc]/20">
                 <iconify-icon icon="mdi:telegram" class="text-xl"></iconify-icon>
                 Hantar Borang via Telegram
             </button>
         </div>
     </div>
 
-    <!-- SUCCESS OVERLAY -->
-    <div id="successOverlay" class="fixed inset-0 z-[200] bg-black/80 flex items-center justify-center p-6 hidden" style="backdrop-filter: blur(8px);">
-        <div class="success-pop bg-surface-300 border border-white/10 rounded-2xl p-8 sm:p-10 text-center max-w-md w-full">
-            <div class="w-20 h-20 rounded-full bg-tg/10 flex items-center justify-center mx-auto mb-5">
-                <iconify-icon icon="mdi:check-circle" class="text-tg text-5xl"></iconify-icon>
+    <!-- ========== FAIL OVERLAY ========== -->
+    <div id="failOverlay" class="fixed inset-0 z-[200] overlay-bg flex items-center justify-center p-4 hidden">
+        <div class="pop-in bg-surface-300 border border-white/10 rounded-2xl p-6 sm:p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <!-- Error icon -->
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center flex-shrink-0">
+                    <iconify-icon icon="mdi:alert-circle" class="text-red-400 text-2xl"></iconify-icon>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold">Telegram Tidak Dapat Dibuka</h3>
+                    <p class="text-xs text-slate-400">Pautan Telegram tidak berfungsi. Sila salin mesej di bawah dan hantar manual.</p>
+                </div>
             </div>
-            <h3 class="text-xl font-bold mb-2">Borang Dihantar!</h3>
-            <p class="text-sm text-slate-400 mb-6">Mesej ringkasan telah dibuka di Telegram anda. Sila hantar mesej tersebut ke <strong class="text-tg">Pixelcraft Aranis</strong> untuk mengesahkan tempahan.</p>
-            <a id="successTgLink" href="#" target="_blank"
-               class="inline-flex items-center gap-2 bg-[#0088cc] hover:bg-[#006699] text-white font-bold text-sm px-8 py-3.5 rounded-full transition-all hover:scale-105">
-                <iconify-icon icon="mdi:telegram" class="text-xl"></iconify-icon>
-                Buka Telegram
-            </a>
-            <button onclick="document.getElementById('successOverlay').classList.add('hidden')" class="block mx-auto mt-3 text-xs text-slate-500 hover:text-white transition-colors">Tutup</button>
+
+            <!-- Possible reasons -->
+            <div class="bg-red-500/5 border border-red-500/10 rounded-xl p-4 mb-4">
+                <p class="text-xs font-semibold text-red-400 mb-2">Sebab yang mungkin:</p>
+                <ul class="text-xs text-slate-400 space-y-1.5">
+                    <li class="flex items-start gap-2"><iconify-icon icon="mdi:close-circle" class="text-red-400/60 mt-0.5 flex-shrink-0 text-sm"></iconify-icon>Telegram tidak dipasang di peranti ini</li>
+                    <li class="flex items-start gap-2"><iconify-icon icon="mdi:close-circle" class="text-red-400/60 mt-0.5 flex-shrink-0 text-sm"></iconify-icon>Popup blocker menyekat pautan daripada terbuka</li>
+                    <li class="flex items-start gap-2"><iconify-icon icon="mdi:close-circle" class="text-red-400/60 mt-0.5 flex-shrink-0 text-sm"></iconify-icon>Membuka melalui Instagram / app lain yang menyekat pautan luaran</li>
+                </ul>
+            </div>
+
+            <!-- Message box -->
+            <div class="mb-4">
+                <div class="flex items-center justify-between mb-2">
+                    <p class="text-xs font-semibold text-slate-400">Mesej untuk dihantar:</p>
+                    <button onclick="copyFailMsg()" id="failCopyBtn" class="flex items-center gap-1 text-xs text-tg hover:text-white transition-colors font-medium">
+                        <iconify-icon icon="mdi:content-copy" class="text-sm"></iconify-icon>
+                        Salin Mesej
+                    </button>
+                </div>
+                <div id="failMsgBox" class="msg-box rounded-xl p-4 text-xs text-slate-300 leading-relaxed whitespace-pre-line font-mono"></div>
+            </div>
+
+            <!-- Instructions -->
+            <div class="bg-tg/5 border border-tg/10 rounded-xl p-4 mb-5">
+                <p class="text-xs font-semibold text-tg mb-2">Cara hantar manual:</p>
+                <ol class="text-xs text-slate-400 space-y-1.5 list-decimal list-inside">
+                    <li>Tekan <strong class="text-white">"Salin Mesej"</strong> di atas</li>
+                    <li>Buka <strong class="text-white">Telegram</strong></li>
+                    <li>Cari <strong class="text-tg">@PixelcraftAranis</strong> atau klik <a href="https://t.me/+601127412402" target="_blank" class="text-tg underline">pautan ini</a></li>
+                    <li><strong class="text-white">Tampal (paste)</strong> mesej dan hantar</li>
+                </ol>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex gap-3">
+                <button onclick="tryAgain()" class="flex-1 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium text-sm px-4 py-3 rounded-xl transition-all">
+                    <iconify-icon icon="mdi:refresh" class="text-base"></iconify-icon>
+                    Cuba Lagi
+                </button>
+                <button onclick="closeFail()" class="flex-1 flex items-center justify-center gap-2 bg-[#0088cc] hover:bg-[#006699] text-white font-bold text-sm px-4 py-3 rounded-xl transition-all">
+                    <iconify-icon icon="mdi:telegram" class="text-base"></iconify-icon>
+                    Buka Telegram
+                </button>
+            </div>
         </div>
     </div>
 
@@ -553,16 +593,16 @@
         let selectedColor = '#0088cc';
         let selectedStyle = 'gelap';
         let selectedCount = '3';
+        let lastBuiltMsg = '';
+        let openedWindow = null;
 
         function toggleCustom() {
-            const v = document.getElementById('jenisProduk').value;
-            document.getElementById('jenisLain').classList.toggle('hidden', v !== 'Lain-lain');
+            document.getElementById('jenisLain').classList.toggle('hidden', document.getElementById('jenisProduk').value !== 'Lain-lain');
         }
 
         function toggleCheck(el) {
             el.classList.toggle('selected');
-            const icon = el.querySelector('.choice-check-box iconify-icon');
-            icon.classList.toggle('hidden');
+            el.querySelector('.choice-check-box iconify-icon').classList.toggle('hidden');
         }
 
         function selectStyle(el) {
@@ -572,10 +612,7 @@
         }
 
         function pickColor(btn) {
-            document.querySelectorAll('.color-btn').forEach(b => {
-                b.classList.remove('active-color');
-                b.style.borderColor = 'transparent';
-            });
+            document.querySelectorAll('.color-btn').forEach(b => { b.classList.remove('active-color'); b.style.borderColor = 'transparent'; });
             btn.classList.add('active-color');
             btn.style.borderColor = 'rgba(255,255,255,0.5)';
             selectedColor = btn.dataset.color;
@@ -590,9 +627,7 @@
         }
 
         function getFeatures() {
-            const f = [];
-            document.querySelectorAll('.choice-card.selected[data-feature]').forEach(el => f.push(el.dataset.feature));
-            return f;
+            return [...document.querySelectorAll('.choice-card.selected[data-feature]')].map(el => el.dataset.feature);
         }
 
         const featureLabels = {
@@ -613,43 +648,32 @@
         };
 
         function buildMessage() {
-            const nama = document.getElementById('nama').value.trim();
-            const bisnes = document.getElementById('bisnes').value.trim();
-            const tg = document.getElementById('telegram').value.trim();
-            const emel = document.getElementById('emel').value.trim();
-            const jenis = document.getElementById('jenisProduk').value;
-            const jenisLain = document.getElementById('jenisLain').value.trim();
-            const desk = document.getElementById('deskripsi').value.trim();
-            const harga = document.getElementById('harga').value.trim();
-            const sasaran = document.getElementById('sasaran').value;
-            const webLama = document.getElementById('webLama').value.trim();
-            const nota = document.getElementById('nota').value.trim();
-            const features = getFeatures();
-
-            let jenisDisplay = jenis;
-            if (jenis === 'Lain-lain' && jenisLain) jenisDisplay = jenisLain;
-
+            const g = id => document.getElementById(id).value.trim();
+            const jenis = g('jenisProduk');
+            const jenisLain = g('jenisLain');
+            let jenisDisplay = (jenis === 'Lain-lain' && jenisLain) ? jenisLain : jenis;
             const styleMap = { gelap: 'Gelap (Premium)', cerah: 'Cerah (Clean)', campuran: 'Campuran (Modern)' };
+            const features = getFeatures();
 
             let msg = `🚀 *TEMPAHAN LANDING PAGE — Pixelcraft Aranis*
 ━━━━━━━━━━━━━━━━━━━━
 
 👤 *MAKLUMAT*
-Nama: ${nama}
-Bisnes: ${bisnes || '-'}
-Telegram: +60${tg}
-Emel: ${emel || '-'}
+Nama: ${g('nama')}
+Bisnes: ${g('bisnes') || '-'}
+Telegram: +60${g('telegram')}
+Emel: ${g('emel') || '-'}
 
 📦 *PRODUK / PERKHIDMATAN*
 Jenis: ${jenisDisplay}
-Sasaran: ${sasaran || '-'}
-Web sedia ada: ${webLama || '-'}
+Sasaran: ${g('sasaran') || '-'}
+Web sedia ada: ${g('webLama') || '-'}
 
 Deskripsi:
- ${desk}
+ ${g('deskripsi')}
 
 Harga / Pakej:
- ${harga}
+ ${g('harga')}
 
 🎨 *REKA BENTUK*
 Gaya: ${styleMap[selectedStyle] || selectedStyle}
@@ -659,33 +683,23 @@ Bil. pakej harga: ${selectedCount}
 ✅ *FEATURE (${features.length})*
  ${features.map(f => featureLabels[f] || f).join('\n')}
 
- ${nota ? `📝 *NOTA:* ${nota}` : ''}
+ ${g('nota') ? `📝 *NOTA:* ${g('nota')}` : ''}
 
 ━━━━━━━━━━━━━━━━━━━━
 _Dihantar melalui borang Pixelcraft Aranis_`;
 
+            lastBuiltMsg = msg;
             return msg;
         }
 
         function validate() {
             let ok = true;
-            const checks = [
-                { id: 'nama', min: 2 },
-                { id: 'telegram', min: 8 },
-                { id: 'jenisProduk', min: 1 },
-                { id: 'deskripsi', min: 10 },
-                { id: 'harga', min: 5 }
-            ];
-            checks.forEach(c => {
+            [{ id: 'nama', min: 2 }, { id: 'telegram', min: 8 }, { id: 'jenisProduk', min: 1 }, { id: 'deskripsi', min: 10 }, { id: 'harga', min: 5 }].forEach(c => {
                 const el = document.getElementById(c.id);
-                const val = el.value.trim();
-                if (val.length < c.min) {
+                if (el.value.trim().length < c.min) {
                     el.classList.add('shake');
                     el.style.borderColor = 'rgba(239,68,68,0.6)';
-                    setTimeout(() => {
-                        el.classList.remove('shake');
-                        el.style.borderColor = '';
-                    }, 600);
+                    setTimeout(() => { el.classList.remove('shake'); el.style.borderColor = ''; }, 600);
                     ok = false;
                 }
             });
@@ -699,15 +713,82 @@ _Dihantar melalui borang Pixelcraft Aranis_`;
             const encoded = encodeURIComponent(msg);
             const url = `https://t.me/share/url?url=&text=${encoded}`;
 
-            document.getElementById('successTgLink').href = url;
-            document.getElementById('successOverlay').classList.remove('hidden');
+            // Disable button
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<iconify-icon icon="mdi:loading" class="text-xl animate-spin"></iconify-icon> Membuka Telegram...';
 
-            window.open(url, '_blank');
+            // Try opening — detect if it actually opened
+            let didOpen = false;
+
+            try {
+                openedWindow = window.open(url, '_blank');
+
+                // Detection: if window is null or blocked
+                if (!openedWindow || openedWindow.closed || typeof openedWindow.closed === 'undefined') {
+                    didOpen = false;
+                } else {
+                    // Window opened — but might still be a blank tab if Telegram scheme failed
+                    // Check after a short delay
+                    setTimeout(() => {
+                        try {
+                            // If we can still access it and it didn't navigate away, it might have failed
+                            if (openedWindow && !openedWindow.closed && openedWindow.location.href === 'about:blank') {
+                                openedWindow.close();
+                                showFailOverlay();
+                            }
+                        } catch (e) {
+                            // Cross-origin means it navigated successfully to Telegram
+                            // Do nothing — success
+                        }
+                    }, 1500);
+                    didOpen = true;
+                }
+            } catch (e) {
+                didOpen = false;
+            }
+
+            if (!didOpen) {
+                // Failed to open at all — show fail overlay
+                setTimeout(() => showFailOverlay(), 300);
+            }
+
+            // Re-enable button after delay
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = '<iconify-icon icon="mdi:telegram" class="text-xl"></iconify-icon> Hantar Borang via Telegram';
+            }, 3000);
+        }
+
+        function showFailOverlay() {
+            document.getElementById('failMsgBox').textContent = lastBuiltMsg;
+            document.getElementById('failOverlay').classList.remove('hidden');
+        }
+
+        function closeFail() {
+            document.getElementById('failOverlay').classList.add('hidden');
+            // Open Telegram directly as fallback
+            window.open('https://t.me/+601127412402', '_blank');
+        }
+
+        function tryAgain() {
+            document.getElementById('failOverlay').classList.add('hidden');
+            submitForm();
+        }
+
+        function copyFailMsg() {
+            navigator.clipboard.writeText(lastBuiltMsg).then(() => {
+                const btn = document.getElementById('failCopyBtn');
+                btn.innerHTML = '<iconify-icon icon="mdi:check" class="text-sm text-green-400"></iconify-icon> <span class="text-green-400">Disalin!</span>';
+                setTimeout(() => {
+                    btn.innerHTML = '<iconify-icon icon="mdi:content-copy" class="text-sm"></iconify-icon> Salin Mesej';
+                }, 2000);
+            });
         }
 
         function copySummary() {
-            const msg = buildMessage();
-            navigator.clipboard.writeText(msg).then(() => {
+            buildMessage();
+            navigator.clipboard.writeText(lastBuiltMsg).then(() => {
                 const toast = document.getElementById('copyToast');
                 toast.classList.remove('opacity-0', '-translate-y-4');
                 toast.classList.add('opacity-100', 'translate-y-0');
