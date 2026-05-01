@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tempah Landing Page — Pixelcraft Aranis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 'inter': ['Inter', 'sans-serif'] },
+                    colors: {
+                        tg: '#0088cc',
+                        tgDark: '#006699',
+                        surface: { 50: '#0A0B0E', 100: '#0c0d10', 200: '#121317', 300: '#1a1b20', 400: '#25262c' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; }
+        body { background: #0A0B0E; color: #fff; }
+
+        @keyframes animationIn {
+            0% { opacity: 0; transform: translateY(30px); filter: blur(8px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0px); }
+        }
+        .anim-in { animation: animationIn 0.8s ease-out both; }
+        .anim-d1 { animation-delay: 0.1s; }
+        .anim-d2 { animation-delay: 0.2s; }
+        .anim-d3 { animation-delay: 0.3s; }
+        .anim-d4 { animation-delay: 0.4s; }
+        .anim-d5 { animation-delay: 0.5s; }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 136, 204, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(0, 136, 204, 0.6); }
+        }
+        .pulse-tg { animation: pulse-glow 2s ease-in-out infinite; }
+
+        .section-card {
+            background: linear-gradient(135deg, rgba(0,136,204,0.08), rgba(0,136,204,0.02));
+            border: 1px solid rgba(0,136,204,0.1);
+        }
+
+        .choice-card {
+            background: rgba(255,255,255,0.03);
+            border: 1.5px solid rgba(255,255,255,0.07);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .choice-card:hover {
+            border-color: rgba(0,136,204,0.3);
+            background: rgba(0,136,204,0.03);
+        }
+        .choice-card.selected {
+            border-color: rgba(0,136,204,0.5);
+            background: rgba(0,136,204,0.07);
+        }
+        .choice-card.selected .choice-check-box {
+            background: #0088cc;
+            border-color: #0088cc;
+        }
+        .choice-card.selected .choice-dot {
+            background: #0088cc;
+            box-shadow: 0 0 8px rgba(0,136,204,0.5);
+        }
+
+        .choice-check-box {
+            width: 20px; height: 20px;
+            border-radius: 6px;
+            border: 2px solid rgba(255,255,255,0.12);
+            transition: all 0.2s ease;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .choice-dot {
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.15);
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .form-input {
+            background: rgba(255,255,255,0.04);
+            border: 1.5px solid rgba(255,255,255,0.07);
+            color: #fff;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+        .form-input:focus {
+            border-color: rgba(0,136,204,0.5);
+            background: rgba(0,136,204,0.03);
+            box-shadow: 0 0 0 3px rgba(0,136,204,0.08);
+        }
+        .form-input::placeholder { color: rgba(255,255,255,0.18); }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath fill='%2394a3b8' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 40px;
+        }
+        textarea.form-input { resize: vertical; min-height: 80px; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0A0B0E; }
+        ::-webkit-scrollbar-thumb { background: #25262c; border-radius: 3px; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+        .shake { animation: shake 0.4s ease; }
+
+        @keyframes successPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .success-pop { animation: successPop 0.5s ease-out both; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .float-anim { animation: float 3s ease-in-out infinite; }
+
+        .sticky-submit {
+            backdrop-filter: blur(24px);
+            background: rgba(10, 11, 14, 0.92);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-28">
+
+    <!-- NAV -->
+    <nav class="sticky top-0 z-50 border-b border-white/5" style="backdrop-filter: blur(24px); background: rgba(10,11,14,0.85);">
+        <div class="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-tg flex items-center justify-center">
+                    <iconify-icon icon="mdi:pixel" class="text-white text-lg"></iconify-icon>
+                </div>
+                <div>
+                    <span class="font-bold text-sm tracking-tight">Pixelcraft<span class="text-tg"> Aranis</span></span>
+                    <p class="text-[10px] text-slate-600 -mt-0.5">Landing Page Builder</p>
+                </div>
+            </div>
+            <a href="https://t.me/+601127412402" target="_blank" class="flex items-center gap-1.5 text-xs text-slate-400 hover:text-tg transition-colors">
+                <iconify-icon icon="mdi:telegram" class="text-base"></iconify-icon>
+                <span class="hidden sm:inline">@PixelcraftAranis</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="max-w-2xl mx-auto px-6 pt-10">
+
+        <!-- HEADER -->
+        <div class="anim-in text-center mb-10">
+            <div class="w-16 h-16 rounded-2xl bg-tg/10 border border-tg/20 flex items-center justify-center mx-auto mb-5 float-anim">
+                <iconify-icon icon="mdi:web" class="text-tg text-3xl"></iconify-icon>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">Tempah Laman Web Landing Page</h1>
+            <p class="text-sm text-slate-400 max-w-md mx-auto">Isi borang di bawah. Ringkasan akan dihantar terus ke Telegram kami untuk diproses.</p>
+        </div>
+
+        <!-- FORM -->
+        <form id="orderForm" class="space-y-6" onsubmit="return false;">
+
+            <!-- ===== SECTION 1: MAKLUMAT ANDA ===== -->
+            <div class="section-card rounded-2xl p-6 sm:p-8 anim-in anim-d1">
+                <div class="flex items-center gap-2.5 mb-6">
+                    <div class="w-8 h-8 rounded-lg bg-tg/10 flex items-center justify-center">
+                        <iconify-icon icon="mdi:account" class="text-tg text-base"></iconify-icon>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold">Maklumat Anda</h2>
+                        <p class="text-[11px] text-slate-500">Untuk kami hubungi anda</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1.5">Nama Penuh <span class="text-red-400">*</span></label>
+                            <input id="nama" type="text" class="form-input w-full rounded-xl px-4 py-3 text-sm" placeholder="e.g. Ahmad Faizal" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1.5">Nama Bisnes</label>
+                            <input id="bisnes" type="text" class="form-input w-full rounded-xl px-4 py-3 text-sm" placeholder="e.g. Kedai Digital Ahmad">
+                        </div>
+                    </div>
+
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1.5">Nombor Telegram <span class="text-red-400">*</span></label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-500">+60</span>
+                                <input id="telegram" type="tel" class="form-input w-full rounded-xl pl-14 pr-4 py-3 text-sm" placeholder="11 2741 2402" maxlength="12" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1.5">Emel</label>
+                            <input id="emel" type="email" class="form-input w-full rounded-xl px-4 py-3 text-sm" placeholder="e.g. ahmad@email.com">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SECTION 2: PRODUK ===== -->
+            <div class="section-card rounded-2xl p-6 sm:p-8 anim-in anim-d2">
+                <div class="flex items-center gap-2.5 mb-6">
+                    <div class="w-8 h-8 rounded-lg bg-tg/10 flex items-center justify-center">
+                        <iconify-icon icon="mdi:store" class="text-tg text-base"></iconify-icon>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold">Produk / Perkhidmatan Anda</h2>
+                        <p class="text-[11px] text-slate-500">Lebih detail, lebih tepat hasilnya</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1.5">Jenis Produk / Perkhidmatan <span class="text-red-400">*</span></label>
+                        <select id="jenisProduk" class="form-input form-select w-full rounded-xl px-4 py-3 text-sm" onchange="toggleCustom()" required>
+                            <option value="" class="bg-surface-200">Pilih jenis</option>
+                            <option value="Produk Fizik" class="bg-surface-200">Produk Fizik (barang, makanan, pakaian)</option>
+                            <option value="Produk Digital" class="bg-surface-200">Produk Digital (e-book, kursus, template)</option>
+                            <option value="Perkhidmatan" class="bg-surface-200">Perkhidmatan (servis, konsultasi, agency)</option>
+                            <option value="Kad SIM / Telco" class="bg-surface-200">Kad SIM / Telekomunikasi</option>
+                            <option value="Makanan & Minuman" class="bg-surface-200">Makanan & Minuman (F&B)</option>
+                            <option value="Property" class="bg-surface-200">Property / Hartanah</option>
+                            <option value="Kesihatan & Kecantikan" class="bg-surface-200">Kesihatan & Kecantikan</option>
+                            <option value="Lain-lain" class="bg-surface-200">Lain-lain</option>
+                        </select>
+                        <input id="jenisLain" type="text" class="form-input w-full rounded-xl px-4 py-3 text-sm mt-3 hidden" placeholder="Nyatakan jenis produk anda...">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1.5">Terangkan produk anda <span class="text-red-400">*</span></label>
+                        <textarea id="deskripsi" class="form-input w-full rounded-xl px-4 py-3 text-sm" rows="3" placeholder="Contoh: Kami jual kad SIM data tanpa had. Penghantaran 24 jam ke seluruh Malaysia. Harga mula RM29/bulan." required></textarea>
+                        <p class="text-[10px] text-slate-600 mt-1">Apa yang anda jual? Apa masalah yang diselesaikan? Apa yang istimewa?</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1.5">Harga / Pakej yang ditawarkan <span class="text-red-400">*</span></label>
+                        <textarea id="harga" class="form-input w-full rounded-xl px-4 py-3 text-sm" rows="2" placeholder="Contoh:&#10;Pakej Asas: RM29/bulan — 30GB data&#10;Pakej Premium: RM49/bulan — Data tanpa had" required></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1.5">Sasaran pelanggan utama</label>
+                        <select id="sasaran" class="form-input form-select w-full rounded-xl px-4 py-3 text-sm">
+                            <option value="" class="bg-surface-200">Pilih (optional)</option>
+                            <option value="Umum" class="bg-surface-200">Umum (semua orang)</option>
+                            <option value="Pelajar" class="bg-surface-200">Pelajar / Mahasiswa</option>
+                            <option value="Pekerja" class="bg-surface-200">Pekerja / Professional</option>
+                            <option value="Keluarga" class="bg-surface-200">Ibu bapa / Keluarga</option>
+                            <option value="Perniagaan" class="bg-surface-200">Perniagaan / B2B</option>
+                            <option value="Belia" class="bg-surface-200">Belia / Remaja</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1.5">Laman web sedia ada (jika ada)</label>
+                        <input id="webLama" type="url" class="form-input w-full rounded-xl px-4 py-3 text-sm" placeholder="https://... (kosongkan jika tiada)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SECTION 3: FEATURE ===== -->
+            <div class="section-card rounded-2xl p-6 sm:p-8 anim-in anim-d3">
+                <div class="flex items-center gap-2.5 mb-2">
+                    <div class="w-8 h-8 rounded-lg bg-tg/10 flex items-center justify-center">
+                        <iconify-icon icon="mdi:puzzle" class="text-tg text-base"></iconify-icon>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold">Feature Yang Diperlukan</h2>
+                        <p class="text-[11px] text-slate-500">Tandakan yang anda mahu</p>
+                    </div>
+                </div>
+
+                <div class="space-y-5 mt-6">
+
+                    <!-- High-convert features -->
+                    <div>
+                        <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-3">Penukaran Tinggi (High-Convert)</p>
+                        <div class="space-y-2.5">
+                            <div class="choice-card selected rounded-xl p-4 flex items-center gap-3" data-feature="notif-palsu" onclick="toggleCheck(this)">
+                                <div class="choice-check-box"><iconify-icon icon="mdi:check" class="text-white text-xs"></iconify-icon></div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium">Notifikasi Pembelian Palsu</p>
+                                    <p class="text-[11px] text-slate-500">Popup "Ahmad dari KL baru tempah" — bina trust & urgency</p>
+                                </div>
+                                <span class="text-[10px] bg-tg/10 text-tg px-2 py-0.5 rounded-full font-medium flex-shrink-0">Popular</span>
+                            </div>
+                            <div class="choice-card selected rounded-xl p-4 flex items-center gap-3" data-feature="undur-masa" onclick="toggleCheck(this)">
+                                <div class="choice-check-box"><iconify-icon icon="mdi:check" class="text-white text-xs"></iconify-icon></div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium">Undur Masa Kesegeraan</p>
+                                    <p class="text-[11px] text-slate-500">Countdown timer "Jualan tamat dalam 2 jam 47 minit"</p>
+                                </div>
+                                <span class="text-[10px] bg-tg/10 text-tg px-2 py-0.5 rounded-full font-medium flex-shrink-0">Popular</span>
+                            </div>
+                            <div class="choice-card selected rounded-xl p-4 flex items-center gap-3" data-feature="cta-telegram" onclick="toggleCheck(this)">
+                                <div class="choice-check-box"><iconify-icon icon="mdi:check" class="text-white text-xs"></iconify-icon></div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium">Butang CTA Terus ke Telegram</p>
+                                    <p class="text-[11px] text-slate-500">Semua butang order → buka Telegram dengan mesej auto</p>
+                                </div>
+                                <span class="text-[10px] bg-tg/10 text-tg px-2 py-0.5 rounded-full font-medium flex-shrink-0">Wajib</span>
+                            </div>
+                            <div class="choice-card selected rounded-xl p-4 flex items-center gap-3" data-feature="stok-terhad" onclick="toggleCheck(this)">
+                                <div class="choice-check-box"><iconify-icon icon="mdi:check" class="text-white text-xs"></iconify-icon></div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium">Kiraan Stok Berkurang</p>
+                                    <p class="text-[11px] text-slate-500">"Hanya tinggal 23 unit" — nombor berkurang perlahan</p>
+                                </div>
+                            </div>
+                            <div class="choice-card selected rounded-xl p-4 flex items-center gap-3" data-feature="penonton-live" onclick="toggleCheck(this)">
+                                <div class="choice-check-box"><iconify-icon icon="mdi:check" class="text-white text-xs"></iconify-icon></div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium">Penonton Secara Langsung</p>
+                                    <p class="text-[11px] text-slate-500">"47 orang sedang lihat halaman ini"</p>
+                                </div>
+                            </div>
+                            <div class="choice-card rounded-xl p-4 flex items-center gap-3" data-feature="popup-trending" onclick="toggleCheck(this)">
+                                <div class="choice-check-box"><iconify-icon icon="mdi:check" class="text-white text-xs hidden"></iconify-icon></div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium">Popup "Trending Sekarang"</p>
+                                    <p class="text-[11px] text-slate-500">"247 orang tempah dalam 24 jam terakhir"</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Page sections -->
+                    <div>
+                        <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-3">Bahagian Laman Web</p>
+                        <div class="space-y-2.5">
+                            <div class="choice-card selected rounded-xl p-4 flex items-center gap-3" data-feature="hero" onclick="toggleCheck(this)">
+                                <div class="choice-check-box"><iconify-icon icon="mdi:check" class="text-white text-xs"></iconify-icon></div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium">Bahagian Hero (Header Utama)</p>
+                                    <p class="text-[11px] text-slate-500">Tajuk besar + sub-tajuk + butang CTA + imej</p>
+                                </div>
+                                <span class="text-[10px] bg-tg/10 text-tg px-2 py-0.5 rounded-full font-medium flex-shrink-0">Wajib</span>
+                            </div>
+                            <div class="choice-card selected rounded-xl p-4 flex items-center gap-3" data-feature="pakej-harga" onclick="toggleCheck(this)">
+                                <div class="choice-check-box"><iconify-icon icon="mdi:check" class="text-white text-xs"></iconify-icon></div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium">Kad Pakej / Harga</p>
+                                    <p class="text-[11px] text-slate-500">Paparan pakej dengan harga coret & badge "Popular"</p>
+                                </div>
+                                <span class="text-[10px] bg-tg/10 text-tg px-2 py-0.5 rounded-full font-medium flex-shrink-0">Wajib</span>
+                            </div>
+                            <div class="choice-card rounded-xl p-4 flex items-center gap-3" data-feature="perbandingan" onclick="toggleCheck(this)">
+                                <div class="choice-check-box"><iconify-icon icon="mdi:check" class="text-white text-xs hidden"></iconify-icon></div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium">Jadual Perbandingan</p>
+                                    <p class="text-[11px] text-slate-500">Anda vs pesaing — tunjukkan kelebihan</p>
+                                </div>
+                            </div>
+                            <div class="choice-card rounded-xl p-4 flex items-center gap-3" data-feature="cara-order" onclick="toggleCheck(this)">
+                                <div class="choice-check-box"><iconify-icon icon="mdi:check" class="text-white text-xs hidden"></iconify-icon></div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium">Cara Penggunaan (3 Langkah)</p>
+                                    <p class="text-[11px] text-slate-500">"Hantar mesej → Bayar → Terima"</p>
+                                </div>
+                            </div>
+                            <div class="choice-card rounded-xl p-4 flex items-center gap-3" data-feature="galeri" onclick="toggleCheck(this)">
+                                <div class="choice-check-box"><iconify-icon icon="mdi:check" class="text-white text-xs hidden"></iconify-icon></div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium">Galeri Imej / Produk</p>
+                                    <p class="text-[11px] text-slate-500">Paparan gambar produk berkaitan</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Extras -->
+                    <div>
+                        <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-3">Tambahan</p>
+                        <div class="space-y-2.5">
+                            <div class="choice-card rounded-xl p-4 flex items-center gap-3" data-feature="marquee" onclick="toggleCheck(this)">
+                                <div class="choice-check-box"><iconify-icon icon="mdi:check" class="text-white text-xs hidden"></iconify-icon></div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium">Teks Berjalan (Marquee) di Atas</p>
+                                    <p class="text-[11px] text-slate-500">Bar mesej promosi bergerak di bahagian atas</p>
+                                </div>
+                            </div>
+                            <div class="choice-card rounded-xl p-4 flex items-center gap-3" data-feature="sticky-mobile" onclick="toggleCheck(this)">
+                                <div class="choice-check-box"><iconify-icon icon="mdi:check" class="text-white text-xs hidden"></iconify-icon></div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium">Bar Telegram Melekat (Mobile)</p>
+                                    <p class="text-[11px] text-slate-500">Butang order sentiasa kelihatan di bawah skrin telefon</p>
+                                </div>
+                            </div>
+                            <div class="choice-card rounded-xl p-4 flex items-center gap-3" data-feature="floating-tg" onclick="toggleCheck(this)">
+                                <div class="choice-check-box"><iconify-icon icon="mdi:check" class="text-white text-xs hidden"></iconify-icon></div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium">Butang Telegram Terapung (Desktop)</p>
+                                    <p class="text-[11px] text-slate-500">Butang bulat terapung di penjuru skrin</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SECTION 4: REKA BENTUK ===== -->
+            <div class="section-card rounded-2xl p-6 sm:p-8 anim-in anim-d4">
+                <div class="flex items-center gap-2.5 mb-6">
+                    <div class="w-8 h-8 rounded-lg bg-tg/10 flex items-center justify-center">
+                        <iconify-icon icon="mdi:palette" class="text-tg text-base"></iconify-icon>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold">Gaya & Warna</h2>
+                        <p class="text-[11px] text-slate-500">Pilih rupa laman web anda</p>
+                    </div>
+                </div>
+
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-3">Gaya Reka Bentuk</label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="choice-card selected rounded-xl p-4 text-center" data-style="gelap" onclick="selectStyle(this)">
+                                <div class="choice-dot mx-auto mb-2"></div>
+                                <iconify-icon icon="mdi:weather-night" class="text-2xl text-slate-300 mb-1"></iconify-icon>
+                                <p class="text-xs font-medium">Gelap</p>
+                                <p class="text-[10px] text-slate-600">Premium</p>
+                            </div>
+                            <div class="choice-card rounded-xl p-4 text-center" data-style="cerah" onclick="selectStyle(this)">
+                                <div class="choice-dot mx-auto mb-2"></div>
+                                <iconify-icon icon="mdi:white-balance-sunny" class="text-2xl text-slate-300 mb-1"></iconify-icon>
+                                <p class="text-xs font-medium">Cerah</p>
+                                <p class="text-[10px] text-slate-600">Clean</p>
+                            </div>
+                            <div class="choice-card rounded-xl p-4 text-center" data-style="campuran" onclick="selectStyle(this)">
+                                <div class="choice-dot mx-auto mb-2"></div>
+                                <iconify-icon icon="mdi:contrast-circle" class="text-2xl text-slate-300 mb-1"></iconify-icon>
+                                <p class="text-xs font-medium">Campuran</p>
+                                <p class="text-[10px] text-slate-600">Modern</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-3">Warna Tema Utama</label>
+                        <div class="grid grid-cols-5 sm:grid-cols-8 gap-2.5">
+                            <button type="button" class="w-10 h-10 rounded-xl border-2 border-white/40 hover:scale-110 transition-all color-btn active-color" style="background:#0088cc;" data-color="#0088cc" onclick="pickColor(this)"></button>
+                            <button type="button" class="w-10 h-10 rounded-xl border-2 border-transparent hover:scale-110 transition-all color-btn" style="background:#25D366;" data-color="#25D366" onclick="pickColor(this)"></button>
+                            <button type="button" class="w-10 h-10 rounded-xl border-2 border-transparent hover:scale-110 transition-all color-btn" style="background:#3B82F6;" data-color="#3B82F6" onclick="pickColor(this)"></button>
+                            <button type="button" class="w-10 h-10 rounded-xl border-2 border-transparent hover:scale-110 transition-all color-btn" style="background:#F59E0B;" data-color="#F59E0B" onclick="pickColor(this)"></button>
+                            <button type="button" class="w-10 h-10 rounded-xl border-2 border-transparent hover:scale-110 transition-all color-btn" style="background:#EF4444;" data-color="#EF4444" onclick="pickColor(this)"></button>
+                            <button type="button" class="w-10 h-10 rounded-xl border-2 border-transparent hover:scale-110 transition-all color-btn" style="background:#8B5CF6;" data-color="#8B5CF6" onclick="pickColor(this)"></button>
+                            <button type="button" class="w-10 h-10 rounded-xl border-2 border-transparent hover:scale-110 transition-all color-btn" style="background:#EC4899;" data-color="#EC4899" onclick="pickColor(this)"></button>
+                            <button type="button" class="w-10 h-10 rounded-xl border-2 border-transparent hover:scale-110 transition-all color-btn" style="background:#F97316;" data-color="#F97316" onclick="pickColor(this)"></button>
+                        </div>
+                        <input type="hidden" id="warnaTema" value="#0088cc">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-3">Bilangan Pakej / Kad Harga</label>
+                        <div class="grid grid-cols-4 gap-2.5">
+                            <div class="choice-card rounded-xl p-3 text-center" data-count="2" onclick="selectCount(this)">
+                                <div class="choice-dot mx-auto mb-1.5"></div>
+                                <p class="text-sm font-bold">2</p>
+                            </div>
+                            <div class="choice-card selected rounded-xl p-3 text-center" data-count="3" onclick="selectCount(this)">
+                                <div class="choice-dot mx-auto mb-1.5"></div>
+                                <p class="text-sm font-bold">3</p>
+                                <p class="text-[9px] text-slate-500">Disyorkan</p>
+                            </div>
+                            <div class="choice-card rounded-xl p-3 text-center" data-count="4" onclick="selectCount(this)">
+                                <div class="choice-dot mx-auto mb-1.5"></div>
+                                <p class="text-sm font-bold">4</p>
+                            </div>
+                            <div class="choice-card rounded-xl p-3 text-center" data-count="5" onclick="selectCount(this)">
+                                <div class="choice-dot mx-auto mb-1.5"></div>
+                                <p class="text-sm font-bold">5</p>
+                            </div>
+                        </div>
+                        <input type="hidden" id="bilPakej" value="3">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SECTION 5: NOTA TAMBAHAN ===== -->
+            <div class="section-card rounded-2xl p-6 sm:p-8 anim-in anim-d5">
+                <div class="flex items-center gap-2.5 mb-6">
+                    <div class="w-8 h-8 rounded-lg bg-tg/10 flex items-center justify-center">
+                        <iconify-icon icon="mdi:note-edit" class="text-tg text-base"></iconify-icon>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold">Nota Tambahan</h2>
+                        <p class="text-[11px] text-slate-500">Apa-apa permintaan khas (optional)</p>
+                    </div>
+                </div>
+
+                <textarea id="nota" class="form-input w-full rounded-xl px-4 py-3 text-sm" rows="3" placeholder="Contoh: Nak tambah bahagian video, integrasi Instagram, animasi khas, rujukan laman web yang anda suka..."></textarea>
+            </div>
+
+        </form>
+    </main>
+
+    <!-- STICKY SUBMIT BAR -->
+    <div class="sticky-submit fixed bottom-0 left-0 right-0 z-50 py-4 px-6">
+        <div class="max-w-2xl mx-auto flex items-center gap-3">
+            <button onclick="copySummary()" class="flex-shrink-0 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium text-sm px-4 py-3.5 rounded-full transition-all flex items-center gap-2" id="copyBtn">
+                <iconify-icon icon="mdi:content-copy" class="text-base"></iconify-icon>
+                <span class="hidden sm:inline">Salin</span>
+            </button>
+            <button onclick="submitForm()" class="flex-1 flex items-center justify-center gap-2 bg-[#0088cc] hover:bg-[#006699] text-white font-bold text-sm px-6 py-3.5 rounded-full transition-all hover:scale-[1.02] pulse-tg shadow-lg shadow-[#0088cc]/20">
+                <iconify-icon icon="mdi:telegram" class="text-xl"></iconify-icon>
+                Hantar Borang via Telegram
+            </button>
+        </div>
+    </div>
+
+    <!-- SUCCESS OVERLAY -->
+    <div id="successOverlay" class="fixed inset-0 z-[200] bg-black/80 flex items-center justify-center p-6 hidden" style="backdrop-filter: blur(8px);">
+        <div class="success-pop bg-surface-300 border border-white/10 rounded-2xl p-8 sm:p-10 text-center max-w-md w-full">
+            <div class="w-20 h-20 rounded-full bg-tg/10 flex items-center justify-center mx-auto mb-5">
+                <iconify-icon icon="mdi:check-circle" class="text-tg text-5xl"></iconify-icon>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Borang Dihantar!</h3>
+            <p class="text-sm text-slate-400 mb-6">Mesej ringkasan telah dibuka di Telegram anda. Sila hantar mesej tersebut ke <strong class="text-tg">Pixelcraft Aranis</strong> untuk mengesahkan tempahan.</p>
+            <a id="successTgLink" href="#" target="_blank"
+               class="inline-flex items-center gap-2 bg-[#0088cc] hover:bg-[#006699] text-white font-bold text-sm px-8 py-3.5 rounded-full transition-all hover:scale-105">
+                <iconify-icon icon="mdi:telegram" class="text-xl"></iconify-icon>
+                Buka Telegram
+            </a>
+            <button onclick="document.getElementById('successOverlay').classList.add('hidden')" class="block mx-auto mt-3 text-xs text-slate-500 hover:text-white transition-colors">Tutup</button>
+        </div>
+    </div>
+
+    <!-- COPY TOAST -->
+    <div id="copyToast" class="fixed top-20 left-1/2 -translate-x-1/2 z-[300] bg-tg text-white text-sm font-medium px-5 py-2.5 rounded-full shadow-lg transition-all duration-300 opacity-0 -translate-y-4 pointer-events-none">
+        <iconify-icon icon="mdi:check" class="mr-1"></iconify-icon> Disalin!
+    </div>
+
+
+    <script>
+        let selectedColor = '#0088cc';
+        let selectedStyle = 'gelap';
+        let selectedCount = '3';
+
+        // Toggle custom product field
+        function toggleCustom() {
+            const v = document.getElementById('jenisProduk').value;
+            document.getElementById('jenisLain').classList.toggle('hidden', v !== 'Lain-lain');
+        }
+
+        // Checkbox toggle
+        function toggleCheck(el) {
+            el.classList.toggle('selected');
+            const icon = el.querySelector('.choice-check-box iconify-icon');
+            icon.classList.toggle('hidden');
+        }
+
+        // Style radio
+        function selectStyle(el) {
+            el.parentElement.querySelectorAll('.choice-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedStyle = el.dataset.style;
+        }
+
+        // Color pick
+        function pickColor(btn) {
+            document.querySelectorAll('.color-btn').forEach(b => {
+                b.classList.remove('active-color');
+                b.style.borderColor = 'transparent';
+            });
+            btn.classList.add('active-color');
+            btn.style.borderColor = 'rgba(255,255,255,0.5)';
+            selectedColor = btn.dataset.color;
+            document.getElementById('warnaTema').value = selectedColor;
+        }
+
+        // Count radio
+        function selectCount(el) {
+            el.parentElement.querySelectorAll('.choice-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedCount = el.dataset.count;
+            document.getElementById('bilPakej').value = selectedCount;
+        }
+
+        // Get selected features
+        function getFeatures() {
+            const f = [];
+            document.querySelectorAll('.choice-card.selected[data-feature]').forEach(el => f.push(el.dataset.feature));
+            return f;
+        }
+
+        const featureLabels = {
+            'notif-palsu':    '🔔 Notifikasi Pembelian Palsu',
+            'undur-masa':     '⏰ Undur Masa Kesegeraan',
+            'cta-telegram':   '💬 Butang CTA Telegram',
+            'stok-terhad':    '📦 Kiraan Stok Berkurang',
+            'penonton-live':  '👁️ Penonton Secara Langsung',
+            'popup-trending': '🔥 Popup Trending',
+            'hero':           '🎬 Bahagian Hero',
+            'pakej-harga':    '💰 Kad Pakej / Harga',
+            'perbandingan':   '📊 Jadual Perbandingan',
+            'cara-order':     '📋 Cara Penggunaan (3 Langkah)',
+            'galeri':         '🖼️ Galeri Imej / Produk',
+            'marquee':        '📢 Teks Berjalan (Marquee)',
+            'sticky-mobile':  '📱 Bar Telegram Melekat (Mobile)',
+            'floating-tg':    '🟢 Butang Telegram Terapung (Desktop)'
+        };
+
+        // Build message
+        function buildMessage() {
+            const nama = document.getElementById('nama').value.trim();
+            const bisnes = document.getElementById('bisnes').value.trim();
+            const tg = document.getElementById('telegram').value.trim();
+            const emel = document.getElementById('emel').value.trim();
+            const jenis = document.getElementById('jenisProduk').value;
+            const jenisLain = document.getElementById('jenisLain').value.trim();
+            const desk = document.getElementById('deskripsi').value.trim();
+            const harga = document.getElementById('harga').value.trim();
+            const sasaran = document.getElementById('sasaran').value;
+            const webLama = document.getElementById('webLama').value.trim();
+            const nota = document.getElementById('nota').value.trim();
+            const features = getFeatures();
+
+            let jenisDisplay = jenis;
+            if (jenis === 'Lain-lain' && jenisLain) jenisDisplay = jenisLain;
+
+            const styleMap = { gelap: 'Gelap (Premium)', cerah: 'Cerah (Clean)', campuran: 'Campuran (Modern)' };
+
+            let msg = `🚀 *TEMPAHAN LANDING PAGE — Pixelcraft Aranis*
+━━━━━━━━━━━━━━━━━━━━
+
+👤 *MAKLUMAT*
+Nama: ${nama}
+Bisnes: ${bisnes || '-'}
+Telegram: +60${tg}
+Emel: ${emel || '-'}
+
+📦 *PRODUK / PERKHIDMATAN*
+Jenis: ${jenisDisplay}
+Sasaran: ${sasaran || '-'}
+Web sedia ada: ${webLama || '-'}
+
+Deskripsi:
+ ${desk}
+
+Harga / Pakej:
+ ${harga}
+
+🎨 *REKA BENTUK*
+Gaya: ${styleMap[selectedStyle] || selectedStyle}
+Warna: ${selectedColor}
+Bil. pakej harga: ${selectedCount}
+
+✅ *FEATURE (${features.length})*
+ ${features.map(f => featureLabels[f] || f).join('\n')}
+
+ ${nota ? `📝 *NOTA:* ${nota}` : ''}
+
+━━━━━━━━━━━━━━━━━━━━
+_Dihantar melalui borang Pixelcraft Aranis_`;
+
+            return msg;
+        }
+
+        // Validate
+        function validate() {
+            let ok = true;
+            const checks = [
+                { id: 'nama', min: 2 },
+                { id: 'telegram', min: 8 },
+                { id: 'jenisProduk', min: 1 },
+                { id: 'deskripsi', min: 10 },
+                { id: 'harga', min: 5 }
+            ];
+            checks.forEach(c => {
+                const el = document.getElementById(c.id);
+                const val = el.value.trim();
+                if (val.length < c.min) {
+                    el.classList.add('shake');
+                    el.style.borderColor = 'rgba(239,68,68,0.6)';
+                    setTimeout(() => {
+                        el.classList.remove('shake');
+                        el.style.borderColor = '';
+                    }, 600);
+                    ok = false;
+                }
+            });
+            return ok;
+        }
+
+        // Submit
+        function submitForm() {
+            if (!validate()) return;
+
+            const msg = buildMessage();
+            const encoded = encodeURIComponent(msg);
+            const url = `https://t.me/share/url?url=&text=${encoded}`;
+
+            document.getElementById('successTgLink').href = url;
+            document.getElementById('successOverlay').classList.remove('hidden');
+
+            window.open(url, '_blank');
+        }
+
+        // Copy
+        function copySummary() {
+            const msg = buildMessage();
+            navigator.clipboard.writeText(msg).then(() => {
+                const toast = document.getElementById('copyToast');
+                toast.classList.remove('opacity-0', '-translate-y-4');
+                toast.classList.add('opacity-100', 'translate-y-0');
+                setTimeout(() => {
+                    toast.classList.add('opacity-0', '-translate-y-4');
+                    toast.classList.remove('opacity-100', 'translate-y-0');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
