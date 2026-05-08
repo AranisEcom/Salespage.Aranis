@@ -1,1120 +1,457 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARANIS ECOM HUB — We Build Stores That Sell</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            celadon: '#6366F1',
-            darkSurface: '#2b2b2b',
-            lightNeutral: '#f3f1ee',
-            bgBlack: '#0b0b0b',
-          },
-          fontFamily: {
-            poppins: ['Poppins', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    ::selection { background: #6366F1; color: #0b0b0b; }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Poppins', sans-serif; background: #0b0b0b; color: #f3f1ee; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aranis — Ecom Design Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root{--bg:#050508;--text:#f0f0f0;--accent:#5046e5;--muted:#666;--cyan:#06b6d4;--magenta:#7c3aed}
+  html{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);scroll-behavior:auto}
+  body{overflow-x:hidden}
 
-    @keyframes fadeSlideIn {
-      0% { opacity: 0; transform: translateY(30px); filter: blur(8px); }
-      100% { opacity: 1; transform: translateY(0); filter: blur(0); }
-    }
-    .anim-in { animation: fadeSlideIn 0.8s ease-out both; }
-    .anim-d1 { animation-delay: 0s; }
-    .anim-d2 { animation-delay: 0.2s; }
-    .anim-d3 { animation-delay: 0.4s; }
-    .anim-d4 { animation-delay: 0.6s; }
-    .anim-d5 { animation-delay: 0.8s; }
-    .anim-d6 { animation-delay: 1s; }
+  /* Cursor */
+  .cursor-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;mix-blend-mode:difference}
+  .cursor-ring{width:40px;height:40px;border:1.5px solid var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transition:width .3s,height .3s;mix-blend-mode:difference}
+  .cursor-ring.hovering{width:64px;height:64px;background:rgba(80,70,229,.06)}
 
-    @keyframes blob {
-      0% { transform: translate(0,0) scale(1); }
-      33% { transform: translate(30px,-50px) scale(1.1); }
-      66% { transform: translate(-20px,20px) scale(0.9); }
-      100% { transform: translate(0,0) scale(1); }
-    }
-    .blob { animation: blob 10s infinite cubic-bezier(0.4,0,0.2,1); mix-blend-mode: screen; }
+  #webgl-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1}
+  .scroll-content{position:relative;z-index:2;pointer-events:none}
+  .scroll-content a,.scroll-content button,.scroll-content [data-clickable]{pointer-events:auto}
 
-    @keyframes beam-drop {
-      0% { transform: translateY(-100%); }
-      100% { transform: translateY(100%); }
-    }
-    @keyframes beam-slide {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
+  /* Nav */
+  .navbar{position:fixed;top:0;left:0;width:100%;padding:24px 48px;display:flex;justify-content:space-between;align-items:center;z-index:100;mix-blend-mode:difference}
+  .logo{font-weight:900;font-size:22px;letter-spacing:-1px}
+  .logo span{color:var(--magenta)}
+  .nav-cta{padding:10px 24px;border:1px solid rgba(255,255,255,.2);border-radius:100px;color:var(--text);text-decoration:none;font-size:13px;font-weight:600;letter-spacing:.5px;transition:all .3s}
+  .nav-cta:hover{background:var(--accent);color:var(--bg);border-color:var(--accent)}
 
-    /* 3D Logo Entrance */
-    @keyframes logo3DEntrance {
-      0% {
-        opacity: 0;
-        transform: perspective(1000px) rotateY(-120deg) rotateX(20deg) scale(0.15) translateZ(-150px);
-        filter: blur(25px) brightness(2.5);
-      }
-      25% { opacity: 0.6; filter: blur(12px) brightness(2); }
-      55% {
-        transform: perspective(1000px) rotateY(18deg) rotateX(-8deg) scale(1.1) translateZ(30px);
-        filter: blur(2px) brightness(1.2);
-      }
-      75% {
-        transform: perspective(1000px) rotateY(-8deg) rotateX(3deg) scale(0.96) translateZ(-8px);
-        filter: blur(0) brightness(1);
-      }
-      100% {
-        opacity: 1;
-        transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1) translateZ(0);
-        filter: blur(0) brightness(1);
-      }
-    }
-    @keyframes portalRing {
-      0% { transform: scale(0.2) rotateX(75deg); opacity: 0; border-color: rgba(99,102,241,0); box-shadow: 0 0 0 0 rgba(99,102,241,0); }
-      25% { opacity: 1; border-color: rgba(99,102,241,0.6); box-shadow: 0 0 40px 10px rgba(99,102,241,0.15); }
-      100% { transform: scale(3) rotateX(75deg); opacity: 0; border-color: rgba(139,92,246,0); box-shadow: 0 0 0 0 rgba(139,92,246,0); }
-    }
-    @keyframes portalRing2 {
-      0% { transform: scale(0.15) rotateX(75deg) rotateZ(45deg); opacity: 0; border-color: rgba(139,92,246,0); }
-      30% { opacity: 0.8; border-color: rgba(139,92,246,0.5); }
-      100% { transform: scale(2.5) rotateX(75deg) rotateZ(45deg); opacity: 0; border-color: rgba(99,102,241,0); }
-    }
-    @keyframes glowPulse {
-      0% { transform: scale(0); opacity: 0; }
-      35% { opacity: 0.7; }
-      100% { transform: scale(2.5); opacity: 0; }
-    }
-    @keyframes sparkleOut {
-      0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-      100% { transform: translate(calc(var(--tx) - 50%), calc(var(--ty) - 50%)) scale(0); opacity: 0; }
-    }
-    @keyframes logoFloat {
-      0%, 100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
-      25% { transform: translateY(-8px) rotateX(1.5deg) rotateY(2deg); }
-      75% { transform: translateY(4px) rotateX(-1deg) rotateY(-1.5deg); }
-    }
-    @keyframes fadeIn { to { opacity: 1; } }
+  /* Indicators */
+  .section-indicators{position:fixed;right:32px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;z-index:100}
+  .indicator{width:3px;height:3px;border-radius:50%;background:var(--muted);transition:all .4s ease}
+  .indicator.active{height:32px;border-radius:2px;background:var(--accent)}
 
-    .logo-entrance-wrapper {
-      animation: logo3DEntrance 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both,
-                 logoFloat 6s ease-in-out 2.6s infinite;
-    }
-    .portal-ring {
-      position: absolute; width: 180px; height: 180px; border-radius: 50%;
-      border: 2px solid rgba(99,102,241,0.6); pointer-events: none;
-      animation: portalRing 2s ease-out 0.2s both;
-    }
-    .portal-ring-2 {
-      position: absolute; width: 180px; height: 180px; border-radius: 50%;
-      border: 1.5px solid rgba(139,92,246,0.5); pointer-events: none;
-      animation: portalRing2 2.2s ease-out 0.4s both;
-    }
-    .logo-glow {
-      position: absolute; width: 200px; height: 200px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(99,102,241,0.25) 0%, rgba(139,92,246,0.1) 40%, transparent 70%);
-      pointer-events: none; animation: glowPulse 2s ease-out 0.3s both;
-    }
-    .logo-glow-persist {
-      position: absolute; width: 250px; height: 250px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, rgba(139,92,246,0.05) 50%, transparent 75%);
-      pointer-events: none; opacity: 0; animation: fadeIn 1s ease-out 2s forwards;
-    }
-    .sparkle {
-      position: absolute; width: var(--s, 5px); height: var(--s, 5px); border-radius: 50%;
-      background: var(--c, #818CF8);
-      box-shadow: 0 0 10px var(--c, #818CF8), 0 0 20px var(--c, #818CF8);
-      left: 50%; top: 50%; opacity: 0; pointer-events: none;
-      animation: sparkleOut 1.4s ease-out var(--d, 1s) both;
-    }
-    .logo-text-reveal { opacity: 0; animation: fadeSlideIn 0.6s ease-out 2s both; }
-    .logo-img { filter: drop-shadow(0 0 25px rgba(99,102,241,0.35)) drop-shadow(0 0 60px rgba(139,92,246,0.15)); }
+  /* Sections */
+  .section{height:100vh;display:flex;align-items:center;padding:0 8vw;position:relative}
 
-    .text-gradient {
-      background: linear-gradient(135deg, #818CF8, #A78BFA);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .text-gradient-bold {
-      background: linear-gradient(135deg, #6366F1, #8B5CF6);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
+  .hero-section{justify-content:flex-start}
+  .hero-eyebrow{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:3px;color:var(--magenta);margin-bottom:16px;opacity:0}
+  .hero-title{font-size:clamp(42px,6.5vw,90px);font-weight:900;line-height:.92;letter-spacing:-3px;max-width:800px}
+  .hero-title .line{display:block;overflow:hidden}
+  .hero-title .line-inner{display:block;transform:translateY(110%)}
+  .hero-sub{margin-top:28px;font-size:18px;color:var(--muted);font-weight:300;max-width:500px;line-height:1.5;opacity:0}
 
-    .hover-card {
-      transition: all 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
-      transform-style: preserve-3d;
-    }
-    .hover-card:hover { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); border-color: rgba(99,102,241,0.3); }
+  .problem-section{justify-content:center}
+  .problem-content{max-width:700px}
+  .problem-text{font-size:clamp(26px,3.5vw,44px);font-weight:600;line-height:1.2;letter-spacing:-1px}
+  .problem-text .word{display:inline-block;opacity:.1;transition:opacity .4s}
+  .problem-text .word.revealed{opacity:1}
+  .problem-stat{margin-top:32px;font-size:15px;color:var(--cyan);font-weight:700;letter-spacing:1px;opacity:0}
 
-    .btn-primary { transition: all 0.3s ease; background: linear-gradient(135deg, #4F46E5, #7C3AED); }
-    .btn-primary:hover {
-      background: linear-gradient(135deg, #6366F1, #8B5CF6);
-      box-shadow: 0 0 30px rgba(99,102,241,0.35), 0 0 60px rgba(139,92,246,0.15);
-      transform: translateY(-2px);
-    }
-    .btn-outline { transition: all 0.3s ease; }
-    .btn-outline:hover {
-      background: linear-gradient(135deg, #6366F1, #8B5CF6);
-      color: #ffffff; border-color: transparent;
-      box-shadow: 0 0 20px rgba(99,102,241,0.25);
-    }
+  .solution-section{justify-content:flex-end}
+  .solution-content{max-width:550px}
+  .solution-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:var(--cyan);margin-bottom:16px;opacity:0}
+  .solution-title{font-size:clamp(36px,5vw,60px);font-weight:800;line-height:.95;letter-spacing:-2px;margin-bottom:20px;opacity:0}
+  .solution-desc{font-size:16px;color:var(--muted);line-height:1.6;opacity:0}
 
-    .section-reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s ease-out; }
-    .section-reveal.visible { opacity: 1; transform: translateY(0); }
+  .result-section{flex-direction:column;justify-content:center;align-items:center;text-align:center}
+  .result-title{font-size:clamp(48px,7vw,100px);font-weight:900;line-height:.9;letter-spacing:-3px;opacity:0}
+  .result-title .design{color:var(--cyan)}
+  .result-title .code{color:var(--magenta)}
+  .result-sub{margin-top:20px;font-size:16px;color:var(--muted);max-width:400px;opacity:0}
 
-    .pricing-popular {
-      background: linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(43,43,43,0.6) 100%);
-      border-color: rgba(99,102,241,0.4);
-    }
-    .nav-scrolled {
-      background: rgba(11,11,11,0.9) !important;
-      backdrop-filter: blur(16px) !important;
-      padding-top: 0.75rem !important; padding-bottom: 0.75rem !important;
-    }
+  .cta-section{flex-direction:column;justify-content:center;align-items:center;text-align:center}
+  .cta-title{font-size:clamp(42px,6vw,80px);font-weight:900;line-height:.95;letter-spacing:-2px;opacity:0}
+  .cta-btn{margin-top:40px;padding:18px 56px;background:var(--accent);color:#fff;border:none;border-radius:100px;font-size:15px;font-weight:800;letter-spacing:.5px;cursor:pointer;opacity:0;transform:translateY(20px);box-shadow:0 0 40px rgba(80,70,229,.3);transition:transform .3s,box-shadow .3s}
+  .cta-btn:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 0 60px rgba(80,70,229,.5)}
+  .cta-note{margin-top:16px;font-size:12px;color:var(--muted);opacity:0}
 
-    #hero3DCanvas { position: absolute; inset: 0; z-index: 1; }
-    .hero-overlay { position: relative; z-index: 2; }
+  /* Progress */
+  .scroll-progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg, var(--cyan), var(--magenta));z-index:200;width:0%}
 
-    .cube-scene { perspective: 600px; }
-    .cube-3d { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: cubeFloat 16s ease-in-out infinite; }
-    .cube-face { position: absolute; border: 1px solid rgba(99,102,241,0.15); background: rgba(99,102,241,0.02); backdrop-filter: blur(2px); }
-    .cube-face.f-front  { transform: translateZ(var(--half)); }
-    .cube-face.f-back   { transform: rotateY(180deg) translateZ(var(--half)); }
-    .cube-face.f-left   { transform: rotateY(-90deg) translateZ(var(--half)); }
-    .cube-face.f-right  { transform: rotateY(90deg) translateZ(var(--half)); }
-    .cube-face.f-top    { transform: rotateX(90deg) translateZ(var(--half)); }
-    .cube-face.f-bottom { transform: rotateX(-90deg) translateZ(var(--half)); }
-    @keyframes cubeFloat {
-      0% { transform: rotateX(-20deg) rotateY(0deg); }
-      25% { transform: rotateX(10deg) rotateY(90deg); }
-      50% { transform: rotateX(-15deg) rotateY(180deg); }
-      75% { transform: rotateX(20deg) rotateY(270deg); }
-      100% { transform: rotateX(-20deg) rotateY(360deg); }
-    }
-
-    .diamond-scene { perspective: 500px; }
-    .diamond-3d { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: diamondSpin 20s linear infinite; }
-    .diamond-face { position: absolute; border: 1px solid rgba(99,102,241,0.12); background: rgba(99,102,241,0.015); clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
-    @keyframes diamondSpin { from { transform: rotateY(0deg) rotateX(15deg); } to { transform: rotateY(360deg) rotateX(15deg); } }
-
-    .ring3d-scene { perspective: 400px; }
-    .ring3d { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: ringTumble 14s ease-in-out infinite; }
-    .ring3d-segment { position: absolute; border: 1px solid rgba(99,102,241,0.2); border-radius: 50%; }
-    @keyframes ringTumble {
-      0% { transform: rotateX(60deg) rotateY(0deg) rotateZ(0deg); }
-      33% { transform: rotateX(30deg) rotateY(120deg) rotateZ(30deg); }
-      66% { transform: rotateX(80deg) rotateY(240deg) rotateZ(-20deg); }
-      100% { transform: rotateX(60deg) rotateY(360deg) rotateZ(0deg); }
-    }
-
-    .parallax-3d { transition: transform 0.1s linear; }
-    .floating-node { backdrop-filter: blur(12px); transition: transform 0.3s ease, box-shadow 0.3s ease; }
-    .floating-node:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(99,102,241,0.15); }
-    .badge-gradient { background: linear-gradient(135deg, #4F46E5, #8B5CF6); }
-
-    /* ===== PORTFOLIO STYLES ===== */
-    .portfolio-card {
-      transition: all 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
-      transform-style: preserve-3d;
-    }
-    .portfolio-card:hover {
-      transform: translateY(-10px) scale(1.01);
-      box-shadow: 0 30px 60px -15px rgba(0,0,0,0.6), 0 0 40px rgba(99,102,241,0.08);
-    }
-    .portfolio-screenshot-wrap {
-      overflow: hidden;
-      position: relative;
-      border-radius: 12px 12px 0 0;
-    }
-    .portfolio-screenshot-wrap img {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      object-position: top center;
-      transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.7s ease;
-      filter: brightness(0.7) saturate(0.8);
-    }
-    .portfolio-card:hover .portfolio-screenshot-wrap img {
-      transform: scale(1.06);
-      filter: brightness(0.85) saturate(1);
-    }
-    .portfolio-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(11,11,11,0.95) 0%, rgba(11,11,11,0.3) 40%, transparent 70%);
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding-bottom: 20px;
-      gap: 12px;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-    .portfolio-card:hover .portfolio-overlay {
-      opacity: 1;
-    }
-    .portfolio-overlay-btn {
-      padding: 10px 22px;
-      border-radius: 9999px;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-    }
-    .portfolio-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 4px 10px;
-      border-radius: 9999px;
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      border: 1px solid rgba(99,102,241,0.15);
-      background: rgba(99,102,241,0.05);
-      color: #A78BFA;
-    }
-    .portfolio-skeleton {
-      background: linear-gradient(90deg, rgba(43,43,43,0.5) 25%, rgba(43,43,43,0.8) 50%, rgba(43,43,43,0.5) 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-    }
-    @keyframes shimmer {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    /* Featured (first) portfolio card spans 2 cols on lg */
-    @media (min-width: 1024px) {
-      .portfolio-featured {
-        grid-column: span 2;
-      }
-      .portfolio-featured .portfolio-screenshot-wrap img {
-        height: 300px;
-      }
-    }
-  </style>
+  /* Mobile */
+  @media(max-width:768px){
+    .navbar{padding:16px 24px}
+    .section{padding:0 24px}
+    .section-indicators{right:12px}
+    .cursor-dot,.cursor-ring{display:none}
+    .solution-section{justify-content:center}
+  }
+</style>
 </head>
-<body class="overflow-x-hidden">
+<body>
 
-  <!-- ========== NAVIGATION ========== -->
-  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-6 lg:py-8 px-6 lg:px-12">
-    <div class="max-w-[90rem] mx-auto flex items-center justify-between">
-      <a href="#" class="flex items-center">
-        <img src="https://z-cdn-media.chatglm.cn/files/17dcbe23-0150-4656-9dab-2ec221472b4d.png?auth_key=1878129906-b696f3f25d3b4134b475b6d5ee48957f-0-7d49e7048a37ad820ac23a6a026e4194" alt="ARANIS ECOM HUB" class="h-8 lg:h-9">
-      </a>
-      <div class="hidden md:flex items-center gap-8">
-        <a href="#services" class="text-sm text-lightNeutral/70 hover:text-celadon transition-colors duration-300">Services</a>
-        <a href="#portfolio" class="text-sm text-lightNeutral/70 hover:text-celadon transition-colors duration-300">Portfolio</a>
-        <a href="#process" class="text-sm text-lightNeutral/70 hover:text-celadon transition-colors duration-300">Process</a>
-        <a href="#pricing" class="text-sm text-lightNeutral/70 hover:text-celadon transition-colors duration-300">Pricing</a>
-        <a href="#contact" class="text-sm text-lightNeutral/70 hover:text-celadon transition-colors duration-300">Contact</a>
-      </div>
-      <a href="#contact" class="btn-outline border border-white/10 rounded-full px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-lightNeutral hidden sm:inline-flex">
-        Start a Project
-      </a>
-      <button id="mobileToggle" class="md:hidden text-lightNeutral ml-4">
-        <span class="iconify text-2xl" data-icon="mdi:menu"></span>
-      </button>
-    </div>
-    <div id="mobileMenu" class="hidden md:hidden mt-4 pb-4 border-t border-white/5 pt-4 flex flex-col gap-4">
-      <a href="#services" class="text-sm text-lightNeutral/70 hover:text-celadon transition-colors">Services</a>
-      <a href="#portfolio" class="text-sm text-lightNeutral/70 hover:text-celadon transition-colors">Portfolio</a>
-      <a href="#process" class="text-sm text-lightNeutral/70 hover:text-celadon transition-colors">Process</a>
-      <a href="#pricing" class="text-sm text-lightNeutral/70 hover:text-celadon transition-colors">Pricing</a>
-      <a href="#contact" class="text-sm text-lightNeutral/70 hover:text-celadon transition-colors">Contact</a>
-    </div>
-  </nav>
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+<div class="scroll-progress"></div>
+<canvas id="webgl-canvas"></canvas>
 
-  <!-- ========== HERO ========== -->
-  <section class="relative min-h-screen overflow-hidden">
-    <div class="absolute top-1/4 -left-40 w-[500px] h-[500px] rounded-full bg-celadon/15 blob filter blur-[80px]"></div>
-    <div class="absolute bottom-1/4 -right-40 w-[400px] h-[400px] rounded-full bg-purple-500/15 blob filter blur-[100px]" style="animation-delay:2s"></div>
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-blue-500/10 blob filter blur-[80px]" style="animation-delay:4s"></div>
-    <div class="absolute inset-0 pointer-events-none">
-      <div class="absolute top-0 bottom-0 left-1/3 w-px bg-white/5"></div>
-      <div class="absolute top-0 bottom-0 right-1/3 w-px bg-white/5"></div>
-    </div>
-    <div class="absolute top-0 left-1/3 w-px h-full overflow-hidden pointer-events-none">
-      <div class="w-full h-32 bg-gradient-to-b from-transparent via-celadon/25 to-transparent" style="animation: beam-drop 5s linear infinite;"></div>
-    </div>
-    <div class="absolute top-1/2 left-0 right-0 h-px overflow-hidden pointer-events-none">
-      <div class="h-full w-48 bg-gradient-to-r from-transparent via-purple-500/15 to-transparent" style="animation: beam-slide 7s linear infinite 2.5s;"></div>
-    </div>
+<nav class="navbar">
+  <div class="logo">ARANIS<span>.</span></div>
+  <a href="#cta" class="nav-cta" data-clickable>Start Scaling</a>
+</nav>
 
-    <div class="relative max-w-[90rem] mx-auto px-6 lg:px-12 pt-40 lg:pt-52 pb-20">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-12 items-center">
-        <div class="lg:col-span-5 flex flex-col justify-center hero-overlay">
-          <div class="anim-in anim-d1">
-            <span class="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-celadon font-semibold mb-6">
-              <span class="w-2 h-2 rounded-full bg-celadon"></span>
-              E-Commerce Design & Development
-            </span>
-          </div>
-          <h1 class="anim-in anim-d2 font-bold uppercase leading-[1.0] tracking-[-0.03em] text-lightNeutral" style="font-size: clamp(2.2rem, 9vw, 3rem);">
-            Your store<br>
-            <span class="text-gradient">should</span> sell<br>
-            as hard as<br>
-            you build.
-          </h1>
-          <p class="anim-in anim-d3 mt-8 text-lightNeutral/50 font-light text-base lg:text-lg leading-relaxed max-w-md">
-            We design and build fast, beautiful, conversion-focused e-commerce stores that turn visitors into loyal customers. No fluff. No delays. Just results.
-          </p>
-          <div class="anim-in anim-d4 mt-10 flex flex-wrap gap-4">
-            <a href="#portfolio" class="btn-primary text-white font-semibold text-sm uppercase tracking-wider px-8 py-4 rounded-full inline-flex items-center gap-2">
-              View Our Work
-              <span class="iconify text-lg" data-icon="mdi:arrow-right"></span>
-            </a>
-            <a href="#process" class="btn-outline border border-white/10 text-lightNeutral font-semibold text-sm uppercase tracking-wider px-8 py-4 rounded-full inline-flex items-center gap-2">
-              How It Works
-            </a>
-          </div>
-        </div>
+<div class="section-indicators">
+  <div class="indicator active" data-section="0"></div>
+  <div class="indicator" data-section="1"></div>
+  <div class="indicator" data-section="2"></div>
+  <div class="indicator" data-section="3"></div>
+  <div class="indicator" data-section="4"></div>
+</div>
 
-        <div class="lg:col-span-5 relative h-[400px] lg:h-[520px] flex items-center justify-center">
-          <canvas id="hero3DCanvas"></canvas>
-          <div class="absolute inset-0 flex flex-col items-center justify-center z-10">
-            <div class="portal-ring"></div>
-            <div class="portal-ring-2"></div>
-            <div class="logo-glow"></div>
-            <div class="logo-glow-persist"></div>
-            <div class="logo-entrance-wrapper relative">
-              <img src="https://z-cdn-media.chatglm.cn/files/17dcbe23-0150-4656-9dab-2ec221472b4d.png?auth_key=1878129906-b696f3f25d3b4134b475b6d5ee48957f-0-7d49e7048a37ad820ac23a6a026e4194" alt="ARANIS ECOM HUB" class="logo-img w-40 lg:w-52 relative z-10">
-              <span class="sparkle" style="--tx: 90px; --ty: -50px; --d: 1.3s; --s: 5px; --c: #818CF8;"></span>
-              <span class="sparkle" style="--tx: -75px; --ty: -65px; --d: 1.35s; --s: 4px; --c: #A78BFA;"></span>
-              <span class="sparkle" style="--tx: 100px; --ty: 30px; --d: 1.4s; --s: 6px; --c: #6366F1;"></span>
-              <span class="sparkle" style="--tx: -90px; --ty: 45px; --d: 1.45s; --s: 5px; --c: #818CF8;"></span>
-              <span class="sparkle" style="--tx: 55px; --ty: -85px; --d: 1.5s; --s: 3px; --c: #C4B5FD;"></span>
-              <span class="sparkle" style="--tx: -55px; --ty: -80px; --d: 1.55s; --s: 4px; --c: #A78BFA;"></span>
-              <span class="sparkle" style="--tx: 110px; --ty: -15px; --d: 1.38s; --s: 3px; --c: #818CF8;"></span>
-              <span class="sparkle" style="--tx: -105px; --ty: 10px; --d: 1.42s; --s: 5px; --c: #6366F1;"></span>
-              <span class="sparkle" style="--tx: 30px; --ty: 85px; --d: 1.48s; --s: 4px; --c: #C4B5FD;"></span>
-              <span class="sparkle" style="--tx: -30px; --ty: 90px; --d: 1.52s; --s: 3px; --c: #A78BFA;"></span>
-              <span class="sparkle" style="--tx: 70px; --ty: 70px; --d: 1.58s; --s: 5px; --c: #818CF8;"></span>
-              <span class="sparkle" style="--tx: -65px; --ty: -30px; --d: 1.33s; --s: 6px; --c: #6366F1;"></span>
-              <span class="sparkle" style="--tx: 0px; --ty: -100px; --d: 1.6s; --s: 4px; --c: #C4B5FD;"></span>
-              <span class="sparkle" style="--tx: -120px; --ty: -45px; --d: 1.44s; --s: 3px; --c: #818CF8;"></span>
-              <span class="sparkle" style="--tx: 85px; --ty: -75px; --d: 1.36s; --s: 4px; --c: #A78BFA;"></span>
-              <span class="sparkle" style="--tx: -40px; --ty: 70px; --d: 1.56s; --s: 5px; --c: #6366F1;"></span>
-            </div>
-            <div class="logo-text-reveal mt-5">
-              <p class="text-[10px] uppercase tracking-[0.3em] text-lightNeutral/30 font-medium">Built for performance</p>
-            </div>
-          </div>
-          <div class="absolute top-8 right-4 lg:top-12 lg:right-4 floating-node bg-darkSurface/80 border border-white/10 rounded-lg px-3 py-2 flex items-center gap-2 hero-overlay z-10">
-            <span class="iconify text-celadon text-lg" data-icon="mdi:lightning-bolt"></span>
-            <span class="text-xs text-lightNeutral/70 font-light">99 PageSpeed</span>
-          </div>
-          <div class="absolute bottom-16 left-0 lg:bottom-20 lg:left-0 floating-node bg-darkSurface/80 border border-white/10 rounded-lg px-3 py-2 flex items-center gap-2 hero-overlay z-10">
-            <span class="iconify text-celadon text-lg" data-icon="mdi:shield-check"></span>
-            <span class="text-xs text-lightNeutral/70 font-light">SSL Secured</span>
-          </div>
-          <div class="absolute bottom-6 right-8 lg:bottom-10 lg:right-4 floating-node bg-darkSurface/80 border border-white/10 rounded-lg px-3 py-2 flex items-center gap-2 hero-overlay z-10">
-            <span class="iconify text-celadon text-lg" data-icon="mdi:cart-outline"></span>
-            <span class="text-xs text-lightNeutral/70 font-light">E-Commerce Ready</span>
-          </div>
-        </div>
+<div class="scroll-content">
 
-        <div class="lg:col-span-2 lg:border-l border-white/5 lg:pl-8 flex lg:flex-col gap-8 lg:gap-12 anim-in anim-d5 hero-overlay">
-          <div>
-            <p class="text-5xl font-light tracking-tighter text-lightNeutral">150<span class="text-gradient">+</span></p>
-            <p class="text-[10px] uppercase tracking-[0.2em] text-lightNeutral/40 mt-2">Stores Launched</p>
-          </div>
-          <div>
-            <p class="text-5xl font-light tracking-tighter text-lightNeutral">98<span class="text-gradient">%</span></p>
-            <p class="text-[10px] uppercase tracking-[0.2em] text-lightNeutral/40 mt-2">Client Satisfaction</p>
-          </div>
-          <div>
-            <p class="text-5xl font-light tracking-tighter text-lightNeutral">14<span class="text-gradient">d</span></p>
-            <p class="text-[10px] uppercase tracking-[0.2em] text-lightNeutral/40 mt-2">Avg. Turnaround</p>
-          </div>
-        </div>
-      </div>
+  <!-- Hero: Floating Logo State -->
+  <section class="section hero-section" data-index="0">
+    <div>
+      <div class="hero-eyebrow">E-Commerce Design Hub</div>
+      <h1 class="hero-title">
+        <span class="line"><span class="line-inner">Stores that</span></span>
+        <span class="line"><span class="line-inner">actually</span></span>
+        <span class="line"><span class="line-inner">convert<span style="color:var(--magenta)">.</span></span></span>
+      </h1>
+      <p class="hero-sub">We engineer high-performance Shopify experiences that turn your traffic into customers. Fast.</p>
     </div>
   </section>
 
-  <!-- ========== TRUST BAR ========== -->
-  <section class="relative border-y border-white/5 py-12">
-    <div class="max-w-[80rem] mx-auto px-6 lg:px-12">
-      <p class="text-center text-[10px] uppercase tracking-[0.25em] text-lightNeutral/30 mb-8">Trusted by teams at</p>
-      <div class="flex flex-wrap items-center justify-center gap-8 lg:gap-16">
-        <span class="text-lightNeutral/20 font-bold text-xl tracking-tight">TechFlow</span>
-        <span class="text-lightNeutral/20 font-bold text-xl tracking-tight">Meridian</span>
-        <span class="text-lightNeutral/20 font-bold text-xl tracking-tight">NovaPay</span>
-        <span class="text-lightNeutral/20 font-bold text-xl tracking-tight">ArcLabs</span>
-        <span class="text-lightNeutral/20 font-bold text-xl tracking-tight">Helix</span>
-        <span class="text-lightNeutral/20 font-bold text-xl tracking-tight">Orbit</span>
-      </div>
+  <!-- Problem: Twisting State -->
+  <section class="section problem-section" data-index="1">
+    <div class="problem-content">
+      <p class="problem-text" id="problem-text">Most e-commerce stores leak sales. Slow load times, weak copy, and friction kill your conversion rate before it even starts.</p>
+      <div class="problem-stat">↑ 53% abandon rate if load takes > 3s</div>
     </div>
   </section>
 
-  <!-- ========== SERVICES ========== -->
-  <section id="services" class="relative py-24 lg:py-36">
-    <div class="absolute top-20 right-10 lg:right-20 w-16 h-16 cube-scene parallax-3d opacity-40 pointer-events-none hidden lg:block" data-speed="0.03">
-      <div class="cube-3d" style="--half: 32px;">
-        <div class="cube-face f-front" style="width:64px;height:64px;"></div>
-        <div class="cube-face f-back" style="width:64px;height:64px;"></div>
-        <div class="cube-face f-left" style="width:64px;height:64px;"></div>
-        <div class="cube-face f-right" style="width:64px;height:64px;"></div>
-        <div class="cube-face f-top" style="width:64px;height:64px;"></div>
-        <div class="cube-face f-bottom" style="width:64px;height:64px;"></div>
-      </div>
-    </div>
-    <div class="max-w-[80rem] mx-auto px-6 lg:px-12">
-      <div class="section-reveal max-w-2xl mb-16">
-        <span class="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-celadon font-semibold mb-4">
-          <span class="w-2 h-2 rounded-full bg-celadon"></span>
-          What We Do
-        </span>
-        <h2 class="text-3xl lg:text-4xl font-bold tracking-tight text-lightNeutral leading-tight">
-          Everything you need<br>to <span class="text-gradient">launch & grow</span> online.
-        </h2>
-        <p class="mt-4 text-lightNeutral/50 font-light leading-relaxed">From strategy to launch and beyond — we handle the complexity so you can focus on your business.</p>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 section-reveal">
-        <div class="hover-card tilt-card bg-darkSurface/50 border border-white/5 rounded-2xl p-8 flex flex-col">
-          <div class="w-12 h-12 rounded-xl bg-celadon/10 flex items-center justify-center mb-6"><span class="iconify text-celadon text-2xl" data-icon="mdi:palette-outline"></span></div>
-          <h3 class="text-lg font-semibold text-lightNeutral mb-3">Custom Design</h3>
-          <p class="text-sm text-lightNeutral/50 font-light leading-relaxed flex-1">Bespoke UI/UX crafted around your brand identity. No templates — every pixel is intentional and designed to convert.</p>
-        </div>
-        <div class="hover-card tilt-card bg-darkSurface/50 border border-white/5 rounded-2xl p-8 flex flex-col">
-          <div class="w-12 h-12 rounded-xl bg-celadon/10 flex items-center justify-center mb-6"><span class="iconify text-celadon text-2xl" data-icon="mdi:code-tags"></span></div>
-          <h3 class="text-lg font-semibold text-lightNeutral mb-3">Clean Development</h3>
-          <p class="text-sm text-lightNeutral/50 font-light leading-relaxed flex-1">Lightning-fast, semantically correct code. We build with modern frameworks for speed, SEO, and scalability.</p>
-        </div>
-        <div class="hover-card tilt-card bg-darkSurface/50 border border-white/5 rounded-2xl p-8 flex flex-col">
-          <div class="w-12 h-12 rounded-xl bg-celadon/10 flex items-center justify-center mb-6"><span class="iconify text-celadon text-2xl" data-icon="mdi:cellphone-link"></span></div>
-          <h3 class="text-lg font-semibold text-lightNeutral mb-3">Responsive & Mobile</h3>
-          <p class="text-sm text-lightNeutral/50 font-light leading-relaxed flex-1">Your store looks flawless on every screen. Mobile-first approach ensures 60%+ of visitors get a premium experience.</p>
-        </div>
-        <div class="hover-card tilt-card bg-darkSurface/50 border border-white/5 rounded-2xl p-8 flex flex-col">
-          <div class="w-12 h-12 rounded-xl bg-celadon/10 flex items-center justify-center mb-6"><span class="iconify text-celadon text-2xl" data-icon="mdi:magnify"></span></div>
-          <h3 class="text-lg font-semibold text-lightNeutral mb-3">SEO Foundation</h3>
-          <p class="text-sm text-lightNeutral/50 font-light leading-relaxed flex-1">Technical SEO baked in from day one. Structured data, meta optimization, and performance tuning for organic growth.</p>
-        </div>
-        <div class="hover-card tilt-card bg-darkSurface/50 border border-white/5 rounded-2xl p-8 flex flex-col">
-          <div class="w-12 h-12 rounded-xl bg-celadon/10 flex items-center justify-center mb-6"><span class="iconify text-celadon text-2xl" data-icon="mdi:rocket-launch-outline"></span></div>
-          <h3 class="text-lg font-semibold text-lightNeutral mb-3">Launch & Hosting</h3>
-          <p class="text-sm text-lightNeutral/50 font-light leading-relaxed flex-1">We handle deployment, domain setup, SSL, and hosting configuration. Go live with zero headaches.</p>
-        </div>
-        <div class="hover-card tilt-card bg-darkSurface/50 border border-white/5 rounded-2xl p-8 flex flex-col">
-          <div class="w-12 h-12 rounded-xl bg-celadon/10 flex items-center justify-center mb-6"><span class="iconify text-celadon text-2xl" data-icon="mdi:wrench-outline"></span></div>
-          <h3 class="text-lg font-semibold text-lightNeutral mb-3">Ongoing Support</h3>
-          <p class="text-sm text-lightNeutral/50 font-light leading-relaxed flex-1">Post-launch maintenance, updates, and iterations. We stick around because your store is never truly "done."</p>
-        </div>
-      </div>
+  <!-- Solution: Curved/Funnel State -->
+  <section class="section solution-section" data-index="2">
+    <div class="solution-content">
+      <div class="solution-label">The Streamlined Funnel</div>
+      <h2 class="solution-title">Engineered to Sell</h2>
+      <p class="solution-desc">We strip away the noise. Through strategic copy, aggressive A/B testing, and flawless code, we build a seamless journey from click to checkout.</p>
     </div>
   </section>
 
-  <!-- ========== PORTFOLIO ========== -->
-  <section id="portfolio" class="relative py-24 lg:py-36 border-t border-white/5 overflow-hidden">
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-celadon/5 blob filter blur-[120px] pointer-events-none"></div>
-
-    <div class="max-w-[90rem] mx-auto px-6 lg:px-12">
-      <div class="section-reveal max-w-2xl mx-auto text-center mb-16">
-        <span class="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-celadon font-semibold mb-4">
-          <span class="w-2 h-2 rounded-full bg-celadon"></span>
-          Our Portfolio
-        </span>
-        <h2 class="text-3xl lg:text-4xl font-bold tracking-tight text-lightNeutral leading-tight">
-          Real sites. <span class="text-gradient">Real results.</span>
-        </h2>
-        <p class="mt-4 text-lightNeutral/50 font-light">
-          Every project below is live and running. Click to explore the actual websites we've built.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7 section-reveal">
-
-        <!-- Project 1 — Featured (spans 2 cols on lg) -->
-        <a href="https://aranis-aiadsanalyst.vercel.app/" target="_blank" rel="noopener noreferrer" class="portfolio-card portfolio-featured bg-darkSurface/50 border border-white/5 rounded-2xl overflow-hidden block group">
-          <div class="portfolio-screenshot-wrap">
-            <div class="portfolio-skeleton w-full" style="height:300px;"></div>
-            <img src="https://image.thum.io/get/width/1200/crop/600/https://aranis-aiadsanalyst.vercel.app/" alt="AI Ads Analyst" class="absolute inset-0 w-full h-full" loading="lazy" onload="this.previousElementSibling.style.display='none';this.style.display='block';" style="display:none;">
-            <div class="portfolio-overlay">
-              <span class="portfolio-overlay-btn bg-celadon text-white flex items-center gap-2">
-                <span class="iconify" data-icon="mdi:open-in-new"></span>
-                Visit Live Site
-              </span>
-            </div>
-          </div>
-          <div class="p-6 lg:p-8">
-            <div class="flex flex-wrap gap-2 mb-4">
-              <span class="portfolio-tag">AI Dashboard</span>
-              <span class="portfolio-tag">Analytics</span>
-              <span class="portfolio-tag">React</span>
-            </div>
-            <h3 class="text-xl font-semibold text-lightNeutral mb-2 group-hover:text-celadon transition-colors duration-300">AI Ads Analyst</h3>
-            <p class="text-sm text-lightNeutral/50 font-light leading-relaxed">
-              Intelligent advertising analytics platform powered by AI. Real-time insights, automated reporting, and predictive performance metrics for data-driven marketers.
-            </p>
-          </div>
-        </a>
-
-        <!-- Project 2 -->
-        <a href="https://prostreammy.vercel.app/" target="_blank" rel="noopener noreferrer" class="portfolio-card bg-darkSurface/50 border border-white/5 rounded-2xl overflow-hidden block group">
-          <div class="portfolio-screenshot-wrap">
-            <div class="portfolio-skeleton w-full" style="height:220px;"></div>
-            <img src="https://image.thum.io/get/width/800/crop/440/https://prostreammy.vercel.app/" alt="ProStream" class="absolute inset-0 w-full h-full" loading="lazy" onload="this.previousElementSibling.style.display='none';this.style.display='block';" style="display:none;">
-            <div class="portfolio-overlay">
-              <span class="portfolio-overlay-btn bg-celadon text-white flex items-center gap-2">
-                <span class="iconify" data-icon="mdi:open-in-new"></span>
-                Visit Live Site
-              </span>
-            </div>
-          </div>
-          <div class="p-6">
-            <div class="flex flex-wrap gap-2 mb-4">
-              <span class="portfolio-tag">Streaming</span>
-              <span class="portfolio-tag">Platform</span>
-            </div>
-            <h3 class="text-lg font-semibold text-lightNeutral mb-2 group-hover:text-celadon transition-colors duration-300">ProStream</h3>
-            <p class="text-sm text-lightNeutral/50 font-light leading-relaxed">
-              Professional streaming platform with clean UX, real-time broadcasting, and audience engagement tools.
-            </p>
-          </div>
-        </a>
-
-        <!-- Project 3 -->
-        <a href="https://pixelcraft-ten-psi.vercel.app/examplesimkad.html" target="_blank" rel="noopener noreferrer" class="portfolio-card bg-darkSurface/50 border border-white/5 rounded-2xl overflow-hidden block group">
-          <div class="portfolio-screenshot-wrap">
-            <div class="portfolio-skeleton w-full" style="height:220px;"></div>
-            <img src="https://image.thum.io/get/width/800/crop/440/https://pixelcraft-ten-psi.vercel.app/examplesimkad.html" alt="Simkad Landing" class="absolute inset-0 w-full h-full" loading="lazy" onload="this.previousElementSibling.style.display='none';this.style.display='block';" style="display:none;">
-            <div class="portfolio-overlay">
-              <span class="portfolio-overlay-btn bg-celadon text-white flex items-center gap-2">
-                <span class="iconify" data-icon="mdi:open-in-new"></span>
-                Visit Live Site
-              </span>
-            </div>
-          </div>
-          <div class="p-6">
-            <div class="flex flex-wrap gap-2 mb-4">
-              <span class="portfolio-tag">Landing Page</span>
-              <span class="portfolio-tag">Product</span>
-            </div>
-            <h3 class="text-lg font-semibold text-lightNeutral mb-2 group-hover:text-celadon transition-colors duration-300">Simkad Landing Page</h3>
-            <p class="text-sm text-lightNeutral/50 font-light leading-relaxed">
-              High-converting product landing page with compelling visuals, smooth animations, and optimized user flow.
-            </p>
-          </div>
-        </a>
-
-        <!-- Project 4 -->
-        <a href="https://atuksimkadmy.vercel.app/" target="_blank" rel="noopener noreferrer" class="portfolio-card bg-darkSurface/50 border border-white/5 rounded-2xl overflow-hidden block group">
-          <div class="portfolio-screenshot-wrap">
-            <div class="portfolio-skeleton w-full" style="height:220px;"></div>
-            <img src="https://image.thum.io/get/width/800/crop/440/https://atuksimkadmy.vercel.app/" alt="Atuk Simkad" class="absolute inset-0 w-full h-full" loading="lazy" onload="this.previousElementSibling.style.display='none';this.style.display='block';" style="display:none;">
-            <div class="portfolio-overlay">
-              <span class="portfolio-overlay-btn bg-celadon text-white flex items-center gap-2">
-                <span class="iconify" data-icon="mdi:open-in-new"></span>
-                Visit Live Site
-              </span>
-            </div>
-          </div>
-          <div class="p-6">
-            <div class="flex flex-wrap gap-2 mb-4">
-              <span class="portfolio-tag">E-Commerce</span>
-              <span class="portfolio-tag">Showcase</span>
-            </div>
-            <h3 class="text-lg font-semibold text-lightNeutral mb-2 group-hover:text-celadon transition-colors duration-300">Atuk Simkad</h3>
-            <p class="text-sm text-lightNeutral/50 font-light leading-relaxed">
-              E-commerce product showcase site with elegant catalog display, filtering, and seamless browsing experience.
-            </p>
-          </div>
-        </a>
-
-        <!-- Project 5 -->
-        <a href="https://pixelcraft-ten-psi.vercel.app/examplecoway.html" target="_blank" rel="noopener noreferrer" class="portfolio-card bg-darkSurface/50 border border-white/5 rounded-2xl overflow-hidden block group">
-          <div class="portfolio-screenshot-wrap">
-            <div class="portfolio-skeleton w-full" style="height:220px;"></div>
-            <img src="https://image.thum.io/get/width/800/crop/440/https://pixelcraft-ten-psi.vercel.app/examplecoway.html" alt="Coway Landing" class="absolute inset-0 w-full h-full" loading="lazy" onload="this.previousElementSibling.style.display='none';this.style.display='block';" style="display:none;">
-            <div class="portfolio-overlay">
-              <span class="portfolio-overlay-btn bg-celadon text-white flex items-center gap-2">
-                <span class="iconify" data-icon="mdi:open-in-new"></span>
-                Visit Live Site
-              </span>
-            </div>
-          </div>
-          <div class="p-6">
-            <div class="flex flex-wrap gap-2 mb-4">
-              <span class="portfolio-tag">Landing Page</span>
-              <span class="portfolio-tag">Premium Brand</span>
-            </div>
-            <h3 class="text-lg font-semibold text-lightNeutral mb-2 group-hover:text-celadon transition-colors duration-300">Coway Landing Page</h3>
-            <p class="text-sm text-lightNeutral/50 font-light leading-relaxed">
-              Premium brand landing page for Coway products. Sophisticated design language with focus on trust and conversion.
-            </p>
-          </div>
-        </a>
-
-      </div>
-
-      <!-- Portfolio CTA -->
-      <div class="section-reveal text-center mt-14">
-        <p class="text-lightNeutral/40 font-light text-sm mb-5">Want to see your project here?</p>
-        <a href="#contact" class="btn-outline border border-white/10 text-lightNeutral font-semibold text-sm uppercase tracking-wider px-8 py-4 rounded-full inline-flex items-center gap-2">
-          Let's Build Yours
-          <span class="iconify text-lg" data-icon="mdi:arrow-right"></span>
-        </a>
-      </div>
+  <!-- Result: Dual-Color Split State -->
+  <section class="section result-section" data-index="3">
+    <div>
+      <h2 class="result-title"><span class="design">Design</span> + <span class="code">Commerce</span></h2>
+      <p class="result-sub">The perfect marriage of aesthetic intuition and technical precision.</p>
     </div>
   </section>
 
-  <!-- ========== PROCESS ========== -->
-  <section id="process" class="relative py-24 lg:py-36 border-t border-white/5 overflow-hidden">
-    <div class="absolute bottom-10 left-10 lg:left-20 w-20 h-20 diamond-scene parallax-3d opacity-30 pointer-events-none hidden lg:block" data-speed="-0.02">
-      <div class="diamond-3d">
-        <div class="diamond-face" style="width:80px;height:80px;left:0;top:0;transform: rotateY(0deg) translateZ(40px);"></div>
-        <div class="diamond-face" style="width:80px;height:80px;left:0;top:0;transform: rotateY(72deg) translateZ(40px);"></div>
-        <div class="diamond-face" style="width:80px;height:80px;left:0;top:0;transform: rotateY(144deg) translateZ(40px);"></div>
-        <div class="diamond-face" style="width:80px;height:80px;left:0;top:0;transform: rotateY(216deg) translateZ(40px);"></div>
-        <div class="diamond-face" style="width:80px;height:80px;left:0;top:0;transform: rotateY(288deg) translateZ(40px);"></div>
-      </div>
-    </div>
-    <div class="max-w-[80rem] mx-auto px-6 lg:px-12">
-      <div class="section-reveal text-center max-w-2xl mx-auto mb-20">
-        <span class="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-celadon font-semibold mb-4">
-          <span class="w-2 h-2 rounded-full bg-celadon"></span>
-          How It Works
-        </span>
-        <h2 class="text-3xl lg:text-4xl font-bold tracking-tight text-lightNeutral leading-tight">
-          From brief to <span class="text-gradient">live</span><br>in four steps.
-        </h2>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 section-reveal">
-        <div class="relative group">
-          <div class="text-6xl font-light tracking-tighter text-white/5 mb-4">01</div>
-          <div class="w-10 h-10 rounded-full bg-celadon/10 border border-celadon/30 flex items-center justify-center mb-5"><span class="iconify text-celadon text-lg" data-icon="mdi:chat-outline"></span></div>
-          <h3 class="text-base font-semibold text-lightNeutral mb-2">Discovery Call</h3>
-          <p class="text-sm text-lightNeutral/50 font-light leading-relaxed">We learn your goals, audience, and brand. A 30-minute call that sets the foundation for everything.</p>
-        </div>
-        <div class="relative group">
-          <div class="text-6xl font-light tracking-tighter text-white/5 mb-4">02</div>
-          <div class="w-10 h-10 rounded-full bg-celadon/10 border border-celadon/30 flex items-center justify-center mb-5"><span class="iconify text-celadon text-lg" data-icon="mdi:pencil-ruler"></span></div>
-          <h3 class="text-base font-semibold text-lightNeutral mb-2">Design & Review</h3>
-          <p class="text-sm text-lightNeutral/50 font-light leading-relaxed">We create wireframes and high-fidelity mockups. You review, we revise until it's perfect.</p>
-        </div>
-        <div class="relative group">
-          <div class="text-6xl font-light tracking-tighter text-white/5 mb-4">03</div>
-          <div class="w-10 h-10 rounded-full bg-celadon/10 border border-celadon/30 flex items-center justify-center mb-5"><span class="iconify text-celadon text-lg" data-icon="mdi:code-braces"></span></div>
-          <h3 class="text-base font-semibold text-lightNeutral mb-2">Build & Test</h3>
-          <p class="text-sm text-lightNeutral/50 font-light leading-relaxed">Designs become code. We test across devices, browsers, and performance benchmarks rigorously.</p>
-        </div>
-        <div class="relative group">
-          <div class="text-6xl font-light tracking-tighter text-white/5 mb-4">04</div>
-          <div class="w-10 h-10 rounded-full bg-celadon/10 border border-celadon/30 flex items-center justify-center mb-5"><span class="iconify text-celadon text-lg" data-icon="mdi:check-decagram-outline"></span></div>
-          <h3 class="text-base font-semibold text-lightNeutral mb-2">Launch & Handoff</h3>
-          <p class="text-sm text-lightNeutral/50 font-light leading-relaxed">We deploy, connect your domain, and hand over the keys. Plus 30 days of free support.</p>
-        </div>
-      </div>
+  <!-- CTA: Flat Call to Action -->
+  <section class="section cta-section" id="cta" data-index="4">
+    <div>
+      <h2 class="cta-title">Ready to scale<span style="color:var(--accent)">?</span></h2>
+      <button class="cta-btn" data-clickable>Start Your Project</button>
+      <div class="cta-note">No commitment. 30-min strategy call.</div>
     </div>
   </section>
 
-  <!-- ========== PRICING ========== -->
-  <section id="pricing" class="relative py-24 lg:py-36 border-t border-white/5">
-    <div class="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-celadon/5 blob filter blur-[120px] pointer-events-none"></div>
-    <div class="absolute top-40 left-8 lg:left-16 w-24 h-24 ring3d-scene parallax-3d opacity-25 pointer-events-none hidden lg:block" data-speed="0.04">
-      <div class="ring3d">
-        <div class="ring3d-segment" style="width:96px;height:96px;left:0;top:0;transform: translateZ(20px);"></div>
-        <div class="ring3d-segment" style="width:96px;height:96px;left:0;top:0;transform: translateZ(-20px);"></div>
-        <div class="ring3d-segment" style="width:96px;height:96px;left:0;top:0;transform: rotateY(90deg) translateZ(20px);"></div>
-        <div class="ring3d-segment" style="width:96px;height:96px;left:0;top:0;transform: rotateY(-90deg) translateZ(20px);"></div>
-      </div>
-    </div>
-    <div class="max-w-[80rem] mx-auto px-6 lg:px-12">
-      <div class="section-reveal text-center max-w-2xl mx-auto mb-16">
-        <span class="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-celadon font-semibold mb-4">
-          <span class="w-2 h-2 rounded-full bg-celadon"></span>
-          Pricing
-        </span>
-        <h2 class="text-3xl lg:text-4xl font-bold tracking-tight text-lightNeutral leading-tight">
-          Transparent pricing.<br><span class="text-gradient">No surprises.</span>
-        </h2>
-        <p class="mt-4 text-lightNeutral/50 font-light">Choose the package that fits your needs. All plans include responsive design and SEO fundamentals.</p>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 section-reveal">
-        <div class="hover-card tilt-card bg-darkSurface/50 border border-white/5 rounded-2xl p-8 flex flex-col">
-          <h3 class="text-lg font-semibold text-lightNeutral">Starter</h3>
-          <p class="text-sm text-lightNeutral/40 font-light mt-1">Perfect for getting online fast</p>
-          <div class="mt-6 mb-8"><span class="text-5xl font-light tracking-tighter text-lightNeutral">$1,499</span><span class="text-sm text-lightNeutral/40 ml-1">one-time</span></div>
-          <ul class="space-y-3 flex-1 mb-8">
-            <li class="flex items-start gap-3 text-sm text-lightNeutral/60 font-light"><span class="iconify text-celadon text-lg mt-0.5 shrink-0" data-icon="mdi:check-circle-outline"></span>Up to 5 pages</li>
-            <li class="flex items-start gap-3 text-sm text-lightNeutral/60 font-light"><span class="iconify text-celadon text-lg mt-0.5 shrink-0" data-icon="mdi:check-circle-outline"></span>Custom design</li>
-            <li class="flex items-start gap-3 text-sm text-lightNeutral/60 font-light"><span class="iconify text-celadon text-lg mt-0.5 shrink-0" data-icon="mdi:check-circle-outline"></span>Mobile responsive</li>
-            <li class="flex items-start gap-3 text-sm text-lightNeutral/60 font-light"><span class="iconify text-celadon text-lg mt-0.5 shrink-0" data-icon="mdi:check-circle-outline"></span>Contact form</li>
-            <li class="flex items-start gap-3 text-sm text-lightNeutral/60 font-light"><span class="iconify text-celadon text-lg mt-0.5 shrink-0" data-icon="mdi:check-circle-outline"></span>14-day delivery</li>
-          </ul>
-          <a href="#contact" class="btn-outline border border-white/10 text-lightNeutral font-semibold text-sm uppercase tracking-wider px-8 py-4 rounded-full text-center">Get Started</a>
-        </div>
-        <div class="hover-card tilt-card pricing-popular border border-celadon/30 rounded-2xl p-8 flex flex-col relative">
-          <span class="absolute -top-3 left-1/2 -translate-x-1/2 badge-gradient text-white text-[10px] uppercase tracking-[0.2em] font-bold px-4 py-1 rounded-full">Most Popular</span>
-          <h3 class="text-lg font-semibold text-lightNeutral">Professional</h3>
-          <p class="text-sm text-lightNeutral/40 font-light mt-1">For growing businesses</p>
-          <div class="mt-6 mb-8"><span class="text-5xl font-light tracking-tighter text-lightNeutral">$3,499</span><span class="text-sm text-lightNeutral/40 ml-1">one-time</span></div>
-          <ul class="space-y-3 flex-1 mb-8">
-            <li class="flex items-start gap-3 text-sm text-lightNeutral/60 font-light"><span class="iconify text-celadon text-lg mt-0.5 shrink-0" data-icon="mdi:check-circle-outline"></span>Up to 15 pages</li>
-            <li class="flex items-start gap-3 text-sm text-lightNeutral/60 font-light"><span class="iconify text-celadon text-lg mt-0.5 shrink-0" data-icon="mdi:check-circle-outline"></span>Advanced animations & interactions</li>
-            <li class="flex items-start gap-3 text-sm text-lightNeutral/60 font-light"><span class="iconify text-celadon text-lg mt-0.5 shrink-0" data-icon="mdi:check-circle-outline"></span>CMS integration</li>
-            <li class="flex items-start gap-3 text-sm text-lightNeutral/60 font-light"><span class="iconify text-celadon text-lg mt-0.5 shrink-0" data-icon="mdi:check-circle-outline"></span>SEO optimization</li>
-            <li class="flex items-start gap-3 text-sm text-lightNeutral/60 font-light"><span class="iconify text-celadon text-lg mt-0.5 shrink-0" data-icon="mdi:check-circle-outline"></span>Analytics setup</li>
-            <li class="flex items-start gap-3 text-sm text-lightNeutral/60 font-light"><span class="iconify text-celadon text-lg mt-0.5 shrink-0" data-icon="mdi:check-circle-outline"></span>30-day post-launch support</li>
-          </ul>
-          <a href="#contact" class="btn-primary text-white font-semibold text-sm uppercase tracking-wider px-8 py-4 rounded-full text-center">Get Started</a>
-        </div>
-        <div class="hover-card tilt-card bg-darkSurface/50 border border-white/5 rounded-2xl p-8 flex flex-col">
-          <h3 class="text-lg font-semibold text-lightNeutral">Enterprise</h3>
-          <p class="text-sm text-lightNeutral/40 font-light mt-1">Full-scale custom solution</p>
-          <div class="mt-6 mb-8"><span class="text-5xl font-light tracking-tighter text-lightNeutral">Custom</span></div>
-          <ul class="space-y-3 flex-1 mb-8">
-            <li class="flex items-start gap-3 text-sm text-lightNeutral/60 font-light"><span class="iconify text-celadon text-lg mt-0.5 shrink-0" data-icon="mdi:check-circle-outline"></span>Unlimited pages</li>
-            <li class="flex items-start gap-3 text-sm text-lightNeutral/60 font-light"><span class="iconify text-celadon text-lg mt-0.5 shrink-0" data-icon="mdi:check-circle-outline"></span>Custom web application</li>
-            <li class="flex items-start gap-3 text-sm text-lightNeutral/60 font-light"><span class="iconify text-celadon text-lg mt-0.5 shrink-0" data-icon="mdi:check-circle-outline"></span>API & third-party integrations</li>
-            <li class="flex items-start gap-3 text-sm text-lightNeutral/60 font-light"><span class="iconify text-celadon text-lg mt-0.5 shrink-0" data-icon="mdi:check-circle-outline"></span>E-commerce functionality</li>
-            <li class="flex items-start gap-3 text-sm text-lightNeutral/60 font-light"><span class="iconify text-celadon text-lg mt-0.5 shrink-0" data-icon="mdi:check-circle-outline"></span>Dedicated project manager</li>
-            <li class="flex items-start gap-3 text-sm text-lightNeutral/60 font-light"><span class="iconify text-celadon text-lg mt-0.5 shrink-0" data-icon="mdi:check-circle-outline"></span>Priority support & SLA</li>
-          </ul>
-          <a href="#contact" class="btn-outline border border-white/10 text-lightNeutral font-semibold text-sm uppercase tracking-wider px-8 py-4 rounded-full text-center">Let's Talk</a>
-        </div>
-      </div>
-    </div>
-  </section>
+</div>
 
-  <!-- ========== TESTIMONIALS ========== -->
-  <section class="relative py-24 lg:py-36 border-t border-white/5">
-    <div class="max-w-[80rem] mx-auto px-6 lg:px-12">
-      <div class="section-reveal text-center max-w-2xl mx-auto mb-16">
-        <span class="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-celadon font-semibold mb-4">
-          <span class="w-2 h-2 rounded-full bg-celadon"></span>
-          Testimonials
-        </span>
-        <h2 class="text-3xl lg:text-4xl font-bold tracking-tight text-lightNeutral">Don't take our word for it.</h2>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 section-reveal">
-        <div class="hover-card tilt-card bg-darkSurface/50 border border-white/5 rounded-2xl p-8">
-          <div class="flex gap-1 mb-4">
-            <span class="iconify text-celadon" data-icon="mdi:star"></span><span class="iconify text-celadon" data-icon="mdi:star"></span><span class="iconify text-celadon" data-icon="mdi:star"></span><span class="iconify text-celadon" data-icon="mdi:star"></span><span class="iconify text-celadon" data-icon="mdi:star"></span>
-          </div>
-          <p class="text-sm text-lightNeutral/60 font-light leading-relaxed mb-6">"Aranis delivered our store in under two weeks and it looks incredible. Our revenue increased 40% in the first month. Best investment we've made."</p>
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-celadon/20 flex items-center justify-center"><span class="text-celadon text-sm font-semibold">SR</span></div>
-            <div><p class="text-sm font-semibold text-lightNeutral">Sarah Rodriguez</p><p class="text-xs text-lightNeutral/40">CEO, Meridian</p></div>
-          </div>
-        </div>
-        <div class="hover-card tilt-card bg-darkSurface/50 border border-white/5 rounded-2xl p-8">
-          <div class="flex gap-1 mb-4">
-            <span class="iconify text-celadon" data-icon="mdi:star"></span><span class="iconify text-celadon" data-icon="mdi:star"></span><span class="iconify text-celadon" data-icon="mdi:star"></span><span class="iconify text-celadon" data-icon="mdi:star"></span><span class="iconify text-celadon" data-icon="mdi:star"></span>
-          </div>
-          <p class="text-sm text-lightNeutral/60 font-light leading-relaxed mb-6">"Working with them felt effortless. They understood our vision immediately and the final product exceeded every expectation. Truly professional."</p>
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-celadon/20 flex items-center justify-center"><span class="text-celadon text-sm font-semibold">JK</span></div>
-            <div><p class="text-sm font-semibold text-lightNeutral">James Kim</p><p class="text-xs text-lightNeutral/40">Founder, ArcLabs</p></div>
-          </div>
-        </div>
-        <div class="hover-card tilt-card bg-darkSurface/50 border border-white/5 rounded-2xl p-8">
-          <div class="flex gap-1 mb-4">
-            <span class="iconify text-celadon" data-icon="mdi:star"></span><span class="iconify text-celadon" data-icon="mdi:star"></span><span class="iconify text-celadon" data-icon="mdi:star"></span><span class="iconify text-celadon" data-icon="mdi:star"></span><span class="iconify text-celadon" data-icon="mdi:star-half-full"></span>
-          </div>
-          <p class="text-sm text-lightNeutral/60 font-light leading-relaxed mb-6">"Our conversion rate jumped 28% after the redesign. The speed and attention to detail are unmatched. Highly recommend for any e-commerce brand."</p>
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-celadon/20 flex items-center justify-center"><span class="text-celadon text-sm font-semibold">LP</span></div>
-            <div><p class="text-sm font-semibold text-lightNeutral">Lisa Park</p><p class="text-xs text-lightNeutral/40">VP Marketing, NovaPay</p></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 
-  <!-- ========== FAQ ========== -->
-  <section class="relative py-24 lg:py-36 border-t border-white/5">
-    <div class="absolute bottom-20 right-10 lg:right-24 w-12 h-12 cube-scene parallax-3d opacity-20 pointer-events-none hidden lg:block" data-speed="-0.03">
-      <div class="cube-3d" style="--half: 24px; animation-duration: 22s; animation-direction: reverse;">
-        <div class="cube-face f-front" style="width:48px;height:48px;"></div>
-        <div class="cube-face f-back" style="width:48px;height:48px;"></div>
-        <div class="cube-face f-left" style="width:48px;height:48px;"></div>
-        <div class="cube-face f-right" style="width:48px;height:48px;"></div>
-        <div class="cube-face f-top" style="width:48px;height:48px;"></div>
-        <div class="cube-face f-bottom" style="width:48px;height:48px;"></div>
-      </div>
-    </div>
-    <div class="max-w-3xl mx-auto px-6 lg:px-12">
-      <div class="section-reveal text-center mb-16">
-        <span class="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-celadon font-semibold mb-4">
-          <span class="w-2 h-2 rounded-full bg-celadon"></span>
-          FAQ
-        </span>
-        <h2 class="text-3xl lg:text-4xl font-bold tracking-tight text-lightNeutral">Common questions.</h2>
-      </div>
-      <div class="section-reveal space-y-4" id="faqContainer">
-        <div class="faq-item border border-white/5 rounded-xl overflow-hidden">
-          <button class="faq-toggle w-full flex items-center justify-between p-6 text-left" onclick="toggleFaq(this)">
-            <span class="text-sm font-semibold text-lightNeutral pr-4">How long does a typical project take?</span>
-            <span class="iconify text-celadon text-xl shrink-0 faq-icon transition-transform duration-300" data-icon="mdi:plus"></span>
-          </button>
-          <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
-            <p class="px-6 pb-6 text-sm text-lightNeutral/50 font-light leading-relaxed">Starter projects take 10–14 days. Professional stores typically take 3–4 weeks. Enterprise projects vary based on scope — we'll give you a detailed timeline during our discovery call.</p>
-          </div>
-        </div>
-        <div class="faq-item border border-white/5 rounded-xl overflow-hidden">
-          <button class="faq-toggle w-full flex items-center justify-between p-6 text-left" onclick="toggleFaq(this)">
-            <span class="text-sm font-semibold text-lightNeutral pr-4">Do you offer revisions?</span>
-            <span class="iconify text-celadon text-xl shrink-0 faq-icon transition-transform duration-300" data-icon="mdi:plus"></span>
-          </button>
-          <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
-            <p class="px-6 pb-6 text-sm text-lightNeutral/50 font-light leading-relaxed">Yes. Starter includes 2 rounds of revisions, Professional includes unlimited revisions during the design phase, and Enterprise has ongoing iteration built in.</p>
-          </div>
-        </div>
-        <div class="faq-item border border-white/5 rounded-xl overflow-hidden">
-          <button class="faq-toggle w-full flex items-center justify-between p-6 text-left" onclick="toggleFaq(this)">
-            <span class="text-sm font-semibold text-lightNeutral pr-4">What if I already have a store?</span>
-            <span class="iconify text-celadon text-xl shrink-0 faq-icon transition-transform duration-300" data-icon="mdi:plus"></span>
-          </button>
-          <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
-            <p class="px-6 pb-6 text-sm text-lightNeutral/50 font-light leading-relaxed">We can redesign and rebuild on top of your existing store. We'll audit your current site, preserve what works, and elevate everything else.</p>
-          </div>
-        </div>
-        <div class="faq-item border border-white/5 rounded-xl overflow-hidden">
-          <button class="faq-toggle w-full flex items-center justify-between p-6 text-left" onclick="toggleFaq(this)">
-            <span class="text-sm font-semibold text-lightNeutral pr-4">What technologies do you use?</span>
-            <span class="iconify text-celadon text-xl shrink-0 faq-icon transition-transform duration-300" data-icon="mdi:plus"></span>
-          </button>
-          <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
-            <p class="px-6 pb-6 text-sm text-lightNeutral/50 font-light leading-relaxed">We use modern stacks — React, Next.js, Tailwind CSS, and headless CMS solutions like Sanity or Strapi. For stores, we integrate with Shopify, WooCommerce, or custom solutions.</p>
-          </div>
-        </div>
-        <div class="faq-item border border-white/5 rounded-xl overflow-hidden">
-          <button class="faq-toggle w-full flex items-center justify-between p-6 text-left" onclick="toggleFaq(this)">
-            <span class="text-sm font-semibold text-lightNeutral pr-4">Do you handle domain and hosting?</span>
-            <span class="iconify text-celadon text-xl shrink-0 faq-icon transition-transform duration-300" data-icon="mdi:plus"></span>
-          </button>
-          <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500">
-            <p class="px-6 pb-6 text-sm text-lightNeutral/50 font-light leading-relaxed">Absolutely. We'll set up your domain, configure DNS, provision hosting (Vercel, Netlify, or AWS), and ensure SSL is active. You own everything — we just make it work.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+<script>
+// ============================================
+// 1. LENIS & CURSOR
+// ============================================
+const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+requestAnimationFrame(raf);
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add((time) => lenis.raf(time * 1000));
+gsap.ticker.lagSmoothing(0);
 
-  <!-- ========== CTA / CONTACT ========== -->
-  <section id="contact" class="relative py-24 lg:py-36 border-t border-white/5">
-    <div class="absolute inset-0 pointer-events-none overflow-hidden">
-      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-celadon/5 filter blur-[140px]"></div>
-    </div>
-    <div class="absolute top-16 right-8 lg:right-32 w-16 h-16 diamond-scene parallax-3d opacity-20 pointer-events-none hidden lg:block" data-speed="0.05">
-      <div class="diamond-3d" style="animation-direction: reverse; animation-duration: 25s;">
-        <div class="diamond-face" style="width:64px;height:64px;left:0;top:0;transform: rotateY(0deg) translateZ(32px);"></div>
-        <div class="diamond-face" style="width:64px;height:64px;left:0;top:0;transform: rotateY(72deg) translateZ(32px);"></div>
-        <div class="diamond-face" style="width:64px;height:64px;left:0;top:0;transform: rotateY(144deg) translateZ(32px);"></div>
-        <div class="diamond-face" style="width:64px;height:64px;left:0;top:0;transform: rotateY(216deg) translateZ(32px);"></div>
-        <div class="diamond-face" style="width:64px;height:64px;left:0;top:0;transform: rotateY(288deg) translateZ(32px);"></div>
-      </div>
-    </div>
-    <div class="max-w-3xl mx-auto px-6 lg:px-12 relative">
-      <div class="section-reveal text-center mb-12">
-        <span class="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-celadon font-semibold mb-4">
-          <span class="w-2 h-2 rounded-full bg-celadon"></span>
-          Start Your Project
-        </span>
-        <h2 class="text-3xl lg:text-4xl font-bold tracking-tight text-lightNeutral leading-tight">
-          Ready to build something<br><span class="text-gradient">worth visiting?</span>
-        </h2>
-        <p class="mt-4 text-lightNeutral/50 font-light max-w-lg mx-auto">Tell us about your project and we'll get back within 24 hours with a free proposal. No commitment, no pressure.</p>
-      </div>
-      <form class="section-reveal space-y-5" onsubmit="handleSubmit(event)">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div>
-            <label class="block text-[10px] uppercase tracking-[0.2em] text-lightNeutral/40 mb-2 font-medium">Name</label>
-            <input type="text" required placeholder="John Doe" class="w-full bg-darkSurface/50 border border-white/10 rounded-xl px-5 py-4 text-sm text-lightNeutral placeholder:text-lightNeutral/20 font-light focus:outline-none focus:border-celadon/40 transition-colors">
-          </div>
-          <div>
-            <label class="block text-[10px] uppercase tracking-[0.2em] text-lightNeutral/40 mb-2 font-medium">Email</label>
-            <input type="email" required placeholder="john@company.com" class="w-full bg-darkSurface/50 border border-white/10 rounded-xl px-5 py-4 text-sm text-lightNeutral placeholder:text-lightNeutral/20 font-light focus:outline-none focus:border-celadon/40 transition-colors">
-          </div>
-        </div>
-        <div>
-          <label class="block text-[10px] uppercase tracking-[0.2em] text-lightNeutral/40 mb-2 font-medium">Which package interests you?</label>
-          <select class="w-full bg-darkSurface/50 border border-white/10 rounded-xl px-5 py-4 text-sm text-lightNeutral/60 font-light focus:outline-none focus:border-celadon/40 transition-colors appearance-none">
-            <option>Starter — $1,499</option>
-            <option selected>Professional — $3,499</option>
-            <option>Enterprise — Custom</option>
-            <option>Not sure yet</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-[10px] uppercase tracking-[0.2em] text-lightNeutral/40 mb-2 font-medium">Tell us about your project</label>
-          <textarea rows="4" placeholder="What's your goal? Any specific features or timeline?" class="w-full bg-darkSurface/50 border border-white/10 rounded-xl px-5 py-4 text-sm text-lightNeutral placeholder:text-lightNeutral/20 font-light focus:outline-none focus:border-celadon/40 transition-colors resize-none"></textarea>
-        </div>
-        <div class="text-center pt-2">
-          <button type="submit" class="btn-primary text-white font-semibold text-sm uppercase tracking-wider px-10 py-4 rounded-full inline-flex items-center gap-2">
-            Send Proposal Request
-            <span class="iconify text-lg" data-icon="mdi:arrow-right"></span>
-          </button>
-        </div>
-        <div id="formMessage" class="hidden text-center text-sm text-celadon font-light mt-4"></div>
-      </form>
-    </div>
-  </section>
+const cursorDot = document.querySelector('.cursor-dot');
+const cursorRing = document.querySelector('.cursor-ring');
+let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX; mouseY = e.clientY;
+  cursorDot.style.transform = `translate(${mouseX - 4}px, ${mouseY - 4}px)`;
+});
+function animateCursor() {
+  ringX += (mouseX - ringX) * 0.12; ringY += (mouseY - ringY) * 0.12;
+  cursorRing.style.transform = `translate(${ringX - 20}px, ${ringY - 20}px)`;
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+document.querySelectorAll('a, button, [data-clickable]').forEach(el => {
+  el.addEventListener('mouseenter', () => cursorRing.classList.add('hovering'));
+  el.addEventListener('mouseleave', () => cursorRing.classList.remove('hovering'));
+});
 
-  <!-- ========== FOOTER ========== -->
-  <footer class="border-t border-white/5 py-12">
-    <div class="max-w-[80rem] mx-auto px-6 lg:px-12">
-      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-        <a href="#" class="flex items-center">
-          <img src="https://z-cdn-media.chatglm.cn/files/17dcbe23-0150-4656-9dab-2ec221472b4d.png?auth_key=1878129906-b696f3f25d3b4134b475b6d5ee48957f-0-7d49e7048a37ad820ac23a6a026e4194" alt="ARANIS ECOM HUB" class="h-7">
-        </a>
-        <div class="flex items-center gap-6">
-          <a href="#" class="text-lightNeutral/40 hover:text-celadon transition-colors duration-300"><span class="iconify text-xl" data-icon="mdi:twitter"></span></a>
-          <a href="#" class="text-lightNeutral/40 hover:text-celadon transition-colors duration-300"><span class="iconify text-xl" data-icon="mdi:linkedin"></span></a>
-          <a href="#" class="text-lightNeutral/40 hover:text-celadon transition-colors duration-300"><span class="iconify text-xl" data-icon="mdi:instagram"></span></a>
-          <a href="#" class="text-lightNeutral/40 hover:text-celadon transition-colors duration-300"><span class="iconify text-xl" data-icon="mdi:github"></span></a>
-        </div>
-        <p class="text-xs text-lightNeutral/30 font-light">&copy; 2025 ARANIS ECOM HUB. All rights reserved.</p>
-      </div>
-    </div>
-  </footer>
+// ============================================
+// 2. THREE.JS — LOGO MORPH PLANE
+// ============================================
+const canvas = document.getElementById('webgl-canvas');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
+camera.position.z = 6;
 
-  <!-- ========== SCRIPTS ========== -->
-  <script>
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => navbar.classList.toggle('nav-scrolled', window.scrollY > 60));
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 
-    const mobileToggle = document.getElementById('mobileToggle');
-    const mobileMenu = document.getElementById('mobileMenu');
-    mobileToggle.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-    mobileMenu.querySelectorAll('a').forEach(l => l.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+// Load Logo Texture
+const textureLoader = new THREE.TextureLoader();
+const logoTexture = textureLoader.load('https://z-cdn-media.chatglm.cn/files/226c24f7-b0ac-4e60-9982-f49a7ec74911.png?auth_key=1878250300-8dc498d492de4f1c87dc32e366174702-0-bf0e5b723f10454ba5761d5d51660db8');
 
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
-    }, { threshold: 0.15 });
-    document.querySelectorAll('.section-reveal').forEach(el => revealObserver.observe(el));
+const vertexShader = `
+  uniform float uTime;
+  uniform float uAmplitude;
+  uniform float uFrequency;
+  uniform float uSpeed;
+  uniform float uBend;
+  uniform float uGlitch;
 
-    function toggleFaq(btn) {
-      const item = btn.closest('.faq-item');
-      const answer = item.querySelector('.faq-answer');
-      const icon = item.querySelector('.faq-icon');
-      const isOpen = answer.style.maxHeight && answer.style.maxHeight !== '0px';
-      document.querySelectorAll('.faq-answer').forEach(a => a.style.maxHeight = '0px');
-      document.querySelectorAll('.faq-icon').forEach(i => i.style.transform = 'rotate(0deg)');
-      if (!isOpen) { answer.style.maxHeight = answer.scrollHeight + 'px'; icon.style.transform = 'rotate(45deg)'; }
+  varying vec2 vUv;
+  varying float vDisplacement;
+  varying vec3 vWorldNormal;
+
+  float hash(float n) { return fract(sin(n) * 43758.5453123); }
+  float noise(vec3 x) {
+    vec3 p = floor(x); vec3 f = fract(x); f = f*f*(3.0-2.0*f);
+    float n = p.x + p.y*57.0 + 113.0*p.z;
+    return mix(mix(mix(hash(n+0.0), hash(n+1.0), f.x), mix(hash(n+57.0), hash(n+58.0), f.x), f.y),
+               mix(mix(hash(n+113.0), hash(n+114.0), f.x), mix(hash(n+170.0), hash(n+171.0), f.x), f.y), f.z);
+  }
+  float fbm(vec3 p) {
+    float f = 0.0; f += 0.5000*noise(p); p*=2.01; f += 0.2500*noise(p); p*=2.02; f += 0.1250*noise(p); p*=2.03; f += 0.0625*noise(p); return f/0.9375;
+  }
+
+  void main() {
+    vUv = uv;
+    vec3 pos = position;
+    vec3 norm = normal;
+
+    // 1. Bend (Cylinder Mapping)
+    float bendAngle = uBend * 3.14159;
+    if (bendAngle > 0.01) {
+      float radius = 2.0 / bendAngle; // 2.0 is half-width of our 4x4 plane
+      float theta = (pos.x / 2.0) * bendAngle;
+      vec3 bentPos = vec3(radius * sin(theta), pos.y, radius * (1.0 - cos(theta)));
+      pos = mix(position, bentPos, uBend);
     }
 
-    function handleSubmit(e) {
-      e.preventDefault();
-      const msg = document.getElementById('formMessage');
-      msg.classList.remove('hidden');
-      msg.textContent = '✓ Thanks! We\'ll be in touch within 24 hours.';
-      e.target.reset();
-      setTimeout(() => msg.classList.add('hidden'), 5000);
+    // 2. Noise Displacement on Surface
+    float n = fbm(pos * uFrequency + uTime * uSpeed);
+    float displacement = (n - 0.5) * 2.0 * uAmplitude;
+    pos += norm * displacement;
+
+    // 3. Glitch Effect
+    pos.z += (step(0.8, fract(sin(pos.y * 40.0 + uTime * 5.0) * 43758.5453)) * uGlitch * 0.4);
+
+    vDisplacement = displacement;
+    vWorldNormal = normalize(normalMatrix * norm);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+  }
+`;
+
+const fragmentShader = `
+  uniform sampler2D uTexture;
+  uniform vec3 uWireColor;
+  uniform float uOpacity;
+  uniform bool uIsWireframe;
+  
+  varying vec2 vUv;
+  varying float vDisplacement;
+  varying vec3 vWorldNormal;
+
+  void main() {
+    vec4 texColor = texture2D(uTexture, vUv);
+    
+    // Discard pixels outside the logo shape to make the plane invisible except for the logo
+    if (texColor.a < 0.15) discard;
+
+    float intensity = 1.0 + abs(vDisplacement) * 1.5;
+    
+    if (uIsWireframe) {
+      vec3 color = uWireColor * intensity * 1.5;
+      gl_FragColor = vec4(color, uOpacity * texColor.a);
+    } else {
+      vec3 color = texColor.rgb * intensity;
+      gl_FragColor = vec4(color, texColor.a * uOpacity);
     }
+  }
+`;
 
-    // Three.js
-    (function() {
-      const container = document.getElementById('hero3DCanvas').parentElement;
-      const canvas = document.getElementById('hero3DCanvas');
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
-      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-      renderer.setSize(container.clientWidth, container.clientHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+// Uniforms
+const uniforms = {
+  uTime:      { value: 0 },
+  uAmplitude: { value: 0.05 },
+  uFrequency: { value: 1.5 },
+  uSpeed:     { value: 0.4 },
+  uBend:      { value: 0.0 },
+  uGlitch:    { value: 0.0 },
+  uTexture:   { value: logoTexture },
+  uWireColor: { value: new THREE.Color(0x06b6d4) }, // Cyan wireframe
+  uOpacity:   { value: 0.8 },
+  uIsWireframe: { value: true }
+};
 
-      const ico = new THREE.Mesh(new THREE.IcosahedronGeometry(2.2, 1), new THREE.MeshBasicMaterial({ color: 0x6366F1, wireframe: true, transparent: true, opacity: 0.14 }));
-      scene.add(ico);
-      const icoInner = new THREE.Mesh(new THREE.IcosahedronGeometry(1.2, 0), new THREE.MeshBasicMaterial({ color: 0x8B5CF6, wireframe: true, transparent: true, opacity: 0.1 }));
-      scene.add(icoInner);
-      const torus = new THREE.Mesh(new THREE.TorusGeometry(3.2, 0.015, 16, 120), new THREE.MeshBasicMaterial({ color: 0x6366F1, transparent: true, opacity: 0.1 }));
-      torus.rotation.x = Math.PI * 0.5; scene.add(torus);
-      const torus2 = new THREE.Mesh(new THREE.TorusGeometry(3.6, 0.01, 16, 120), new THREE.MeshBasicMaterial({ color: 0x8B5CF6, transparent: true, opacity: 0.05 }));
-      torus2.rotation.x = Math.PI * 0.35; torus2.rotation.z = Math.PI * 0.2; scene.add(torus2);
+const solidUniforms = {
+  ...uniforms,
+  uOpacity: { value: 1.0 },
+  uIsWireframe: { value: false }
+};
 
-      const pCount = 300, pos = new Float32Array(pCount * 3), cols = new Float32Array(pCount * 3), sizes = new Float32Array(pCount);
-      const cA = new THREE.Color(0x6366F1), cB = new THREE.Color(0x8B5CF6), cC = new THREE.Color(0xA78BFA);
-      for (let i = 0; i < pCount; i++) {
-        const th = Math.random() * Math.PI * 2, ph = Math.acos(2 * Math.random() - 1), r = 2.5 + Math.random() * 3;
-        pos[i*3] = r * Math.sin(ph) * Math.cos(th); pos[i*3+1] = r * Math.sin(ph) * Math.sin(th); pos[i*3+2] = r * Math.cos(ph);
-        sizes[i] = Math.random() * 2 + 0.5;
-        const t = Math.random(), c = t < 0.4 ? cA : t < 0.7 ? cB : cC;
-        cols[i*3] = c.r; cols[i*3+1] = c.g; cols[i*3+2] = c.b;
-      }
-      const pGeo = new THREE.BufferGeometry();
-      pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-      pGeo.setAttribute('aColor', new THREE.BufferAttribute(cols, 3));
-      pGeo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-      const pMat = new THREE.ShaderMaterial({
-        uniforms: { uOpacity: { value: 0.45 } },
-        vertexShader: `attribute float size; attribute vec3 aColor; varying vec3 vColor; void main(){ vColor=aColor; vec4 mv=modelViewMatrix*vec4(position,1.); gl_PointSize=size*(150./-mv.z); gl_Position=projectionMatrix*mv; }`,
-        fragmentShader: `uniform float uOpacity; varying vec3 vColor; void main(){ float d=length(gl_PointCoord-vec2(.5)); if(d>.5) discard; gl_FragColor=vec4(vColor, smoothstep(.5,.1,d)*uOpacity); }`,
-        transparent: true, depthWrite: false
-      });
-      const particles = new THREE.Points(pGeo, pMat); scene.add(particles);
+const wireMat = new THREE.ShaderMaterial({
+  vertexShader, fragmentShader, uniforms,
+  transparent: true, wireframe: true, depthWrite: false, side: THREE.DoubleSide
+});
 
-      const dGeo = new THREE.DodecahedronGeometry(0.15, 0), dodecs = [];
-      for (let i = 0; i < 6; i++) {
-        const d = new THREE.Mesh(dGeo, new THREE.MeshBasicMaterial({ color: i%2===0?0x6366F1:0x8B5CF6, wireframe: true, transparent: true, opacity: 0.25 }));
-        const a = (i/6)*Math.PI*2; d.position.set(Math.cos(a)*3, Math.sin(a*.7)*1.5, Math.sin(a)*3);
-        d.userData = { angle:a, speed:.3+Math.random()*.3, offset:Math.random()*Math.PI*2 };
-        scene.add(d); dodecs.push(d);
-      }
-      const lMat = new THREE.LineBasicMaterial({ color: 0x6366F1, transparent: true, opacity: 0.04 }), lines = [];
-      for (let i = 0; i < dodecs.length; i++) for (let j = i+1; j < dodecs.length; j++) {
-        if (Math.random() > 0.4) continue;
-        const lg = new THREE.BufferGeometry().setFromPoints([dodecs[i].position.clone(), dodecs[j].position.clone()]);
-        const l = new THREE.Line(lg, lMat); l.userData = { i, j }; scene.add(l); lines.push(l);
-      }
-      camera.position.z = 7;
-      let mx=0,my=0,tmx=0,tmy=0,sY=0;
-      document.addEventListener('mousemove', e => { tmx=(e.clientX/innerWidth-.5)*2; tmy=(e.clientY/innerHeight-.5)*2; });
-      window.addEventListener('scroll', () => sY = scrollY);
-      function onR(){ const w=container.clientWidth,h=container.clientHeight; camera.aspect=w/h; camera.updateProjectionMatrix(); renderer.setSize(w,h); }
-      window.addEventListener('resize', onR);
-      const clk = new THREE.Clock();
-      (function anim(){
-        requestAnimationFrame(anim); const t=clk.getElapsedTime();
-        mx+=(tmx-mx)*.05; my+=(tmy-my)*.05;
-        ico.rotation.x=t*.15+my*.3; ico.rotation.y=t*.2+mx*.3;
-        icoInner.rotation.x=-t*.2+my*.2; icoInner.rotation.y=-t*.25+mx*.2;
-        torus.rotation.z=t*.1; torus2.rotation.z=-t*.08;
-        particles.rotation.y=t*.03; particles.rotation.x=t*.01;
-        dodecs.forEach(d=>{ const u=d.userData; d.position.y=Math.sin(t*u.speed+u.offset)*1.5; d.rotation.x=t*u.speed; d.rotation.z=t*u.speed*.7; });
-        lines.forEach(l=>{ const p=l.geometry.attributes.position.array; p[0]=dodecs[l.userData.i].position.x; p[1]=dodecs[l.userData.i].position.y; p[2]=dodecs[l.userData.i].position.z; p[3]=dodecs[l.userData.j].position.x; p[4]=dodecs[l.userData.j].position.y; p[5]=dodecs[l.userData.j].position.z; l.geometry.attributes.position.needsUpdate=true; });
-        const sf=Math.min(sY*.002,1); camera.position.y=-sf*1.5; camera.position.z=7+sf*2;
-        renderer.render(scene,camera);
-      })();
-    })();
+const solidMat = new THREE.ShaderMaterial({
+  vertexShader, fragmentShader, uniforms: solidUniforms,
+  transparent: true, wireframe: false, side: THREE.DoubleSide, depthWrite: false
+});
 
-    // 3D Card Tilt
-    document.querySelectorAll('.tilt-card').forEach(card => {
-      card.addEventListener('mousemove', e => {
-        const r = card.getBoundingClientRect();
-        card.style.transform = `perspective(800px) rotateX(${((e.clientY-r.top-r.height/2)/(r.height/2))*-8}deg) rotateY(${((e.clientX-r.left-r.width/2)/(r.width/2))*8}deg) translateY(-8px) scale(1.02)`;
-      });
-      card.addEventListener('mouseleave', () => { card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0) scale(1)'; });
+// Switch from Icosahedron to high-density Plane
+const geometry = new THREE.PlaneGeometry(4, 4, 64, 64); 
+const wireMesh  = new THREE.Mesh(geometry, wireMat);
+const solidMesh = new THREE.Mesh(geometry, solidMat);
+scene.add(solidMesh);
+scene.add(wireMesh);
+
+// Particles
+const pCount = 400;
+const pPositions = new Float32Array(pCount * 3);
+for (let i = 0; i < pCount * 3; i++) pPositions[i] = (Math.random() - 0.5) * 20;
+const pGeo = new THREE.BufferGeometry();
+pGeo.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
+const pMat = new THREE.PointsMaterial({ size: 0.015, color: 0x444444, transparent: true, opacity: 0.4 });
+const particles = new THREE.Points(pGeo, pMat);
+scene.add(particles);
+
+// ============================================
+// 3. SCROLL INTERPOLATION
+// ============================================
+const sectionParams = [
+  { amplitude: 0.05, frequency: 1.5, speed: 0.4, bend: 0.0, glitch: 0.0, wireColor: new THREE.Color(0x06b6d4) }, // Hero Flat
+  { amplitude: 0.10, frequency: 2.0, speed: 0.6, bend: 0.4, glitch: 0.0, wireColor: new THREE.Color(0xff4444) }, // Problem Curve
+  { amplitude: 0.05, frequency: 2.5, speed: 0.8, bend: 0.9, glitch: 0.0, wireColor: new THREE.Color(0x5046e5) }, // Solution Wrap
+  { amplitude: 0.02, frequency: 1.2, speed: 0.3, bend: 1.2, glitch: 0.3, wireColor: new THREE.Color(0x7c3aed) }, // Result Glitch
+  { amplitude: 0.08, frequency: 1.0, speed: 0.2, bend: 0.0, glitch: 0.0, wireColor: new THREE.Color(0x06b6d4) }, // CTA Flat
+];
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+function smoothstep(t) { return t * t * (3 - 2 * t); }
+function lerpColor(c1, c2, t) {
+  return new THREE.Color(lerp(c1.r, c2.r, t), lerp(c1.g, c2.g, t), lerp(c1.b, c2.b, t));
+}
+
+let scrollProgress = 0;
+
+function updateMorphParams(progress) {
+  const totalSections = sectionParams.length - 1;
+  const raw = progress * totalSections;
+  const idx = Math.min(Math.floor(raw), totalSections - 1);
+  const frac = smoothstep(raw - idx);
+
+  const from = sectionParams[idx];
+  const to   = sectionParams[idx + 1] || sectionParams[idx];
+
+  [wireMat, solidMat].forEach(mat => {
+    mat.uniforms.uAmplitude.value = lerp(from.amplitude, to.amplitude, frac);
+    mat.uniforms.uFrequency.value = lerp(from.frequency, to.frequency, frac);
+    mat.uniforms.uSpeed.value     = lerp(from.speed, to.speed, frac);
+    mat.uniforms.uBend.value      = lerp(from.bend, to.bend, frac);
+    mat.uniforms.uGlitch.value    = lerp(from.glitch, to.glitch, frac);
+  });
+  wireMat.uniforms.uWireColor.value = lerpColor(from.wireColor, to.wireColor, frac);
+}
+
+// Mouse parallax
+let targetX = 0, targetY = 0;
+document.addEventListener('mousemove', (e) => {
+  targetX = (e.clientX / innerWidth - 0.5) * 0.8;
+  targetY = (e.clientY / innerHeight - 0.5) * 0.8;
+});
+
+// Animation loop
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const elapsed = clock.getElapsedTime();
+
+  [wireMat, solidMat].forEach(m => { m.uniforms.uTime.value = elapsed; });
+
+  // Subtle continuous rotation
+  wireMesh.rotation.y  += 0.002;
+  solidMesh.rotation.copy(wireMesh.rotation);
+
+  wireMesh.position.x  += (targetX - wireMesh.position.x) * 0.02;
+  wireMesh.position.y  += (-targetY - wireMesh.position.y) * 0.02;
+  solidMesh.position.copy(wireMesh.position);
+
+  camera.position.z = 6 - scrollProgress * 1.5;
+  camera.position.y = scrollProgress * -0.8;
+
+  particles.rotation.y = elapsed * 0.015;
+  renderer.render(scene, camera);
+}
+animate();
+
+// ============================================
+// 4. GSAP SCROLLTRIGGER & ANIMATIONS
+// ============================================
+gsap.registerPlugin(ScrollTrigger);
+
+ScrollTrigger.create({
+  trigger: '.scroll-content',
+  start: 'top top',
+  end: 'bottom bottom',
+  onUpdate: (self) => {
+    scrollProgress = self.progress;
+    document.querySelector('.scroll-progress').style.width = `${self.progress * 100}%`;
+    updateMorphParams(self.progress);
+
+    const activeIdx = Math.min(Math.floor(self.progress * 5), 4);
+    document.querySelectorAll('.indicator').forEach((ind, i) => {
+      ind.classList.toggle('active', i === activeIdx);
     });
+  }
+});
 
-    // Scroll parallax
-    window.addEventListener('scroll', () => {
-      const sy = scrollY;
-      document.querySelectorAll('.parallax-3d').forEach(el => {
-        const sp = parseFloat(el.dataset.speed) || 0.02;
-        const r = el.getBoundingClientRect();
-        el.style.transform = `translateY(${(r.top + r.height/2 - innerHeight/2) * sp}px)`;
-      });
-    });
-  </script>
+// Hero
+gsap.to('.hero-eyebrow', { opacity: 1, duration: 1, delay: 0.3 });
+gsap.to('.hero-title .line-inner', { y: 0, duration: 1.2, ease: 'power4.out', stagger: 0.15, delay: 0.5 });
+gsap.to('.hero-sub', { opacity: 1, duration: 1, delay: 1.2 });
+
+// Problem Text Reveal
+const problemText = document.getElementById('problem-text');
+const pWords = problemText.textContent.trim().split(/\s+/);
+problemText.innerHTML = pWords.map(w => `<span class="word">${w}</span>`).join(' ');
+gsap.to('#problem-text .word', {
+  scrollTrigger: { trigger: '#problem-text', start: 'top 70%', end: 'bottom 40%', scrub: true },
+  opacity: 1, stagger: 0.05,
+});
+gsap.to('.problem-stat', { scrollTrigger: { trigger: '.problem-section', start: 'top 40%' }, opacity: 1, duration: 1 });
+
+// Solution
+gsap.to('.solution-label', { scrollTrigger: { trigger: '.solution-section', start: 'top 60%' }, opacity: 1, duration: 0.8 });
+gsap.to('.solution-title', { scrollTrigger: { trigger: '.solution-section', start: 'top 60%' }, opacity: 1, duration: 1, delay: 0.2 });
+gsap.to('.solution-desc', { scrollTrigger: { trigger: '.solution-section', start: 'top 60%' }, opacity: 1, duration: 1, delay: 0.4 });
+
+// Result
+gsap.to('.result-title', { scrollTrigger: { trigger: '.result-section', start: 'top 60%' }, opacity: 1, duration: 1.2 });
+gsap.to('.result-sub', { scrollTrigger: { trigger: '.result-section', start: 'top 50%' }, opacity: 1, duration: 1 });
+
+// CTA
+gsap.to('.cta-title', { scrollTrigger: { trigger: '.cta-section', start: 'top 60%' }, opacity: 1, duration: 1.2 });
+gsap.to('.cta-btn', { scrollTrigger: { trigger: '.cta-section', start: 'top 60%' }, opacity: 1, y: 0, duration: 1 });
+gsap.to('.cta-note', { scrollTrigger: { trigger: '.cta-section', start: 'top 50%' }, opacity: 1, duration: 1, delay: 0.3 });
+
+// Resize
+window.addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+</script>
 </body>
 </html>
