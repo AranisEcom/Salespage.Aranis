@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EASTEL — Data Besar, Harga Jimat | AtukSimkad</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        ::selection { background: #6C3CE1; color: #fff; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(120%); opacity: 0; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(1deg); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(108,60,225,0.3); }
+            50% { box-shadow: 0 0 40px rgba(108,60,225,0.6), 0 0 80px rgba(108,60,225,0.2); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        @keyframes countUp {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .anim-fade-up { animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards; opacity: 0; }
+        .anim-delay-1 { animation-delay: 0.1s; }
+        .anim-delay-2 { animation-delay: 0.2s; }
+        .anim-delay-3 { animation-delay: 0.3s; }
+        .anim-delay-4 { animation-delay: 0.4s; }
+        .anim-delay-5 { animation-delay: 0.5s; }
+        .anim-delay-6 { animation-delay: 0.6s; }
+
+        .notification-enter { animation: slideInRight 0.4s cubic-bezier(0.16,1,0.3,1) forwards; }
+        .notification-exit { animation: slideOutRight 0.3s ease-in forwards; }
+
+        .float-anim { animation: float 4s ease-in-out infinite; }
+        .pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+
+        .shimmer-text {
+            background: linear-gradient(90deg, #6C3CE1, #a855f7, #6C3CE1, #c084fc, #6C3CE1);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s linear infinite;
+        }
+
+        .gradient-border {
+            position: relative;
+            background: #111;
+            border-radius: 1.5rem;
+        }
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 1.5rem;
+            padding: 1px;
+            background: linear-gradient(135deg, #6C3CE1, #a855f7, #0088cc, #6C3CE1);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .hero-gradient {
+            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(108,60,225,0.18) 0%, transparent 60%),
+                        radial-gradient(ellipse 60% 40% at 80% 20%, rgba(0,136,204,0.1) 0%, transparent 50%);
+        }
+
+        .card-hover { transition: all 0.3s cubic-bezier(0.16,1,0.3,1); }
+        .card-hover:hover { transform: translateY(-4px); }
+
+        .marquee-track {
+            display: flex;
+            animation: marquee 25s linear infinite;
+            width: max-content;
+        }
+
+        .img-promo {
+            background: linear-gradient(135deg, #1a0a3e 0%, #0d0d2b 40%, #0a1628 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .img-promo::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(108,60,225,0.15), transparent 60%);
+            pointer-events: none;
+        }
+
+        .stat-number {
+            background: linear-gradient(135deg, #6C3CE1, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-[#050505] text-white overflow-x-hidden">
+
+    <!-- ========== FAKE PURCHASE NOTIFICATION ========== -->
+    <div id="notification-container" class="fixed bottom-6 left-6 z-[100] flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- ========== TOP BAR ========== -->
+    <div class="fixed top-0 left-0 right-0 z-50 bg-[#050505]/80 backdrop-blur-xl border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6C3CE1] to-[#0088cc] flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+                    </div>
+                    <span class="text-sm font-bold text-white hidden sm:block">AtukSimkad</span>
+                </a>
+            </div>
+            <div class="flex items-center gap-5">
+                <div class="flex items-center gap-2 text-xs text-neutral-400">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </span>
+                    <span><span id="liveViewers" class="text-green-400 font-semibold">52</span> online</span>
+                </div>
+                <a href="https://t.me/+601167997030" target="_blank" class="hidden sm:flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#6C3CE1] text-white text-xs font-semibold hover:bg-[#5b2fd4] transition-colors">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                    Hubungi Kami
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== HERO SECTION ========== -->
+    <section class="relative min-h-screen flex items-center hero-gradient pt-14">
+        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.03) 1px, transparent 0); background-size: 32px 32px;"></div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 w-full py-12 md:py-20">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+                <!-- Left: Copy -->
+                <div>
+                    <div class="anim-fade-up">
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 mb-8">
+                            <span class="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse"></span>
+                            <span class="text-[11px] font-semibold text-purple-300 uppercase tracking-widest">Ultra 4G/5G Speed</span>
+                        </div>
+                    </div>
+
+                    <h1 class="anim-fade-up anim-delay-1 text-[clamp(2.8rem,6vw,5rem)] font-extrabold leading-[0.95] tracking-tight mb-6">
+                        Data Besar.<br>
+                        <span class="shimmer-text">Harga Jimat.</span><br>
+                        Kelajuan Gila.
+                    </h1>
+
+                    <p class="anim-fade-up anim-delay-2 text-lg text-neutral-400 font-light leading-relaxed max-w-md mb-4">
+                        EASTEL hadir dengan pakej data sehingga <strong class="text-white font-semibold">999GB</strong> — sesuai untuk semua orang.
+                    </p>
+
+                    <!-- Trust Badges -->
+                    <div class="anim-fade-up anim-delay-3 flex flex-wrap gap-3 mb-8">
+                        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10">
+                            <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <span class="text-xs text-neutral-300 font-medium">Boleh Hotspot</span>
+                        </div>
+                        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10">
+                            <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <span class="text-xs text-neutral-300 font-medium">Data Carry Forward</span>
+                        </div>
+                        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10">
+                            <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <span class="text-xs text-neutral-300 font-medium">Unlimited Call</span>
+                        </div>
+                    </div>
+
+                    <!-- CTAs -->
+                    <div class="anim-fade-up anim-delay-4 flex flex-col sm:flex-row gap-3">
+                        <a href="https://t.me/+601167997030" target="_blank" class="inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-2xl bg-gradient-to-r from-[#6C3CE1] to-[#8B5CF6] text-white font-bold text-base hover:shadow-[0_0_40px_rgba(108,60,225,0.4)] transition-all duration-300 group">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                            Daftar Sekarang
+                            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                        </a>
+                        <a href="#pricing" class="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl bg-white/5 border border-white/15 text-white font-semibold text-base hover:bg-white/10 transition-all">
+                            Lihat Pakej
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right: Product Image -->
+                <div class="anim-fade-up anim-delay-3 relative flex justify-center lg:justify-end">
+                    <div class="relative">
+                        <!-- Glow behind image -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-[#6C3CE1]/30 to-[#0088cc]/20 rounded-3xl blur-3xl scale-110"></div>
+                        <!-- Image container -->
+                        <div class="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-purple-900/20">
+                            <!-- GANTI src DI BAWAH DENGAN GAMBAR ANDA: photo_6316659650236976908_x.jpg -->
+                            <img src="https://i.ibb.co/Rpr0nM55/photo-6316659650236976908-x.jpg" alt="EASTEL SIM Kad Promo" class="w-full max-w-lg object-cover">
+                            <!-- Overlay badges on image -->
+                            <div class="absolute top-4 right-4 px-3 py-1.5 rounded-full bg-[#6C3CE1] text-white text-xs font-bold animate-pulse">
+                                🔥 PROMO TERHAD
+                            </div>
+                        </div>
+                        <!-- Floating stat card -->
+                        <div class="absolute -bottom-4 -left-4 sm:left-4 bg-[#111]/95 backdrop-blur-xl border border-white/10 rounded-2xl px-5 py-3.5 shadow-xl">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-green-500/15 flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-neutral-400">Kelajuan</p>
+                                    <p class="text-sm font-bold text-white">4G/5G Ultra</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== URGENCY BAR ========== -->
+    <section class="relative border-y border-white/5 bg-[#0a0a0a]/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <!-- Countdown -->
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-1.5 text-xs text-red-400 font-semibold">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        PROMO TAMAT DALAM
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <span id="cH" class="bg-[#6C3CE1]/20 border border-[#6C3CE1]/30 text-white font-bold text-sm px-2.5 py-1 rounded-lg font-mono">02</span>
+                        <span class="text-neutral-600 font-mono">:</span>
+                        <span id="cM" class="bg-[#6C3CE1]/20 border border-[#6C3CE1]/30 text-white font-bold text-sm px-2.5 py-1 rounded-lg font-mono">47</span>
+                        <span class="text-neutral-600 font-mono">:</span>
+                        <span id="cS" class="bg-[#6C3CE1]/20 border border-[#6C3CE1]/30 text-white font-bold text-sm px-2.5 py-1 rounded-lg font-mono">33</span>
+                    </div>
+                </div>
+                <!-- Stock -->
+                <div class="flex items-center gap-3">
+                    <span class="text-xs text-neutral-400">Stok SIM Pack:</span>
+                    <div class="w-32 h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div id="stockBar" class="h-full bg-gradient-to-r from-[#6C3CE1] to-red-500 rounded-full transition-all duration-1000" style="width:65%"></div>
+                    </div>
+                    <span id="stockNum" class="text-xs font-bold text-red-400">33 left</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== STATS MARQUEE ========== -->
+    <section class="py-6 border-b border-white/5 overflow-hidden bg-[#080808]">
+        <div class="marquee-track">
+            <div class="flex items-center gap-12 px-6">
+                <span class="text-sm text-neutral-500 whitespace-nowrap">⚡ Ultra 4G/5G Speed</span>
+                <span class="text-sm text-neutral-500 whitespace-nowrap">📡 Liputan Seluruh Malaysia</span>
+                <span class="text-sm text-neutral-500 whitespace-nowrap">🔥 Sehingga 999GB Data</span>
+                <span class="text-sm text-neutral-500 whitespace-nowrap">📱 Boleh Hotspot</span>
+                <span class="text-sm text-neutral-500 whitespace-nowrap">🔄 Data Carry Forward</span>
+                <span class="text-sm text-neutral-500 whitespace-nowrap">📞 Unlimited Call</span>
+                <span class="text-sm text-neutral-500 whitespace-nowrap">🌍 Data Roaming</span>
+                <span class="text-sm text-neutral-500 whitespace-nowrap">💾 MNP — Kekal Nombor Lama</span>
+            </div>
+            <div class="flex items-center gap-12 px-6">
+                <span class="text-sm text-neutral-500 whitespace-nowrap">⚡ Ultra 4G/5G Speed</span>
+                <span class="text-sm text-neutral-500 whitespace-nowrap">📡 Liputan Seluruh Malaysia</span>
+                <span class="text-sm text-neutral-500 whitespace-nowrap">🔥 Sehingga 999GB Data</span>
+                <span class="text-sm text-neutral-500 whitespace-nowrap">📱 Boleh Hotspot</span>
+                <span class="text-sm text-neutral-500 whitespace-nowrap">🔄 Data Carry Forward</span>
+                <span class="text-sm text-neutral-500 whitespace-nowrap">📞 Unlimited Call</span>
+                <span class="text-sm text-neutral-500 whitespace-nowrap">🌍 Data Roaming</span>
+                <span class="text-sm text-neutral-500 whitespace-nowrap">💾 MNP — Kekal Nombor Lama</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== PAKET HARGA (PRICING) ========== -->
+    <section id="pricing" class="relative py-20 md:py-28">
+        <div class="absolute inset-0 hero-gradient opacity-40"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
+            <!-- Section Header -->
+            <div class="text-center mb-14">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 mb-5">
+                    <span class="text-[11px] font-semibold text-purple-300 uppercase tracking-widest">Pakej Harga</span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
+                    Pilih Pelan <span class="text-purple-400">Anda</span>
+                </h2>
+                <p class="text-neutral-400 font-light max-w-lg mx-auto">SIM Pack bermula RM10 sahaja. Termasuk trial data awal. Boleh kekal nombor lama (MNP).</p>
+            </div>
+
+            <!-- Pricing Grid — 3 Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+
+                <!-- EZ35 — Best Value -->
+                <div class="card-hover bg-[#0d0d0d] border border-white/8 rounded-3xl p-7 flex flex-col">
+                    <div class="mb-5">
+                        <span class="inline-block px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-bold uppercase tracking-wider mb-4">Best Value</span>
+                        <p class="text-xs text-neutral-500 font-semibold uppercase tracking-wider mb-1">EZ35</p>
+                        <div class="flex items-baseline gap-1.5">
+                            <span class="text-4xl font-extrabold text-white">RM35</span>
+                            <span class="text-sm text-neutral-500 font-light">/bulan</span>
+                        </div>
+                        <p class="text-xs text-neutral-600 mt-1">30 Hari · 300GB Data</p>
+                    </div>
+                    <div class="flex-1 space-y-3 mb-7">
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-neutral-300"><strong class="text-white">300GB</strong> High Speed</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-neutral-300"><strong class="text-white">100GB</strong> Hotspot</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-neutral-300"><strong class="text-white">Unlimited</strong> Call</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-neutral-300"><strong class="text-white">10</strong> SMS</span></div>
+                        <div class="flex items-center gap-3 opacity-35"><svg class="w-5 h-5 text-neutral-600 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg><span class="text-sm text-neutral-600">Tiada Roaming</span></div>
+                    </div>
+                    <a href="https://t.me/+601167997030" target="_blank" class="w-full py-3.5 rounded-2xl border border-white/15 text-white font-semibold text-sm text-center hover:bg-white/5 transition-all flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                        Daftar EZ35
+                    </a>
+                </div>
+
+                <!-- EZ50 — Best Seller (POPULAR) -->
+                <div class="card-hover relative bg-gradient-to-b from-[#6C3CE1]/15 to-[#0d0d0d] border-2 border-[#6C3CE1]/50 rounded-3xl p-7 flex flex-col pulse-glow">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-[#6C3CE1] to-[#8B5CF6] text-white text-[11px] font-bold uppercase tracking-wider whitespace-nowrap">
+                        🔥 BEST SELLER
+                    </div>
+                    <div class="mb-5 mt-2">
+                        <p class="text-xs text-purple-400/70 font-semibold uppercase tracking-wider mb-1">EZ50</p>
+                        <div class="flex items-baseline gap-1.5">
+                            <span class="text-5xl font-extrabold text-white">RM50</span>
+                            <span class="text-sm text-neutral-400 font-light">/bulan</span>
+                        </div>
+                        <p class="text-xs text-neutral-500 mt-1">30 Hari · 500GB Data</p>
+                    </div>
+                    <div class="flex-1 space-y-3 mb-7">
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-neutral-200"><strong class="text-white">500GB</strong> High Speed</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-neutral-200"><strong class="text-white">Full</strong> Hotspot</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-neutral-200"><strong class="text-white">Unlimited</strong> Call</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-neutral-200"><strong class="text-white">10</strong> SMS</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-neutral-200"><strong class="text-white">3GB</strong> Roaming SG/TH/ID</span></div>
+                    </div>
+                    <a href="https://t.me/+601167997030" target="_blank" class="w-full py-4 rounded-2xl bg-gradient-to-r from-[#6C3CE1] to-[#8B5CF6] text-white font-bold text-sm text-center hover:shadow-[0_0_30px_rgba(108,60,225,0.4)] transition-all flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                        Daftar EZ50
+                    </a>
+                </div>
+
+                <!-- EZ98 — Power User -->
+                <div class="card-hover bg-[#0d0d0d] border border-white/8 rounded-3xl p-7 flex flex-col">
+                    <div class="mb-5">
+                        <span class="inline-block px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[11px] font-bold uppercase tracking-wider mb-4">💎 Power User</span>
+                        <p class="text-xs text-neutral-500 font-semibold uppercase tracking-wider mb-1">EZ98</p>
+                        <div class="flex items-baseline gap-1.5">
+                            <span class="text-4xl font-extrabold text-white">RM98</span>
+                            <span class="text-sm text-neutral-500 font-light">/bulan</span>
+                        </div>
+                        <p class="text-xs text-neutral-600 mt-1">30 Hari · 999GB Data</p>
+                    </div>
+                    <div class="flex-1 space-y-3 mb-7">
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-neutral-300"><strong class="text-white">999GB</strong> High Speed</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-neutral-300"><strong class="text-white">Full</strong> Hotspot</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-neutral-300"><strong class="text-white">Unlimited</strong> Call</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-neutral-300"><strong class="text-white">10</strong> SMS</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-sm text-neutral-300"><strong class="text-white">10GB</strong> Roaming</span></div>
+                    </div>
+                    <a href="https://t.me/+601167997030" target="_blank" class="w-full py-3.5 rounded-2xl border border-white/15 text-white font-semibold text-sm text-center hover:bg-white/5 transition-all flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                        Daftar EZ98
+                    </a>
+                </div>
+            </div>
+
+            <!-- SIM Pack note -->
+            <div class="mt-6 text-center">
+                <p class="text-xs text-neutral-500">📦 SIM Pack bermula <strong class="text-neutral-300">RM10</strong> · Termasuk trial data · MNP tersedia · Boleh guna sendiri atau sertai <strong class="text-purple-400">Eastelpreneur</strong></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== EASTELPRENEUR — BUAT DUIT ========== -->
+    <section class="relative py-20 md:py-28 bg-[#080808]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+                <!-- Image -->
+                <div class="relative order-2 lg:order-1">
+                    <div class="absolute inset-0 bg-gradient-to-br from-[#6C3CE1]/20 to-transparent rounded-3xl blur-2xl"></div>
+                    <div class="relative rounded-3xl overflow-hidden border border-white/10">
+                        <!-- GANTI src DI BAWAH DENGAN GAMBAR ANDA: e7a31a39-a181-47ec-8a8b-02d9934fd8b4.jpg -->
+                        <img src="https://i.ibb.co/cKK8Q4W4/e7a31a39-a181-47ec-8a8b-02d9934fd8b4.jpg" alt="EASTEL Eastelpreneur" class="w-full object-cover">
+                    </div>
+                    <!-- Badge -->
+                    <div class="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-yellow-500/90 text-black text-[11px] font-bold uppercase tracking-wider">
+                        💰 Produk Permintaan Tinggi
+                    </div>
+                </div>
+
+                <!-- Copy -->
+                <div class="order-1 lg:order-2">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-yellow-500/30 bg-yellow-500/10 mb-6">
+                        <span class="text-[11px] font-semibold text-yellow-300 uppercase tracking-widest">Eastelpreneur</span>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-5 leading-tight">
+                        Dah Boleh<br><span class="text-yellow-400">Buat Duit?</span>
+                    </h2>
+                    <p class="text-neutral-400 font-light leading-relaxed mb-8">
+                        Yes, dengan EASTEL anda bukan hanya guna — anda juga boleh kongsi kepada keluarga & rakan, dan <strong class="text-white font-semibold">dapat komisen setiap kali top-up</strong>.
+                    </p>
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-purple-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-white">Guna macam biasa</p>
+                                <p class="text-xs text-neutral-500 mt-0.5"> Nikmati data besar untuk keperluan harian anda</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-purple-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-white">Share dekat kawan</p>
+                                <p class="text-xs text-neutral-500 mt-0.5"> Cadarkan pakej yang berbaloi kepada orang sekeliling</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-purple-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-white">Dapat komisen setiap top-up</p>
+                                <p class="text-xs text-neutral-500 mt-0.5"> Pendapatan pasif tanpa had</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 mb-8 px-4 py-3 rounded-xl bg-white/5 border border-white/10">
+                        <svg class="w-5 h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        <p class="text-sm text-neutral-300"><strong class="text-white">Tak ada KPI, tak stress.</strong> Just guna & jalan.</p>
+                    </div>
+                    <a href="https://t.me/+601167997030" target="_blank" class="inline-flex items-center gap-2.5 px-7 py-4 rounded-2xl bg-gradient-to-r from-yellow-500 to-amber-500 text-black font-bold text-sm hover:shadow-[0_0_30px_rgba(234,179,8,0.3)] transition-all group">
+                        Tahu Lebih Lanjut
+                        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== KELEBIHAN FEATURES ========== -->
+    <section class="relative py-20 md:py-28">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-14">
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">
+                    Kenapa <span class="text-purple-400">EASTEL</span>?
+                </h2>
+                <p class="text-neutral-400 font-light max-w-md mx-auto">Direka untuk kehidupan digital anda. Simple. Smart. Berbaloi.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div class="card-hover bg-white/[0.02] border border-white/8 rounded-2xl p-6 group">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500/20 to-purple-500/5 flex items-center justify-center mb-4 group-hover:from-purple-500/30 transition-all">
+                        <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+                    </div>
+                    <h3 class="text-base font-bold text-white mb-1.5">Internet Pantas & Stabil</h3>
+                    <p class="text-sm text-neutral-500 font-light leading-relaxed">TikTok, FB, WhatsApp, YouTube & gaming — semua lancar tanpa lag.</p>
+                </div>
+                <div class="card-hover bg-white/[0.02] border border-white/8 rounded-2xl p-6 group">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-500/5 flex items-center justify-center mb-4 group-hover:from-blue-500/30 transition-all">
+                        <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z"/></svg>
+                    </div>
+                    <h3 class="text-base font-bold text-white mb-1.5">Liputan Luas</h3>
+                    <p class="text-sm text-neutral-500 font-light leading-relaxed">Sesuai digunakan di seluruh Malaysia. Signal kukuh di bandar & luar bandar.</p>
+                </div>
+                <div class="card-hover bg-white/[0.02] border border-white/8 rounded-2xl p-6 group">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-500/20 to-green-500/5 flex items-center justify-center mb-4 group-hover:from-green-500/30 transition-all">
+                        <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 3.75v16.5a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V3.75m19.5 0A2.25 2.25 0 0019.5 1.5H4.5a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 5.91a2.25 2.25 0 01-1.07-1.916V3.75"/></svg>
+                    </div>
+                    <h3 class="text-base font-bold text-white mb-1.5">Data Carry Forward</h3>
+                    <p class="text-sm text-neutral-500 font-light leading-relaxed">Data tak habis? Bawa forward ke bulan berikutnya. Tak bazir!</p>
+                </div>
+                <div class="card-hover bg-white/[0.02] border border-white/8 rounded-2xl p-6 group">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-500/20 to-pink-500/5 flex items-center justify-center mb-4 group-hover:from-pink-500/30 transition-all">
+                        <svg class="w-6 h-6 text-pink-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+                    </div>
+                    <h3 class="text-base font-bold text-white mb-1.5">Unlimited Call</h3>
+                    <p class="text-sm text-neutral-500 font-light leading-relaxed">Panggilan sepuas hati tanpa risau bil. Hubungi sesiapa, bila-bila masa.</p>
+                </div>
+                <div class="card-hover bg-white/[0.02] border border-white/8 rounded-2xl p-6 group">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 flex items-center justify-center mb-4 group-hover:from-cyan-500/30 transition-all">
+                        <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182"/></svg>
+                    </div>
+                    <h3 class="text-base font-bold text-white mb-1.5">Kekal Nombor Lama (MNP)</h3>
+                    <p class="text-sm text-neutral-500 font-light leading-relaxed">Tukar ke EASTEL tanpa perlu tukar nombor. Proses mudah & pantas.</p>
+                </div>
+                <div class="card-hover bg-white/[0.02] border border-white/8 rounded-2xl p-6 group">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-500/20 to-orange-500/5 flex items-center justify-center mb-4 group-hover:from-orange-500/30 transition-all">
+                        <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg>
+                    </div>
+                    <h3 class="text-base font-bold text-white mb-1.5">Data Roaming Antarabangsa</h3>
+                    <p class="text-sm text-neutral-500 font-light leading-relaxed">Pelan tertentu termasuk roaming ke Singapore, Thailand & Indonesia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SESUAI UNTUK SIAPA ========== -->
+    <section class="py-16 border-y border-white/5 bg-[#080808]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                    Sesai Untuk <span class="text-purple-400">Siapa</span>?
+                </h2>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                <div class="card-hover text-center bg-white/[0.02] border border-white/8 rounded-2xl py-6 px-3">
+                    <div class="text-3xl mb-2">👷</div>
+                    <p class="text-sm font-semibold text-white">Pekerja</p>
+                </div>
+                <div class="card-hover text-center bg-white/[0.02] border border-white/8 rounded-2xl py-6 px-3">
+                    <div class="text-3xl mb-2">🎓</div>
+                    <p class="text-sm font-semibold text-white">Pelajar</p>
+                </div>
+                <div class="card-hover text-center bg-white/[0.02] border border-white/8 rounded-2xl py-6 px-3">
+                    <div class="text-3xl mb-2">🛒</div>
+                    <p class="text-sm font-semibold text-white">Peniaga Online</p>
+                </div>
+                <div class="card-hover text-center bg-white/[0.02] border border-white/8 rounded-2xl py-6 px-3">
+                    <div class="text-3xl mb-2">🏍️</div>
+                    <p class="text-sm font-semibold text-white">Rider / Grab</p>
+                </div>
+                <div class="card-hover text-center bg-white/[0.02] border border-white/8 rounded-2xl py-6 px-3 col-span-2 sm:col-span-1">
+                    <div class="text-3xl mb-2">👨‍👩‍👧‍👦</div>
+                    <p class="text-sm font-semibold text-white">Keluarga</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== E-BOOK BONUS ========== -->
+    <section class="relative py-20 md:py-24">
+        <div class="absolute inset-0 hero-gradient opacity-30"></div>
+        <div class="relative max-w-3xl mx-auto px-4 sm:px-6">
+            <div class="gradient-border p-8 sm:p-12 text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-purple-500/20 mb-6 float-anim">
+                    <svg class="w-10 h-10 text-purple-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3">
+                    🎁 E-Book <span class="text-purple-400">Percuma</span>
+                </h2>
+                <p class="text-neutral-400 font-light max-w-md mx-auto mb-8">
+                    Daftar EASTEL melalui kami & dapatkan e-book percuma sebagai bonus eksklusif.
+                </p>
+                <a href="https://t.me/+601167997030" target="_blank" class="inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl bg-gradient-to-r from-[#6C3CE1] to-[#8B5CF6] text-white font-bold text-sm hover:shadow-[0_0_30px_rgba(108,60,225,0.4)] transition-all group">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                    Claim E-Book Percuma
+                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== TESTIMONIALS ========== -->
+    <section class="py-20 bg-[#080808] border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                    Apa Kata <span class="text-purple-400">Mereka</span>
+                </h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="bg-white/[0.02] border border-white/8 rounded-2xl p-6 card-hover">
+                    <div class="text-amber-400 text-sm mb-3">★★★★★</div>
+                    <p class="text-sm text-neutral-300 font-light leading-relaxed mb-5">"Dah 3 bulan guna EZ50, data memang cukup untuk streaming & kerja rider. Hotspot full sangat membantu."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500/30 to-blue-500/30 flex items-center justify-center text-xs font-bold text-purple-300">AF</div>
+                        <div>
+                            <p class="text-sm font-semibold text-white">Ahmad Farid</p>
+                            <p class="text-xs text-neutral-600">Rider, Kuala Lumpur</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white/[0.02] border border-white/8 rounded-2xl p-6 card-hover">
+                    <div class="text-amber-400 text-sm mb-3">★★★★★</div>
+                    <p class="text-sm text-neutral-300 font-light leading-relaxed mb-5">"Proses MNP sangat cepat, nombor lama still same. Data carry forward memang best — tak bazir!"</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-pink-500/30 to-purple-500/30 flex items-center justify-center text-xs font-bold text-pink-300">SN</div>
+                        <div>
+                            <p class="text-sm font-semibold text-white">Siti Nurhaliza</p>
+                            <p class="text-xs text-neutral-600">Peniaga Online, JB</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white/[0.02] border border-white/8 rounded-2xl p-6 card-hover">
+                    <div class="text-amber-400 text-sm mb-3">★★★★★</div>
+                    <p class="text-sm text-neutral-300 font-light leading-relaxed mb-5">"EZ35 sangat worth it untuk pelajar. 300GB pun dah more than enough untuk assignment & entertainment."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-green-500/30 to-cyan-500/30 flex items-center justify-center text-xs font-bold text-green-300">MH</div>
+                        <div>
+                            <p class="text-sm font-semibold text-white">Muhammad Haziq</p>
+                            <p class="text-xs text-neutral-600">Pelajar, Penang</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FINAL CTA ========== -->
+    <section class="relative py-24 md:py-32 overflow-hidden">
+        <div class="absolute inset-0 hero-gradient"></div>
+        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.03) 1px, transparent 0); background-size: 32px 32px;"></div>
+
+        <div class="relative max-w-3xl mx-auto px-4 sm:px-6 text-center">
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight mb-5">
+                Simple. Smart.<br><span class="text-purple-400">Berbaloi.</span>
+            </h2>
+            <p class="text-lg text-neutral-400 font-light max-w-md mx-auto mb-4">
+                Tukar ke EASTEL & rasa sendiri bezanya.
+            </p>
+            <p class="italic text-neutral-600 text-base mb-10">
+                "Bukan sekadar line… tapi gaya hidup digital lebih bijak."
+            </p>
+            <a href="https://t.me/+601167997030" target="_blank" class="inline-flex items-center gap-3 px-10 py-5 rounded-2xl bg-gradient-to-r from-[#6C3CE1] to-[#8B5CF6] text-white font-bold text-lg hover:shadow-[0_0_50px_rgba(108,60,225,0.4)] transition-all group">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                PM di Telegram Sekarang
+                <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            </a>
+            <p class="text-xs text-neutral-700 mt-6">AtukSimkad oleh Mohd Yunus · hjyunus@proton.me</p>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="border-t border-white/5 py-8 bg-[#050505]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-[#6C3CE1] to-[#0088cc] flex items-center justify-center">
+                    <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+                </div>
+                <span class="text-sm font-bold text-white">AtukSimkad</span>
+            </div>
+            <div class="flex items-center gap-5 text-xs text-neutral-500">
+                <a href="https://t.me/+601167997030" target="_blank" class="hover:text-purple-400 transition-colors">Telegram</a>
+                <a href="mailto:hjyunus@proton.me" class="hover:text-purple-400 transition-colors">Emel</a>
+                <a href="https://simkadmadani.orderla.my" target="_blank" class="hover:text-purple-400 transition-colors">Web Lama</a>
+            </div>
+            <p class="text-xs text-neutral-700">© 2025 AtukSimkad</p>
+        </div>
+    </footer>
+
+    <!-- ========== FLOATING TG BUTTON (Mobile) ========== -->
+    <a href="https://t.me/+601167997030" target="_blank" class="fixed bottom-6 right-6 z-50 md:hidden w-14 h-14 rounded-full bg-gradient-to-br from-[#6C3CE1] to-[#8B5CF6] flex items-center justify-center shadow-lg shadow-purple-900/40 hover:scale-110 transition-transform">
+        <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+    </a>
+
+    <!-- ========== JAVASCRIPT ========== -->
+    <script>
+        // Init Lucide
+        window.addEventListener('load', () => { lucide.createIcons(); });
+
+        // ===== 1. FAKE PURCHASE NOTIFICATION =====
+        const names = [
+            {n:"Ahmad",l:"Kuala Lumpur"},{n:"Siti",l:"Johor Bahru"},{n:"Raju",l:"Penang"},
+            {n:"Nurul",l:"Shah Alam"},{n:"Farhan",l:"Kuantan"},{n:"Aisyah",l:"Ipoh"},
+            {n:"Muaz",l:"Melaka"},{n:"Hafiz",l:"Seremban"},{n:"Dalila",l:"Kota Bharu"},
+            {n:"Amir",l:"Alor Setar"},{n:"Zulaikha",l:"Petaling Jaya"},{n:"Syafiq",l:"Subang"},
+            {n:"Mira",l:"Cyberjaya"},{n:"Irfan",l:"Bangi"},{n:"Puteri",l:"Cheras"},
+        ];
+        const plans = [{p:"EZ35",v:"RM35"},{p:"EZ50",v:"RM50"},{p:"EZ98",v:"RM98"}];
+        const times = ["baru sahaja","1 minit lepas","2 minit lepas","3 minit lepas","5 minit lepas","4 minit lepas"];
+
+        function showNotif() {
+            const c = document.getElementById('notification-container');
+            const d = names[Math.floor(Math.random()*names.length)];
+            const p = plans[Math.floor(Math.random()*plans.length)];
+            const t = times[Math.floor(Math.random()*times.length)];
+            const el = document.createElement('div');
+            el.className = 'notification-enter pointer-events-auto';
+            el.innerHTML = `<div class="flex items-center gap-3 bg-[#111]/95 backdrop-blur-xl border border-white/10 rounded-2xl px-4 py-3 shadow-2xl max-w-xs">
+                <div class="w-9 h-9 rounded-full bg-green-500/15 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <div><p class="text-xs text-white font-semibold leading-tight">${d.n} dari ${d.l}</p><p class="text-[11px] text-neutral-500 mt-0.5">Daftar ${p.p} · ${t}</p></div>
+            </div>`;
+            c.appendChild(el);
+            setTimeout(() => { el.classList.replace('notification-enter','notification-exit'); setTimeout(() => el.remove(), 300); }, 4500);
+        }
+        setTimeout(showNotif, 6000);
+        (function loop(){ setTimeout(() => { showNotif(); loop(); }, Math.random()*6000+8000); })();
+
+        // ===== 2. COUNTDOWN TIMER =====
+        let sec = 2*3600+47*60+33;
+        function tick() {
+            if(sec<=0) sec = 2*3600+47*60+33;
+            document.getElementById('cH').textContent = String(Math.floor(sec/3600)).padStart(2,'0');
+            document.getElementById('cM').textContent = String(Math.floor(sec%3600/60)).padStart(2,'0');
+            document.getElementById('cS').textContent = String(sec%60).padStart(2,'0');
+            sec--;
+        }
+        tick(); setInterval(tick, 1000);
+
+        // ===== 3. STOCK COUNTER =====
+        let stock = 33; const maxS = 50;
+        function updStock() {
+            if(stock > 10) stock -= Math.floor(Math.random()*2)+1;
+            document.getElementById('stockBar').style.width = (stock/maxS*100)+'%';
+            document.getElementById('stockNum').textContent = stock + ' left';
+        }
+        (function loop2(){ setTimeout(() => { updStock(); loop2(); }, Math.random()*12000+15000); })();
+
+        // ===== 4. LIVE VIEWERS =====
+        let vc = 52;
+        setInterval(() => {
+            vc += Math.floor(Math.random()*5)-2;
+            vc = Math.max(35, Math.min(72, vc));
+            document.getElementById('liveViewers').textContent = vc;
+        }, 3000);
+
+        // ===== 5. SMOOTH SCROLL =====
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const t = document.querySelector(a.getAttribute('href'));
+                if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+            });
+        });
+    </script>
+</body>
+</html>
