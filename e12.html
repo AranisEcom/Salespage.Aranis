@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENGKU ANIS - Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #06b6d4;
+            --secondary: #7df9ff;
+            --accent: #d946ef;
+            --bg-dark: #0a0014;
+            --text-light: #f1f5f9;
+            --text-dark: #0f172a;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(135deg, var(--primary), var(--accent), var(--secondary));
+            background-size: 200% 200%;
+            animation: gradientShift 20s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .floating-orbs {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.4;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .orb1 {
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            top: -150px;
+            left: -150px;
+            animation-delay: 0s;
+        }
+        
+        .orb2 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent);
+            bottom: -200px;
+            right: -200px;
+            animation-delay: 5s;
+        }
+        
+        .orb3 {
+            width: 250px;
+            height: 250px;
+            background: var(--secondary);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 10s;
+        }
+        
+        .orb4 {
+            width: 200px;
+            height: 200px;
+            background: var(--primary);
+            top: 20%;
+            right: 20%;
+            animation-delay: 15s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(20px, -30px) scale(1.1); }
+            50% { transform: translate(-30px, 20px) scale(0.9); }
+            75% { transform: translate(10px, 30px) scale(1.05); }
+        }
+        
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Hero Section */
+        header {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 2rem;
+        }
+        
+        .logo {
+            width: 150px;
+            margin-bottom: 2rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            z-index: 1;
+        }
+        
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            text-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .hero-image {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 20px;
+            margin-top: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Pricing Cards */
+        .pricing-section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            text-align: center;
+            margin-bottom: 3rem;
+            font-weight: 600;
+        }
+        
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+        }
+        
+        .pricing-card.featured {
+            border-color: var(--accent);
+            box-shadow: 0 0 40px rgba(217, 70, 239, 0.3);
+        }
+        
+        .plan-name {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+        
+        .plan-price {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .plan-price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text-light);
+        }
+        
+        .plan-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .plan-features li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: var(--primary);
+            color: var(--bg-dark);
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            background: var(--secondary);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(125, 249, 255, 0.5);
+        }
+        
+        .featured .cta-button {
+            background: var(--accent);
+        }
+        
+        .featured .cta-button:hover {
+            background: #f0abfc;
+            box-shadow: 0 0 20px rgba(217, 70, 239, 0.5);
+        }
+        
+        /* How It Works */
+        .how-it-works {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+        
+        .step {
+            text-align: center;
+            position: relative;
+        }
+        
+        .step-number {
+            width: 70px;
+            height: 70px;
+            background: var(--primary);
+            color: var(--bg-dark);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .step-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+        
+        .step-description {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        /* Testimonials */
+        .testimonials-section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .testimonials-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .testimonial-text {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 1rem;
+            object-fit: cover;
+        }
+        
+        .author-info h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.2rem;
+        }
+        
+        .author-info p {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        /* FAQ Section */
+        .faq-section {
+            padding: 5rem 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .faq-list {
+            margin-top: 3rem;
+        }
+        
+        .faq-item {
+            margin-bottom: 1.5rem;
+        }
+        
+        .faq-question {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 15px;
+            padding: 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-question:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .faq-icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            margin-top: 0;
+        }
+        
+        .faq-item.active .faq-answer {
+            margin-top: 1rem;
+            max-height: 200px;
+        }
+        
+        .faq-answer p {
+            padding: 0 1.5rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        /* CTA Buttons */
+        .cta-section {
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .cta-button-large {
+            padding: 1.2rem 3rem;
+            font-size: 1.2rem;
+            background: var(--primary);
+        }
+        
+        .cta-button-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .cta-button-outline:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
+        
+        /* Sticky Mobile CTA */
+        .sticky-cta {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .sticky-cta {
+                display: block;
+            }
+        }
+        
+        /* Floating CTA (Desktop) */
+        .floating-cta {
+            display: block;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+        
+        .floating-cta:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .floating-cta {
+                display: none;
+            }
+        }
+        
+        /* Urgency Countdown */
+        .urgency-section {
+            padding: 5rem 2rem;
+            background: rgba(10, 0, 20, 0.7);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        
+        .urgency-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+        
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        
+        .countdown-item {
+            text-align: center;
+        }
+        
+        .countdown-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .countdown-label {
+            font-size: 1rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+        }
+        
+        /* Trending Now Badge */
+        .trending-badge {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background: var(--accent);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1;
+            animation: pulse 2s infinite;
+        }
+        
+        /* Scrolling Marquee */
+        .marquee-section {
+            padding: 2rem 0;
+            overflow: hidden;
+            background: rgba(10, 0, 20, 0.7);
+        }
+        
+        .marquee {
+            display: flex;
+            animation: scroll 30s linear infinite;
+        }
+        
+        .marquee-item {
+            padding: 0 3rem;
+            white-space: nowrap;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 5rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-logo {
+            width: 100px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .countdown {
+                gap: 1rem;
+            }
+            
+            .countdown-value {
+                font-size: 2rem;
+            }
+            
+            .pricing-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .testimonials-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-bg"></div>
+    <div class="floating-orbs">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
+        <div class="orb orb4"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <header class="fade-up">
+        <img src="https://i.ibb.co/sdNxYrW8/473356195-3353313398137144-4783892501242427954-n.jpg" alt="Logo ENGKU ANIS" class="logo">
+        <div class="hero-content">
+            <h1 class="hero-title" id="typed-text"></h1>
+            <p class="hero-subtitle">Penyelesaian Digital, Nasihat Profesional, Perkhidmatan Ngepek Berkualiti Tinggi</p>
+            <img src="https://i.ibb.co/Ndxc2hgy/64735043-1557926051009230-8223326762117890048-n.jpg" alt="Hero Banner" class="hero-image">
+        </div>
+    </header>
+
+    <!-- Pricing Cards -->
+    <section class="pricing-section fade-up">
+        <h2 class="section-title">Paket Perkhidmatan</h2>
+        <div class="pricing-cards">
+            <div class="pricing-card">
+                <h3 class="plan-name">NGEPEK</h3>
+                <div class="plan-price">RM399</div>
+                <ul class="plan-features">
+                    <li>Ngepek tok breti 10 minit</li>
+                    <li>Keno maroh kokse kokdei</li>
+                    <li>Respons pantas</li>
+                    <li>Bantuan teknikal asas</li>
+                </ul>
+                <a href="#" class="cta-button">Pilih Paket</a>
+            </div>
+            <div class="pricing-card featured">
+                <div class="trending-badge">Popular</div>
+                <h3 class="plan-name">NGAMOK</h3>
+                <div class="plan-price">RM999</div>
+                <ul class="plan-features">
+                    <li>Ngepek 1 jam penuh</li>
+                    <li>Menjawab keno tapar</li>
+                    <li>Sapa jerik</li>
+                    <li>Perkhidmatan premium</li>
+                    <li>Keutamaan respons</li>
+                </ul>
+                <a href="#" class="cta-button">Pilih Paket</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works fade-up">
+        <h2 class="section-title">Bagaimana Ia Berfungsi</h2>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Pilih Paket</h3>
+                <p class="step-description">Pilih antara paket Ngepek atau Ngamok yang sesuai dengan keperluan anda.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Buat Tempahan</h3>
+                <p class="step-description">Lengkapi butiran tempahan dan buat bayaran untuk mengesahkan tempahan anda.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Mula Perkhidmatan</h3>
+                <p class="step-description">Hubungi kami dan mula perkhidmatan mengikut pake yang telah dipilih.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials-section fade-up">
+        <h2 class="section-title">Apa Kata Pelanggan</h2>
+        <div class="testimonials-container">
+            <div class="testimonial-card">
+                <p class="testimonial-text">"Sangpuh berpuas hati dengan perkhidmatan ngepak yang diberikan. Cepat dan berkesan!"</p>
+                <div class="testimonial-author">
+                    <img src="https://i.ibb.co/0DhL5dY/person1.jpg" alt="Avatar" class="author-avatar">
+                    <div class="author-info">
+                        <h4>Ahmad Faisal</h4>
+                        <p>Pelanggan</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-text">"Ngamok paketnya memang worth it. Saya dapat bantu banyak masalah dengan harga yang berpatutan."</p>
+                <div class="testimonial-author">
+                    <img src="https://i.ibb.co/6W0z3pB/person2.jpg" alt="Avatar" class="author-avatar">
+                    <div class="author-info">
+                        <h4>Siti Aminah</h4>
+                        <p>Pelanggan</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-text">"Engku Anis sangat profesional dan mesra. Jawapan dia tepat pada masalah yang saya hadapi."</p>
+                <div class="testimonial-author">
+                    <img src="https://i.ibb.co/8XnD0cK/person3.jpg" alt="Avatar" class="author-avatar">
+                    <div class="author-info">
+                        <h4>Rashid Hamid</h4>
+                        <p>Pelanggan</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section fade-up">
+        <h2 class="section-title">Soalan Lazim</h2>
+        <div class="faq-list">
+            <div class="faq-item">
+                <div class="faq-question">
+                    Apa perbezaan antara pake Ngepek dan Ngamok?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Paket Ngepek adalah untuk perkhidmatan ringkas selama 10 minit manakala Ngamok adalah untuk perkhidmatan lebih komprehensif selama 1 jam dengan jawapan yang lebih terperinci.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Bagaimana cara saya membuat tempahan?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Pilih pake yang anda ingini, klik butang "Pilih Paket", ikuti langkah-langkah untuk mengisi borang dan buat bayaran. Kami akan menghubungi anda selepas tempahan berjaya.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Adakah saya boleh dapat sokongan selepas tempahan?
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Ya, semua pelanggan akan menerima sokongan teknikal asas selama 7 hari selepas tempahan. Pelanggan pake Ngamok juga akan menerima keutamaan respons.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Primary CTA Buttons -->
+    <section class="cta-section fade-up">
+        <h2 class="section-title">Sedia Untuk Mula?</h2>
+        <div class="cta-buttons">
+            <a href="#" class="cta-button cta-button-large">Pilih Pake Sekarang</a>
+            <a href="#" class="cta-button cta-button-outline">Hubungi Kami</a>
+        </div>
+    </section>
+
+    <!-- Sticky Mobile CTA -->
+    <div class="sticky-cta">Pakai Ngamok - RM999</div>
+
+    <!-- Floating CTA (Desktop) -->
+    <div class="floating-cta">✓</div>
+
+    <!-- Urgency Countdown -->
+    <section class="urgency-section fade-up">
+        <h2 class="urgency-title">Tawaran Terhad - Hanya 3 Hari Lagi!</h2>
+        <p>Jangan lepaskan peluang untuk mendapatkan diskaun 20%</p>
+        <div class="countdown">
+            <div class="countdown-item">
+                <div class="countdown-value" id="days">03</div>
+                <div class="countdown-label">Hari</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-value" id="hours">12</div>
+                <div class="countdown-label">Jam</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-value" id="minutes">45</div>
+                <div class="countdown-label">Minit</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-value" id="seconds">30</div>
+                <div class="countdown-label">Sa</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trending Now Badge (already included in pricing card) -->
+
+    <!-- Scrolling Marquee -->
+    <section class="marquee-section">
+        <div class="marquee">
+            <div class="marquee-item">🔥 TRENDING: Paket Ngamok</div>
+            <div class="marquee-item">💎 Diskaun 20% - Hanya 3 Hari Lagi</div>
+            <div class="marquee-item">⭐ 5.0 Rating Pelanggan</div>
+            <div class="marquee-item">🚀 Perkhidmatan Cepat & Berkesan</div>
+            <div class="marquee-item">🔒 Jaminan Kualiti</div>
+            <div class="marquee-item">🔥 TRENDING: Paket Ngamok</div>
+            <div class="marquee-item">💎 Diskaun 20% - Hanya 3 Hari Lagi</div>
+            <div class="marquee-item">⭐ 5.0 Rating Pelanggan</div>
+            <div class="marquee-item">🚀 Perkhidmatan Cepat & Berkesan</div>
+            <div class="marquee-item">🔒 Jaminan Kualiti</div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <img src="https://i.ibb.co/sdNxYrW8/473356195-3353313398137144-4783892501242427954-n.jpg" alt="Logo ENGKU ANIS" class="footer-logo">
+            <p>© 2023 ENGKU ANIS. Hak Cipta Terpelihara.</p>
+            <p>Penyelesaian Digital, Nasihat Solution, Nok Dengar Ngepek Bulih</p>
+            <div class="social-links">
+                <a href="#" class="social-link">f</a>
+                <a href="#" class="social-link">t</a>
+                <a href="#" class="social-link">in</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Typing effect for hero title
+        const typedTextElement = document.getElementById('typed-text');
+        const textToType = "SELAMAT DATANG KE ENGKU ANIS";
+        let index = 0;
+        
+        function typeText() {
+            if (index < textToType.length) {
+                typedTextElement.textContent += textToType.charAt(index);
+                index++;
+                setTimeout(typeText, 100);
+            }
+        }
+        
+        // Start typing effect when page loads
+        window.addEventListener('load', typeText);
+        
+        // Intersection Observer for fade-up animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.fade-up').forEach(el => {
+            observer.observe(el);
+        });
+        
+        // FAQ toggle functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                const isActive = faqItem.classList.contains('active');
+                
+                // Close all FAQ items
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Open clicked item if it wasn't active
+                if (!isActive) {
+                    faqItem.classList.add('active');
+                }
+            });
+        });
+        
+        // Countdown timer
+        function updateCountdown() {
+            const days = document.getElementById('days');
+            const hours = document.getElementById('hours');
+            const minutes = document.getElementById('minutes');
+            const seconds = document.getElementById('seconds');
+            
+            // Set the countdown date (3 days from now)
+            const countdownDate = new Date();
+            countdownDate.setDate(countdownDate.getDate() + 3);
+            countdownDate.setHours(countdownDate.getHours() + 12);
+            countdownDate.setMinutes(countdownDate.getMinutes() + 45);
+            countdownDate.setSeconds(countdownDate.getSeconds() + 30);
+            
+            // Update the countdown every second
+            setInterval(() => {
+                const now = new Date().getTime();
+                const distance = countdownDate.getTime() - now;
+                
+                const daysValue = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hoursValue = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutesValue = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const secondsValue = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                days.textContent = daysValue.toString().padStart(2, '0');
+                hours.textContent = hoursValue.toString().padStart(2, '0');
+                minutes.textContent = minutesValue.toString().padStart(2, '0');
+                seconds.textContent = secondsValue.toString().padStart(2, '0');
+            }, 1000);
+        }
+        
+        // Start countdown when page loads
+        window.addEventListener('load', updateCountdown);
+    </script>
+</body>
+</html>
